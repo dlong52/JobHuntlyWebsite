@@ -1,0 +1,4 @@
+export {default as CategoryItem } from './CategoryItem'
+export {default as Logo } from './Logo'
+export {default as DefautAvatar } from './DefautAvatar'
+export {default as CVItem } from './CVItem'

@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  :root {
+    --primary: #4527a0;
+    --primary-light: #a6a3fa54;
+    --primary-200: #6863f8;
+    --primary-dark: #172554;
+
+    --secondary: #ccccf5;
+    --secondary-light: #ccccf5;
+    --secondary-200: #ccccf5;
+    --secondary-dark: #ccccf5;
+
+    --neutrals-100: #25324b;
+    --neutrals-80: #515b6f;
+    --neutrals-60: #7c8493;
+    --neutrals-40: #a8adb7;
+    --neutrals-20: #e4e5e7;
+    --neutrals-10: #f9fafc;
+    --neutrals-0: #f8f8fd;
+
+    --accent-yellow: #FFB836;
+    --accent-green: #00c853;
+    --accent-red: #d84315;
+    --accent-blue: #26A4FF;
+    --accent-purple: #7B61FF;
+  }
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+::-webkit-scrollbar {
+  width: 9px; 
+}
+ul{
+  list-style: disc;
+}
+ol{
+  list-style: decimal;
+}
+.ck-editor-field ul {
+  list-style-type: disc; 
+  padding-left: 20px;
+}
+
+.ck-editor-field ol {
+  list-style-type: decimal;
+  padding-left: 20px; 
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #44444444;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4e4d4d; /* Màu khi hover */
+}
+
+@font-face {
+  font-family: "RedHatDisplay";
+  src: url("./assets/fonts/RedHatDisplay-Italic-VariableFont_wght.ttf")
+      format("ttf"),
+    url("./assets/fonts/RedHatDisplay-VariableFont_wght.ttf") format("ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./assets/fonts/Inter-VariableFont_opsz\,wght.ttf") format("ttf"),
+    url("./assets/fonts/Inter-Italic-VariableFont_opsz\,wght.ttf") format("ttf");
+  /* font-style: normal; */
+}
+
+@font-face {
+  font-family: "MonumentExtended";
+  src: url("./assets/fonts/MonumentExtended-Regular.otf") format("otf"),
+    url("./assets/fonts/MonumentExtended-Ultrabold.otf") format("otf");
+  /* font-style: normal; */
+}
+
+@font-face {
+  font-family: "MonumentExtended";
+  src: url("./assets/fonts/MonumentExtended-Regular.otf") format("otf"),
+    url("./assets/fonts/MonumentExtended-Ultrabold.otf") format("otf");
+  /* font-style: normal; */
+}
+
+@font-face {
+  font-family: "ClashDisplay";
+  src: url("./assets/fonts/ClashDisplay-Bold.otf") format("otf");
+  font-weight: 700;
+  font-style: normal;
+}
+
+.ts {
+  color: #54555513;
+}
