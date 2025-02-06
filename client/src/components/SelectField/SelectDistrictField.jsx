@@ -1,11 +1,17 @@
 import React, { useEffect, useMemo } from "react";
-import { FormikField } from "../CustomFieldsFormik";
+import { AutocompleteField, FormikField } from "../CustomFieldsFormik";
 import { useAddress } from "../../hooks";
 
-const SelectDistrictField = ({ provinceId }) => {
-  const { districts, fetchDistricts } = useAddress();
+const SelectDistrictField = ({
+  provinceId,
+  classNameContainer,
+  required,
+  placeholder = "Quận/huyện",
+  variant,
+}) => {
+  const { districts, fetchDistricts, loading } = useAddress();
   const districtOptions = useMemo(() => {
-    if (districts) {
+    if (districts && provinceId) {
       return districts.map((item) => ({
         label: item.district_name,
         value: item.district_id,
@@ -20,8 +26,12 @@ const SelectDistrictField = ({ provinceId }) => {
   }, [provinceId]);
   return (
     <FormikField
+      classNameContainer={classNameContainer}
+      required={required}
       name="district"
-      disabled={!!districts ? false : true}
+      variant={variant}
+      placeholder={loading ? "Đang tải dữ liệu..." : placeholder}
+      disabled={provinceId ? false : true}
       component={AutocompleteField}
       options={districtOptions}
     />

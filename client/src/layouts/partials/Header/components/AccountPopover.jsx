@@ -12,7 +12,7 @@ import { RouteBase } from "../../../../constants/routeUrl";
 import { useAuthentication } from "../../../../providers/AuthenticationProvider";
 
 const AccountPopover = ({ user }) => {
-  const {logout} = useAuthentication();
+  const { logout } = useAuthentication();
   const navigate = useNavigate();
   return (
     <Box className="p-4 flex flex-col gap-4 min-w-[350px]">
@@ -47,14 +47,13 @@ const AccountPopover = ({ user }) => {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate(RouteBase.Profile);
+          }}
+        >
           <CommonIcon.EditOutlined className="text-primary" />
-          <span
-            onClick={() => {
-              navigate(RouteBase.Profile);
-            }}
-            className="text-[14px] font-medium"
-          >
+          <span className="text-[14px] font-medium">
             Cài đặt thông tin cá nhân
           </span>
         </MenuItem>

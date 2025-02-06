@@ -1,4 +1,5 @@
 export const RouteBase = {
+  // All
   Home: "/",
 
   SignIn: "/sign-in",
@@ -9,8 +10,10 @@ export const RouteBase = {
   JobDetail: "/job/:id",
   CVTemplate: "/cv-template",
   Company: "/company",
+  CompanySearch: "/company/search",
   Connect: "/connect",
   Profile: "/profile",
+  Connect: "/connect",
 
   // HR
   HROverview: "/hr",
@@ -20,4 +23,14 @@ export const RouteBase = {
   HRChat: "/hr/chat",
   HRPackage: "/hr/package",
   HRMyPackage: "/hr/my-pakage",
+
+  // ADMIN
+
+  AdminOverview: "/admin",
+  AdminProfile: "/admin/profile",
+  AdminPostManagement: "/admin/post-management",
+  AdminPackageManagement: "/admin/package-management",
+  AdminUserManagement: "/admin/user-management",
+  AdminNotifyManagement: "/admin/notify-management",
+  AdminRevenueManagement: "/admin/revenue-management",
 };

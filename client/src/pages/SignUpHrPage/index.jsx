@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Box, Divider, Typography } from "@mui/material";
 
@@ -9,11 +9,43 @@ import { RouteBase } from "../../constants/routeUrl";
 
 import CommonIcon from "../../ui/CommonIcon";
 import { bgLogin } from "../../assets/images";
-import { useAuthentication } from "../../providers/AuthenticationProvider";
 import SignUpHrForm from "./components/SignUpHrForm";
-
+import useCheckRoleNavigate from "../../hooks/useCheckRoleNavigate";
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../../../firebaseConfig";
+import { signInWithGoogle } from "../../services/AuthServices";
+import { useNotifications } from "../../utils/notifications";
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/redux/userSlice";
+import * as UserServices from "@/services/UserServices";
+import { ROLE } from "../../constants/enum";
 const SignUpHrPage = () => {
-  const { signInGoogle } = useAuthentication();
+  const { showSuccess, showError } = useNotifications();
+  const dispatch = useDispatch();
+  const { checkRoleNavigate } = useCheckRoleNavigate();
+  const signInGoogle = useCallback(async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const token = await user.getIdToken();
+      const res = await signInWithGoogle(token, "google", ROLE.EMPLOYER);
+      if (res?.status === "success") {
+        showSuccess(res?.message);
+        checkRoleNavigate(res?.data.role);
+        if (res?.data.access_token) {
+          handleGetUserDetails(res?.data.access_token);
+        }
+        return;
+      }
+      showError(res.message);
+    } catch (error) {
+      console.error("Error during Google login: ", error);
+    }
+  }, []);
+  const handleGetUserDetails = async (token) => {
+      const res = await UserServices.getDetailUser(token);
+      dispatch(updateUser({ ...res?.data, accessToken: token }));
+    };
   // Render
   return (
     <Box className="w-full max-h-screen relative grid grid-cols-12 bg-primary-dark">

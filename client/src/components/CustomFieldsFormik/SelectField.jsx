@@ -54,12 +54,11 @@ const SelectField = ({
         }}
         displayEmpty
         input={<OutlinedInput />}
-        placeholder="fjkcdsnvj"
+        placeholder=""
         renderValue={(selected) => {
           if (!selected) {
             return <em className="text-gray-400">{placeholder}</em>;
           }
-          return selected;
         }}
         inputProps={{ 'aria-label': 'Without label' }}
         label={label}

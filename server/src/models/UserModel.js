@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  fcmToken: { type: String },
   role: { type: mongoose.Schema.Types.ObjectId, ref: "Role", required: true },
   company: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
   password: {
@@ -41,14 +42,29 @@ const userSchema = new mongoose.Schema({
     phone_number: {
       type: String,
     },
+    avatar_url: { type: String },
     address: {
-      province: { type: String },
-      district: { type: String },
-      ward: { type: String },
-      specific_address: { type: String },
+      province: {
+        id: { type: String },
+        name: { type: String },
+      },
+      district: {
+        id: { type: String },
+        name: { type: String },
+      },
+      ward: {
+        id: { type: String },
+        name: { type: String },
+      },
+      additional_info: { type: String },
     },
     applied_jobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }],
     created_cvs: [{ type: mongoose.Schema.Types.ObjectId, ref: "CV" }],
+  },
+  is_verified: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
   created_at: {
     type: Date,
@@ -60,7 +76,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// Middleware để cập nhật 'updated_at' trước khi lưu tài liệu
 userSchema.pre("save", function (next) {
   this.updated_at = Date.now();
   next();

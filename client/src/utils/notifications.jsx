@@ -5,15 +5,22 @@ import { useSnackbar } from "../providers/SnackbarProvider";
 export const useNotifications = () => {
   const { showSnackbar } = useSnackbar();
 
-  const showSuccess = (msg) => {
+  const showSuccess = (msg, title) => {
     if (typeof msg === "string") {
-      showSnackbar(msg, "success");
+      showSnackbar(msg, "success", title);
     } else {
       showSnackbar("Operation successful", "success");
     }
   };
+  const showInfo = (msg, title) => {
+    if (typeof msg === "string") {
+      showSnackbar(msg, "info", title);
+    } else {
+      showSnackbar("Operation successful", "info");
+    }
+  };
 
-  const showError = (error) => {
+  const showError = (error, title) => {
     if (error && error.response) {
       const { data } = error.response;
       if (data.errors) {
@@ -41,5 +48,5 @@ export const useNotifications = () => {
     }
   };
 
-  return { showSuccess, showError };
+  return { showSuccess, showError, showInfo };
 };

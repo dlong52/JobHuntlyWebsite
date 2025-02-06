@@ -1,6 +1,8 @@
 // Public Pages
 export {default as HomePage} from './HomePage';
 export {default as CompanyPage} from './CompanyPage';
+export {default as CompanySearchPage} from './CompanySearchPage';
+export {default as CompanyDetailPage} from './CompanyDetailPage';
 export {default as CvManagementPage} from './CvManagementPage';
 export {default as ProfileSettingPage} from './ProfileSettingPage';
 export {default as FindJobPage} from './FindJobPage';

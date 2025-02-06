@@ -8,6 +8,7 @@ export default defineConfig({
     port: 8000,
   },
   plugins: [react()],
+  publicDir: 'public',
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),

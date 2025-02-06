@@ -10,9 +10,14 @@ import {
   SignUpHrPage,
   NotFoundPage,
   ProfileSettingPage,
-} from "@/pages";
+  ConnectPage,
+  JobDetailsPage,
+  CompanyDetailPage,
+  CompanySearchPage,
+} from "../pages";
 import {
   ChatPage,
+  JobDetailPage,
   MyPackagePage,
   OverViewPage,
   PackageDetailPage,
@@ -20,111 +25,178 @@ import {
   PostJobPage,
   ProfileHrPage,
 } from "../hr_pages";
-import { HRLayout } from "../layouts";
-import { roles } from "../constants";
-import { JobDetailsPage } from "../pages";
+import { AdminLayout, HRLayout } from "../layouts";
+import { ROLE } from "../constants/enum";
+import {
+  NotifyManagementPage,
+  OverViewAdminPage,
+  PackageManagementPage,
+  PostManageMentPage,
+  RevenueManagementPage,
+  UserManagementPage,
+} from "../admin_page";
 const Routes = [
   {
     path: RouteBase.Home,
     component: HomePage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
   },
   {
     path: RouteBase.SignIn,
     component: SignInPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
     layout: null,
   },
   {
     path: RouteBase.SignUp,
     component: SignUpPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
     layout: null,
   },
   {
     path: RouteBase.SignUpHr,
     component: SignUpHrPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
     layout: null,
   },
   {
     path: RouteBase.Job,
     component: FindJobPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
   },
   {
     path: RouteBase.JobDetail,
     component: JobDetailsPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
   },
   {
     path: RouteBase.CVTemplate,
     component: CvManagementPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
   },
   {
     path: `${RouteBase.CVTemplate}/:id`,
     component: CreateCVPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
   },
   {
     path: RouteBase.Company,
     component: CompanyPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
+  },
+  {
+    path: RouteBase.CompanySearch,
+    component: CompanySearchPage,
+    permissionAllow: [ROLE.ALL],
+  },
+  {
+    path: `${RouteBase.Company}/:id`,
+    component: CompanyDetailPage,
+    permissionAllow: [ROLE.ALL],
+  },
+  {
+    path: RouteBase.Connect,
+    component: ConnectPage,
+    permissionAllow: [ROLE.ALL],
+    layout: null,
   },
   {
     path: RouteBase.Profile,
     component: ProfileSettingPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
   },
   {
     path: "*",
     component: NotFoundPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.ALL],
     layout: null,
   },
-
+  // HR
   {
     path: RouteBase.HROverview,
     component: OverViewPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
   },
   {
     path: RouteBase.HRJobs,
     component: PostJobPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
+  {
+    path: `${RouteBase.HRJobs}/:id`,
+    component: JobDetailPage,
+    permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
   },
   {
     path: RouteBase.HRProfile,
     component: ProfileHrPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
   },
   {
     path: RouteBase.HRChat,
     component: ChatPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
   },
   {
     path: RouteBase.HRPackage,
     component: PackagePage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
   },
   {
     path: `${RouteBase.HRPackage}/:id`,
     component: PackageDetailPage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
   },
   {
     path: RouteBase.HRMyPackage,
     component: MyPackagePage,
-    permissionAllow: [roles.ALL], 
+    permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
+  },
+  // ADMIN
+
+  {
+    path: RouteBase.AdminOverview,
+    component: OverViewAdminPage,
+    permissionAllow: [ROLE.ALL],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminNotifyManagement,
+    component: NotifyManagementPage,
+    permissionAllow: [ROLE.ALL],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminPackageManagement,
+    component: PackageManagementPage,
+    permissionAllow: [ROLE.ALL],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminPostManagement,
+    component: PostManageMentPage,
+    permissionAllow: [ROLE.ALL],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminUserManagement,
+    component: UserManagementPage,
+    permissionAllow: [ROLE.ALL],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminRevenueManagement,
+    component: RevenueManagementPage,
+    permissionAllow: [ROLE.ALL],
+    layout: AdminLayout,
   },
 ];
 

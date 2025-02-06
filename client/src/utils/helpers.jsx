@@ -7,13 +7,42 @@ const helpers = {
     }
     return true;
   },
+  convertSalary: (min, max) => {
+    const minSalary = Math.round(min / 1000000);
+    const maxSalary = Math.round(max / 1000000);
+    return `${minSalary} - ${maxSalary} triệu`;
+  },
   dateFormat: (date) => {
     return new Date(date).toLocaleString("vi-VN", {
       dateStyle: "short",
       timeStyle: "short",
     });
   },
-  numberFormat: (num) => new Intl.NumberFormat("de-DE").format(num),
+  numberFormat: (number) => {
+    if (isNaN(number)) return "Invalid number";
+
+    if (number >= 1_000_000_000) {
+      const value = number / 1_000_000_000;
+      return (
+        (value === Math.floor(value) ? value.toFixed(0) : value.toFixed(2)) +
+        " tỉ"
+      );
+    } else if (number >= 1_000_000) {
+      const value = number / 1_000_000;
+      return (
+        (value === Math.floor(value) ? value.toFixed(0) : value.toFixed(2)) +
+        " triệu"
+      );
+    } else if (number >= 1_000) {
+      const value = number / 1_000;
+      return (
+        (value === Math.floor(value) ? value.toFixed(0) : value.toFixed(2)) +
+        " nghìn"
+      );
+    } else {
+      return number + " đồng";
+    }
+  },
   roundNumber: (number) => {
     return Math.floor(number / 1000) * 1000;
   },

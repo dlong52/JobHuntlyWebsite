@@ -2,8 +2,14 @@ import React, { useMemo } from "react";
 import { AutocompleteField, FormikField } from "../CustomFieldsFormik";
 import { useAddress } from "../../hooks";
 
-const SelectProvinceField = () => {
-  const { provinces } = useAddress();
+const SelectProvinceField = ({
+  classNameContainer,
+  required,
+  placeholder = "Tỉnh/thành phố",
+  variant,
+  disabled,
+}) => {
+  const { provinces, loading } = useAddress();
   const provinceOptions = useMemo(() => {
     if (provinces) {
       return provinces.map((item) => ({
@@ -15,10 +21,12 @@ const SelectProvinceField = () => {
   }, [provinces]);
   return (
     <FormikField
-      required
+      classNameContainer={classNameContainer}
+      required={required}
       name="province"
-      variant="standard"
-      placeholder="Địa điểm"
+      variant={variant}
+      disabled={disabled}
+      placeholder={loading ? "Đang tải dữ liệu..." : placeholder}
       component={AutocompleteField}
       options={provinceOptions}
     />

@@ -1,26 +1,17 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Logo } from "@/components";
-import {
-  Badge,
-  Box,
-  Container,
-  Divider,
-  MenuItem,
-  menuItemClasses,
-  MenuList,
-} from "@mui/material";
+import { Badge, Box, Container } from "@mui/material";
 import { CommonAvatar, CommonIcon, CommonPopover } from "../../../ui";
 import { RouteBase } from "../../../constants/routeUrl";
 import NotifyPopover from "./components/NotifyPopover";
 import AccountPopover from "./components/AccountPopover";
+import { ROLE } from "../../../constants/enum";
 
 const Header = () => {
-  
   const user = useSelector((state) => state.user);
   const [isScrolled, setIsScrolled] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -44,9 +35,7 @@ const Header = () => {
       >
         <Container className="flex items-center justify-between">
           <Box className=" flex items-center gap-12">
-            <Link to={RouteBase.Home} className="flex items-center">
-              <Logo />
-            </Link>
+            <Logo />
             <Box className="flex items-center gap-6 font-medium text-neutrals-100">
               <Link to={RouteBase.Job}>Việc làm</Link>
               <Link to={RouteBase.Company}>Doanh nghiệp</Link>
@@ -54,7 +43,10 @@ const Header = () => {
             </Box>
           </Box>
           <Box className="flex items-center gap-8">
-            {!user.username && (
+            {(user.role === ROLE.EMPLOYER ||
+              user.role === ROLE.ALL ||
+              user.role === ROLE.ADMIN ||
+              !user.role) && (
               <Fragment>
                 <Link
                   to={"/sign-in"}
@@ -70,7 +62,7 @@ const Header = () => {
                 </Link>
               </Fragment>
             )}
-            {user.username && (
+            {user.role === ROLE.CANDIDATE && (
               <Box className="flex items-center gap-6">
                 <CommonPopover
                   body={<NotifyPopover />}

@@ -20,16 +20,20 @@ import { RouteBase } from "../../../../constants/routeUrl";
 const SignUpHrForm = () => {
   const { provinces, districts, fetchDistricts } = useAddress();
   const { showError, showSuccess } = useNotifications();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleSubmit = async (values) => {
     const body = {
+      name: values.name,
       email: values.email,
       password: values.password,
       confirmPassword: values.confirmPassword,
       companyName: values.companyName,
       gender: values.gender,
-      province: values?.province?.label,
-      district: values?.district?.label,
+      province: {
+        id: values?.province?.value,
+        name: values?.province?.label,
+      },
+      district: { id: values?.district?.value, name: values?.district?.label },
       phoneNumber: values.phoneNumber,
       role: ROLE.EMPLOYER,
     };
@@ -142,7 +146,7 @@ const SignUpHrForm = () => {
                   labelTop="Họ và tên"
                   placeholder="Họ và tên"
                 />
-                <GenderField classNameContainer={"col-span-6"}/>
+                <GenderField classNameContainer={"col-span-6"} />
                 <FormikField
                   required
                   classNameLabel="text-neutrals-100 font-medium text-sm"

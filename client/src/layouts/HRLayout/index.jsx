@@ -8,7 +8,7 @@ const HRLayout = ({ children }) => {
       <Sidebar />
       <div className="ml-content-admin w-full">
         <HeaderHr />
-        <div className="mt-header-hr rounded-t-md">
+        <div className="mt-header-hr rounded-t-md overflow-y-auto">
           <Container className="py-5">{children}</Container>
         </div>
       </div>

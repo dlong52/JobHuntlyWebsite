@@ -1,28 +1,18 @@
 import React, { Fragment } from "react";
-import { roles } from "../constants";
-import { useAuthentication } from "../providers/AuthenticationProvider";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { RouteBase } from "../constants/routeUrl";
+import { ROLE } from "../constants/enum";
 
 const ComponentWrapper = ({ children, permissionAllow = [] }) => {
-  const { isLogged, userInfo } = useAuthentication();
-  // const role = userInfo?.userRoleDetail?.key || '';
+  const { role } = useSelector((state) => state.user);
+  const navigate = useNavigate()
 
-  if (
-    !isLogged &&
-    (permissionAllow.includes(roles.ADMIN) ||
-      permissionAllow.includes(roles.EMPLOYER))
-  ) {
-    return (
-      <div className="">
-        <h1>Bạn cần đăng nhập để truy cập vào mục này</h1>
-      </div>
-    );
-  }
-
-  if (permissionAllow.includes(roles.ALL)) {
+  if (permissionAllow.includes(ROLE.ALL) || permissionAllow.includes(role)) {
     return <Fragment>{children}</Fragment>;
   }
 
-  return <div className="">You re not allow access to this</div>;
+  navigate(RouteBase.SignIn);
 };
 
 const withPermission = (Component, permissionAllow = []) => {

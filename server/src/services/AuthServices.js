@@ -39,7 +39,6 @@ const signUp = async (newUser) => {
       newCompany = await Company.create({
         created_by: null,
         name: companyName,
-        // website: null,
         address: {
           province: province || null,
           district: district || null,
@@ -80,7 +79,9 @@ const signUp = async (newUser) => {
 const signIn = async (user) => {
   const { email, password } = user;
   try {
-    const existingUser = await UserModel.findOne({ email: email }).populate('role');
+    const existingUser = await UserModel.findOne({ email: email }).populate(
+      "role"
+    );
 
     if (
       !existingUser ||
@@ -127,28 +128,24 @@ const signIn = async (user) => {
   }
 };
 
-const signInWithGoogle = async (token) => {
+const signInWithGoogle = async (token, role) => {
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
     const uid = decodedToken.uid;
     const email = decodedToken.email;
     const name = decodedToken.name;
-
-    const user = await UserModel.findOne({ firebaseUid: uid });
-    const roleM = await Role.findOne({ name: "candidate" });
+    let user = await UserModel.findOne({ firebaseUid: uid }).populate("role");
+    const roleM = await Role.findOne({ name: role });
     if (!user) {
-      // user = new UserModel({
-      //   email: email,
-      //   role: roleM._id,
-      //   firebaseUid: uid,
-      //   account_type: "google",
-      //   profile: {
-      //     name: name,
-      //   },
-      // });
-      console.log(
-        "-------------------------------------------------------------"
-      );
+      user = new UserModel({
+        email: email,
+        role: roleM._id,
+        firebaseUid: uid,
+        account_type: "google",
+        profile: {
+          name: name,
+        },
+      });
       await UserModel.create({
         email: email,
         role: roleM._id,
@@ -158,22 +155,30 @@ const signInWithGoogle = async (token) => {
           name: name,
         },
       });
+    }else {
+      const checkRole = user?.role.name !== role 
+      if (checkRole) {
+        return { status: "error", message: "Tài khoản này đã được đăng kí với vai trò khác!" }
+      }
     }
 
     const access_token = await JwtServices.generateAccessToken({
       id: user._id,
-      isAdmin: user.role === "admin",
+      role: user.role.name,
     });
     const refresh_token = await JwtServices.generateRefreshToken({
       id: user._id,
-      isAdmin: user.role === "admin",
+      role: user.role.name,
     });
     return {
       status: "success",
       message: "Đăng nhập với Google thành công!",
       access_token,
       refresh_token,
-      user,
+      data: {
+        access_token,
+        role: user.role.name
+      },
     };
   } catch (error) {
     console.error("Lỗi đăng nhập với Google:", error);

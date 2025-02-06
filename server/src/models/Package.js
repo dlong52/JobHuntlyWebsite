@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const packageSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -8,7 +8,12 @@ const packageSchema = new mongoose.Schema({
   duration_in_days: { type: Number, required: true },
   is_featured: { type: Boolean, default: false },
   created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now }
+  updated_at: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Package', packageSchema);
+packageSchema.pre("save", function (next) {
+  this.updated_at = Date.now();
+  next();
+});
+
+module.exports = mongoose.model("Package", packageSchema);

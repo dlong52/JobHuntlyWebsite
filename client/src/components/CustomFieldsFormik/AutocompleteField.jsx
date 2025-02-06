@@ -17,6 +17,7 @@ const AutocompleteField = ({
   size = "medium",
   classNameContainer = "",
   classNameLabel = "",
+  sx,
   leftIcon, // Add leftIcon prop
   ...props
 }) => {
@@ -41,6 +42,7 @@ const AutocompleteField = ({
       )}
       <Autocomplete
         options={options}
+        sx={sx}
         getOptionLabel={(option) => option.label || ""}
         value={value || null}
         onChange={handleChange}

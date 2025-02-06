@@ -3,7 +3,6 @@ const conversationRouter = express.Router()
 const ConversationController = require('../controllers/ConversationControllers')
 
 conversationRouter.post('', ConversationController.createConversation)
-conversationRouter.get('/:conversationId/messages', ConversationController.getMessageByConversation)
-conversationRouter.post('/message', ConversationController.sendMessage)
+conversationRouter.get('/:userId', ConversationController.getConversationsByUserId)
 
 module.exports = conversationRouter

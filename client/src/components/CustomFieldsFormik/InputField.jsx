@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputAdornment from "@mui/material/InputAdornment";
+import { twMerge } from "tailwind-merge";
 
 const InputField = ({
   field,
@@ -18,7 +19,8 @@ const InputField = ({
   size = "medium",
   placeholder = "",
   type = "text",
-  leftIcon, 
+  leftIcon,
+  sx,
   ...props
 }) => {
   const { name } = field;
@@ -27,19 +29,14 @@ const InputField = ({
 
   return (
     <FormControl
-      className={`flex flex-col gap-1 ${classNameContainer}`}
+      className={`flex w-full flex-col gap-1 ${classNameContainer}`}
       fullWidth
       error={showError}
     >
       {labelTop && (
-        <label
-          className={`flex items-center ${classNameLabel}`}
-          htmlFor=""
-        >
+        <label className={`flex items-center ${classNameLabel}`} htmlFor="">
           {labelTop}
-          {required && (
-            <span style={{ color: "red", marginLeft: 4 }}>*</span>
-          )}
+          {required && <span style={{ color: "red", marginLeft: 4 }}>*</span>}
         </label>
       )}
       <TextField
@@ -49,7 +46,8 @@ const InputField = ({
         {...field}
         {...props}
         type={type}
-        className={className}
+        sx={sx}
+        className={twMerge("", className)}
         placeholder={placeholder}
         InputProps={{
           readOnly: readOnly,
