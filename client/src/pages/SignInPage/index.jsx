@@ -1,10 +1,9 @@
 import React, { useCallback, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Divider, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useDispatch } from "react-redux";
 
-import { bgAuth, Google } from "@/assets/images";
 import { auth, provider, signInWithPopup } from "@/../firebaseConfig";
 
 import { Logo } from "@/components";
@@ -20,16 +19,15 @@ import { useNotifications } from "@/utils/notifications";
 import { updateUser } from "@/redux/userSlice";
 import { validationSchema } from "./validate";
 import { useToggleDialog } from "../../hooks";
-import { RouteBase } from "../../constants/routeUrl";
 import CommonIcon from "../../ui/CommonIcon";
 import { useAuthentication } from "../../providers/AuthenticationProvider";
 import { bgLogin } from "../../assets/images";
-import useCheckRoleNavigate from "../../hooks/useCheckRoleNavigate";
 import { signInWithGoogle } from "../../services/AuthServices";
+import useCheckRoleNavigate from "../../hooks/useCheckRoleNavigate";
+import { ROLE } from "../../constants/enum";
 
 const SignInPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { showSuccess, showError } = useNotifications();
   const { open, toggle, shouldRender } = useToggleDialog();
   const { checkRoleNavigate } = useCheckRoleNavigate();
@@ -43,13 +41,14 @@ const SignInPage = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       const token = await user.getIdToken();
-      console.log({token});
-      
-      const res = await signInWithGoogle(token);
-
+      const res = await signInWithGoogle(token, "google", ROLE.CANDIDATE);
       if (res?.status === "success") {
         showSuccess(res?.message);
-        navigate(RouteBase.Home);
+        checkRoleNavigate(res?.data.role);
+        if (res?.data.access_token) {
+          console.log(res?.data.access_token);
+          handleGetUserDetails(res?.data.access_token);
+        }
         return;
       }
       showError(res.message);
@@ -57,12 +56,13 @@ const SignInPage = () => {
       console.error("Error during Google login: ", error);
     }
   }, []);
+
   const handleSubmit = async (values) => {
     try {
       const res = await signIn(values);
       if (res?.status === "success") {
         showSuccess(res?.message);
-        checkRoleNavigate(res?.data.role)
+        checkRoleNavigate(res?.data.role);
         if (res?.data.access_token) {
           handleGetUserDetails(res?.data.access_token);
         }
@@ -82,9 +82,7 @@ const SignInPage = () => {
     <Box className="w-full min-h-screen relative grid grid-cols-1 gap-10 md:grid-cols-12  bg-blue-950 p-10 bg-grid bg-no-repeat bg-contain bg-bottom">
       <Box className="col-span-6 flex flex-col items-center justify-center gap-y-4 px-4 md:px-0">
         <Box className="size-full bg-white flex flex-col items-center justify-center gap-y-4 px-4 md:px-0 rounded-xl">
-          <Link to={RouteBase.Home}>
-            <Logo />
-          </Link>
+          <Logo />
           <Box className="w-[450px] flex flex-col gap-5">
             <Box className="text-center">
               <h2 className="font-bold font-RedHatDisplay text-2xl text-neutrals-100 mb-2">

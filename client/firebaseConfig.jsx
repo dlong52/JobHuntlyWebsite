@@ -1,7 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { deleteToken, getMessaging, getToken, onMessage } from 'firebase/messaging';
+
+import {
+  deleteToken,
+  getMessaging,
+  getToken,
+  onMessage,
+} from "firebase/messaging";
+import { pushFcmToken } from "./src/services/UserServices";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -10,7 +17,7 @@ const firebaseConfig = {
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -19,55 +26,56 @@ const storage = getStorage(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const messaging = getMessaging(app);
-export const requestPermission = () => {
-  console.log("Requesting User Permission......");
-  Notification.requestPermission().then(permission => {
-    if (permission === "granted") {
-      console.log("Notification User Permission Granted.");
-      return getToken(messaging, {
-        vapidKey: "BGFVb-1T_Bfq9OQ9BCY63EH42190LrHhf5_tp4OXh7k0QqgMwrOovOQ6Fd9leeBJpomk1_rmq8z46xHmoLfxolo"
-      }).then(currentToken => {
-        if (currentToken) {
-          authService.pushTokenFCM({ fcm: currentToken });
-        }
-        else {
-          console.log("Failed to generate the app registration token.");
-        }
-      }).catch(err => {
-        console.error(err)
-      })
-    }
-    else {
-      console.log("User Permission Denied.")
-    }
+
+navigator.serviceWorker
+  .register("/firebase-messaging-sw.js")
+  .then((registration) => {
+    // console.log("Service Worker registered successfully:", registration);
+    messaging.onBackgroundMessage = (payload) => {
+      console.log("Received background message: ", payload);
+    };
   })
-}
-export const removeToken = async () => {
+  .catch((error) => {
+    console.error("Failed to register Service Worker:", error);
+  });
+
+// Request FCM token
+export const requestForToken = async (email) => {
+  console.log("Requesting User Permission......");
   try {
-    const currentToken = await getToken(messaging);
-    if (currentToken) {
-      await deleteToken(messaging);
-      console.log("Token removed successfully.");
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      // console.log("Notification User Permission Granted.");
+      const currentToken = await getToken(messaging, {
+        vapidKey:
+          "BK0M4oRUvsaTJKO16tJ0szj4ngRHgOTqs4gXo8u2hzvle5lzzIAR5uxnNOfZakMGPFV47jNpH3oUb8bXXoDR9PE",
+      });
+      if (currentToken) {
+        await pushFcmToken({
+          email: email,
+          fcmToken: currentToken,
+        });
+      } else {
+        console.log("Failed to generate the app registration token.");
+      }
     } else {
-      console.log("No token to delete.");
+      console.log("User Permission Denied.");
     }
-  } catch (error) {
-    console.error("Error deleting token:", error);
+  } catch (err) {
+    console.error("Error requesting FCM token:", err);
   }
-}
-// export const onMessageListener = () => {
-//   return new Promise(resolve => {
-//     onMessage(messaging, payload => {
-//       resolve(payload)
-//     })
-//   })
-// }
-export const onMessageListener = (payload) => {
-  onMessage(messaging, callback); // Gọi callback khi có thông báo
-}
+};
+
+export const onMessageListener = (callback) => {
+  onMessage(messaging, callback);
+};
 export {
   storage,
   auth,
   provider,
-  signInWithPopup
-}
+  signInWithPopup,
+  getToken,
+  onMessage,
+  getMessaging,
+  messaging,
+};

@@ -1,38 +1,71 @@
-const Application = require('../models/Application');
+const Application = require("../models/Application");
 
+// Create new application
 const createApplication = async (data) => {
+  try {
     const application = new Application(data);
     return await application.save();
+  } catch (error) {
+    throw new Error("Failed to create application");
   }
+};
 
-const getApplicationById = async (applicationId) => {
-    return await Application.findById(applicationId)
-      .populate('candidate')
-      .populate('job')
-      .populate('CV');
-  }
+// Get all applications with pagination & filter
+const getAllApplications = async (filters = {}, options = {}) => {
+  const { page = 1, limit = 10, sortBy = "applied_date", order = "desc" } = options;
+  const sort = { [sortBy]: order === "desc" ? -1 : 1 };
+  
+  const query = {};
+  if (filters.status) query.status = filters.status;
+  if (filters.candidate) query.candidate = filters.candidate;
+  if (filters.job) query.job = filters.job;
+  
+  const skip = (page - 1) * limit;
 
-const getAllApplications = async (query = {}) => {
-    return await Application.find(query)
-      .populate('candidate')
-      .populate('job')
-      .populate('CV');
-  }
+  const applications = await Application.find(query)
+    .sort(sort)
+    .skip(skip)
+    .limit(parseInt(limit))
+    .populate("candidate", "profile email")
+    .populate("job", "title company");
 
-const updateApplication = async (applicationId, data) => {
-    return await Application.findByIdAndUpdate(applicationId, data, {
-      new: true,
-    });
-  }
+  const total = await Application.countDocuments(query);
+  return { applications, total, page, limit };
+};
 
-const deleteApplication = async (applicationId) => {
-    return await Application.findByIdAndDelete(applicationId);
+// Get application by ID
+const getApplicationById = async (id) => {
+  try {
+    return await Application.findById(id)
+      .populate("candidate", "name email")
+      .populate("job", "title company");
+  } catch (error) {
+    throw new Error("Application not found");
   }
+};
+
+// Update application
+const updateApplication = async (id, updateData) => {
+  try {
+    return await Application.findByIdAndUpdate(id, updateData, { new: true });
+  } catch (error) {
+    throw new Error("Failed to update application");
+  }
+};
+
+// Delete application
+const deleteApplication = async (id) => {
+  try {
+    return await Application.findByIdAndDelete(id);
+  } catch (error) {
+    throw new Error("Failed to delete application");
+  }
+};
 
 module.exports = {
-    createApplication,
-    updateApplication,
-    deleteApplication,
-    getAllApplications,
-    getAllApplications
+  createApplication,
+  getAllApplications,
+  getApplicationById,
+  updateApplication,
+  deleteApplication,
 };

@@ -93,17 +93,21 @@ export { default as VNFlag } from './icons/VNFlag.webp'
 // Logo
 export { default as logo } from './logo/logo.svg'
 export { default as cpLogo } from './logo/cpLogo.svg' 
+export { default as companyLogoDefault } from './logo/companyLogoDefault.png'
 
 export { default as avatar } from './avatar/avatar.svg' 
 
 export { default as bgAuth } from './background/bgAuth.png'
 export { default as bgLogin } from './background/bgLogin.svg'
 export { default as bgEmptyService } from './background/emptyService.svg'
+export { default as company } from './background/company.svg'
 export { default as bgSignupHr } from './background/bgSignupHr.svg'
 export { default as emptyChat } from './background/emptyChat.png'
+export { default as empty } from './background/empty.svg'
 export { default as package_detail_banner } from './background/detail_package_banner.png'
 export { default as lineBanner } from './background/line_banner.svg'
 export { default as bgGrid } from './background/bg_grid_auth.svg'
 export { default as Employer } from './background/bussiness.webp'
+export { default as mascot_empty } from './background/mascot_empty.webp'
 export { default as Candidate } from './background/student.webp'
 

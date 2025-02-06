@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from "axios";
 
-const KEY_USER = 'user';
-const KEY_TOKEN = 'accessToken';
-const KEY_SERVICE = 'service';
+const KEY_USER = "user";
+const KEY_TOKEN = "accessToken";
+const KEY_SERVICE = "service";
 class Services {
   constructor() {
     this.axios = axios;
@@ -12,17 +12,14 @@ class Services {
     this.axios.interceptors.response.use(
       (response) => response,
       (error) => {
-        console.log("error: ", error);
-        
-        // if (error.response.status === 401) {
-        //   this.clearUserInfoStorage();
-        //   localStorage.removeItem(KEY_TOKEN);
-        //   localStorage.removeItem(KEY_SERVICE);
-        //   window.location.reload();
-        //   return;
-        // }
+        if (error.response.status === 401) {
+          this.clearUserInfoStorage();
+          localStorage.removeItem(KEY_TOKEN);
+          window.location.reload();
+          return;
+        }
         return Promise.reject(error);
-      },
+      }
     );
     this.get = this.axios.get;
     this.post = this.axios.post;
@@ -32,14 +29,16 @@ class Services {
     this.interceptors = this.axios.interceptors.request.use(
       function (config) {
         // Do something before request is sent
-        window.sessionStorage.getItem(KEY_TOKEN)
-          ? (config.headers['Authorization'] = `Bearer ${window.sessionStorage.getItem(KEY_TOKEN)}`)
+        window.localStorage.getItem(KEY_TOKEN)
+          ? (config.headers[
+              "Authorization"
+            ] = `Bearer ${window.localStorage.getItem(KEY_TOKEN)}`)
           : null;
         return config;
       },
       function (error) {
         return Promise.reject(error);
-      },
+      }
     );
   }
 
@@ -47,12 +46,12 @@ class Services {
     this.interceptors = this.axios.interceptors.request.use(
       function (config) {
         // Do something before request is sent
-        config.headers['Authorization'] = `Bearer ${token}`;
+        config.headers["Authorization"] = `Bearer ${token}`;
         return config;
       },
       function (error) {
         return Promise.reject(error);
-      },
+      }
     );
   }
 
@@ -65,7 +64,7 @@ class Services {
 
   //saveToLocalStorage
   saveUserInfoLocalStorage(user) {
-    window.localStorage.setItem(KEY_USER, JSON.stringify(user))
+    window.localStorage.setItem(KEY_USER, JSON.stringify(user));
   }
 
   //saveToSession
@@ -73,14 +72,14 @@ class Services {
     window.sessionStorage.setItem(KEY_USER, JSON.stringify(user));
   }
   saveServiceStorage(service) {
-    window.sessionStorage.setItem(KEY_SERVICE, service)
+    window.sessionStorage.setItem(KEY_SERVICE, service);
   }
 
   //getToSession
   getUserInfoStorage() {
     const userStorage = JSON.parse(window.sessionStorage.getItem(KEY_USER));
 
-    if (userStorage === 'null') {
+    if (userStorage === "null") {
       return null;
     }
 
@@ -91,7 +90,7 @@ class Services {
   getUserInfoLocalStorage() {
     const userStorage = JSON.parse(window.localStorage.getItem(KEY_USER));
 
-    if (userStorage === 'null') {
+    if (userStorage === "null") {
       return null;
     }
 
@@ -100,7 +99,14 @@ class Services {
 
   getTokenSession() {
     const tokenStorage = window.sessionStorage.getItem(KEY_TOKEN);
-    if (tokenStorage === 'null') {
+    if (tokenStorage === "null") {
+      return null;
+    }
+    return tokenStorage;
+  }
+  getTokenStorage() {
+    const tokenStorage = window.localStorage.getItem(KEY_TOKEN);
+    if (tokenStorage === "null") {
       return null;
     }
     return tokenStorage;
@@ -108,7 +114,7 @@ class Services {
 
   getTokenSession() {
     const tokenStorage = window.sessionStorage.getItem(KEY_TOKEN);
-    if (tokenStorage === 'null') {
+    if (tokenStorage === "null") {
       return null;
     }
     return tokenStorage;
@@ -116,7 +122,7 @@ class Services {
 
   getServiceStorage() {
     const serviceStorage = window.sessionStorage.getItem(KEY_SERVICE);
-    if (serviceStorage === 'null') {
+    if (serviceStorage === "null") {
       return null;
     }
     return serviceStorage;
@@ -129,8 +135,11 @@ class Services {
   clearTokenSession() {
     window.sessionStorage.removeItem(KEY_TOKEN);
   }
+  clearTokenStorage() {
+    window.localStorage.removeItem(KEY_TOKEN);
+  }
   clearServiceStorage() {
-    window.sessionStorage.removeItem(KEY_SERVICE)
+    window.sessionStorage.removeItem(KEY_SERVICE);
   }
 
   removeInterceptors() {

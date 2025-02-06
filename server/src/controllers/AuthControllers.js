@@ -6,8 +6,7 @@ const JwtService = require("../services/JwtServices");
 
 const signUp = async (req, res, next) => {
   try {
-    const { email, password, confirmPassword } =
-      req.body;
+    const { email, password, confirmPassword } = req.body;
     const { isValid, errors } = helpers.validate(
       email,
       password,
@@ -53,9 +52,11 @@ const signIn = async (req, res, next) => {
   }
 };
 const signInWithGoogle = async (req, res) => {
-  const { token } = req.body;
+  const { token, role } = req.body;
+  console.log("body: ", req.body);
+
   try {
-    const result = await AuthServices.signInWithGoogle(token);
+    const result = await AuthServices.signInWithGoogle(token, role);
     const { refresh_token, ...newResult } = result;
 
     if (result.status === "success") {

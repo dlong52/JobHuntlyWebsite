@@ -1,15 +1,47 @@
 import React, { Fragment } from "react";
 import { Form, Formik } from "formik";
 import { Link } from "react-router-dom";
-import { Box, Button, Container } from "@mui/material";
-import { lineBanner, Location, Search } from "../../assets/images";
+import { Box, Button, Container, Pagination } from "@mui/material";
+import { lineBanner } from "../../assets/images";
 
-import { FormikField, InputField, SelectField } from "../../components/CustomFieldsFormik";
+import { FormikField, InputField } from "../../components/CustomFieldsFormik";
 import JobFilter from "./components/JobFilter";
 import JobListItem from "./components/JobListItem";
-
+import { useGetAllPosts } from "../../hooks/modules/post/useGetAllPosts";
+import useFilters from "../../hooks/useFilters";
+import { RouteBase } from "../../constants/routeUrl";
+import SelectProvinceField from "../../components/SelectField/SelectProvinceField";
+import { makeStyles } from "@mui/styles";
 const FindJobPage = () => {
-  const jobs = [null, null, null, null, null, null, null, null, null];
+  const useStyles = makeStyles((theme) => ({
+    Pagination: {
+      padding: 15,
+      display: "flex",
+      justifyContent: "center",
+      width: "fit-content",
+      "& ul": {
+        "& li": {
+          "& .MuiPaginationItem-root": {},
+          "& .Mui-selected": {
+            backgroundColor: "var(--primary)",
+            color: "#fff",
+            "&:hover": {
+              backgroundColor: "var(--primary-light)",
+            },
+          },
+        },
+      },
+    },
+  }));
+  const classes = useStyles();
+  const { filters, handleChangePage, setFilters } = useFilters({
+    page: 1,
+    limit: 10,
+    sort: "desc",
+  });
+  const { data } = useGetAllPosts(filters);
+  const jobData = data?.data?.data;
+
   return (
     <Fragment>
       <Box className="bg-banner bg-no-repeat bg-contain bg-right h-[500px] bg-neutrals-0 flex items-end">
@@ -31,29 +63,20 @@ const FindJobPage = () => {
             }}
           >
             {({ errors, touched }) => (
-              <Form className="flex bg-white rounded-sm shadow-md w-full p-4 gap-6">
+              <Form className="flex bg-white rounded-sm shadow-md w-full p-5 gap-6">
                 <FormikField
                   name="name"
                   component={InputField}
-                  placeholder="Enter your name"
-                  isFastField={false} 
+                  variant={"standard"}
+                  placeholder="Vị trí tuyển dụng, tên công ty"
                 />
-                <FormikField
-                  name="name"
-                  component={SelectField}
-                  options={[
-                    { value: '1', label: 'Option 1' },
-                    { value: '2', label: 'Option 2' },
-                    { value: '3', label: 'Option 3' },
-                  ]}
-                  placeholder="Enter your name"
-                  isFastField={false} 
-                />
+                <SelectProvinceField variant={"standard"} />
                 <Button
-                sx={{
-                  paddingX: 5,
-                }}
-                className="!bg-primary !text-white !text-nowrap font-semibold px-8 rounded-sm hover:bg-blue-600 transition-all"
+                  sx={{
+                    paddingX: 5,
+                  }}
+                  size="large"
+                  className="!bg-primary !text-white !text-nowrap font-semibold px-8 rounded-sm hover:bg-blue-600 transition-all"
                 >
                   Tìm kiếm
                 </Button>
@@ -65,14 +88,29 @@ const FindJobPage = () => {
       <Box className=" bg-white">
         <Container className="grid grid-cols-12 py-6 gap-5">
           <Box className="col-span-3">
-            <JobFilter />
+            <JobFilter setFilters={setFilters} />
           </Box>
           <Box className="col-span-9 flex flex-col gap-6">
-            {jobs?.map((job, index) => (
-              <Link to={"/job/2"}>
-                <JobListItem />
-              </Link>
+            {jobData?.map((job) => (
+              <JobListItem
+                key={job._id}
+                id={job._id}
+                title={job?.title}
+                salary={job?.salary}
+                company={job?.company}
+                logo={job?.company?.logo}
+                posted_by={job?.posted_by}
+              />
             ))}
+            <Box className="w-full flex justify-end py-4">
+              <Pagination
+                className={classes.Pagination}
+                color="secondary"
+                count={data?.data?.pagination.totalPages}
+                onChange={handleChangePage}
+                page={filters.page}
+              />
+            </Box>
           </Box>
         </Container>
       </Box>

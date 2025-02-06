@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const cvSchema = new mongoose.Schema({
-  candidate_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   profile: {
     name: { type: String, required: true },
     email: { type: String, required: true },

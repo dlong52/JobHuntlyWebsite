@@ -4,8 +4,11 @@ import { CommonAvatar, CommonIcon, CommonPopover } from "../../../ui";
 import MenuAccount from "./components/MenuAccount";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../../constants/routeUrl";
+import { useSelector } from "react-redux";
 
 const HeaderHr = () => {
+  const user = useSelector((state) => state.user);
+  
   return (
     <Box className="h-header-hr w-content-hr fixed top-0 right-0 z-50 flex items-center bg-white">
       <Container className="h-5 flex items-center justify-between">
@@ -14,7 +17,7 @@ const HeaderHr = () => {
           sx={{ fontWeight: 600 }}
           variant="h5"
         >
-          Hello, Đức Long👋
+          Hello, {user?.username}👋
         </Typography>
         <Box className="flex items-center gap-3">
           <Link to={RouteBase.HRChat} className="size-9 flex items-center justify-center rounded-md bg-primary-light text-primary">
@@ -27,7 +30,7 @@ const HeaderHr = () => {
             <CommonIcon.NotificationsTwoTone />
           </Box>
           <CommonPopover
-            body={<MenuAccount />}
+            body={<MenuAccount user={user} />}
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             transformOrigin={{ vertical: "top", horizontal: "right" }}
             zIndex={1300}

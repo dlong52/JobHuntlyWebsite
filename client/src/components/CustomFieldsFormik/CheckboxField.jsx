@@ -1,49 +1,57 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import React from "react";
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
 
-export default function IndeterminateCheckbox() {
-  const [checked, setChecked] = React.useState([true, false]);
-
-  const handleChange1 = (event) => {
-    setChecked([event.target.checked, event.target.checked]);
-  };
-
-  const handleChange2 = (event) => {
-    setChecked([event.target.checked, checked[1]]);
-  };
-
-  const handleChange3 = (event) => {
-    setChecked([checked[0], event.target.checked]);
-  };
-
-  const children = (
-    <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-      <FormControlLabel
-        label="Child 1"
-        control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-      />
-      <FormControlLabel
-        label="Child 2"
-        control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-      />
-    </Box>
-  );
+const CheckboxField = ({
+  field,
+  form,
+  label,
+  labelTop,
+  disabled = false,
+  classNameContainer = "",
+  classNameLabel = "",
+  required = false,
+  ...props
+}) => {
+  const { name, value, onChange, onBlur } = field;
+  const { touched, errors } = form;
+  const showError = Boolean(touched[name] && errors[name]);
 
   return (
-    <div>
+    <FormControl
+      className={`flex flex-col gap-1 ${classNameContainer}`}
+      fullWidth
+      error={showError}
+    >
+      {labelTop && (
+        <label
+          className={`flex items-center ${classNameLabel}`}
+          htmlFor={name}
+        >
+          {labelTop}
+          {required && (
+            <span style={{ color: "red", marginLeft: 4 }}>*</span>
+          )}
+        </label>
+      )}
       <FormControlLabel
-        label="Parent"
         control={
           <Checkbox
-            checked={checked[0] && checked[1]}
-            indeterminate={checked[0] !== checked[1]}
-            onChange={handleChange1}
+            id={name}
+            disabled={disabled}
+            checked={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            {...props}
           />
         }
+        label={label}
       />
-      {children}
-    </div>
+      {showError && <FormHelperText>{errors[name]}</FormHelperText>}
+    </FormControl>
   );
-}
+};
+
+export default CheckboxField;

@@ -3,11 +3,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Slide } from "@mui/material";
+import { Box, IconButton, Slide } from "@mui/material";
+import { CommonIcon } from "../../ui";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
+// const Transition = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="down" ref={ref} {...props} />;
+// });
 const DialogMUI = ({
   open,
   toggle,
@@ -30,18 +31,36 @@ const DialogMUI = ({
     <Dialog
       disableScrollLock={disableScrollLock}
       open={open}
-      TransitionComponent={Transition}
+      // TransitionComponent={Transition}
       keepMounted
       onClose={toggle}
       className="p-0"
       aria-describedby="alert-dialog-slide-description"
       sx={{ "& .MuiDialog-paper": { width: "auto", maxWidth: "none" } }} // Set width to auto
     >
+      {title && (
+        <Box className="shadow">
+          <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+            {title}
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={toggle}
+            sx={(theme) => ({
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CommonIcon.Close />
+          </IconButton>
+        </Box>
+      )}
       <DialogContent
         sx={!isPadding ? { padding: 0 } : {}}
         className={className}
       >
-        {title && <DialogTitle>{title}</DialogTitle>}
         {renderBody()}
       </DialogContent>
     </Dialog>

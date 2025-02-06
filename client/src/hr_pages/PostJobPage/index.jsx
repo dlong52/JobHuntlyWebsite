@@ -1,381 +1,140 @@
-import React from "react";
-import { Button, CommonIcon, CommonTable } from "../../ui";
-import ChipMui from "../../ui/Chip";
-import { Box, Breadcrumbs, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Button, CommonIcon } from "../../ui";
+import { Box, Breadcrumbs, IconButton, Typography } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import useToggleDialog from "../../hooks/useToggleDialog";
 import DialogMUI from "../../components/Dialogs";
 import CreateEditPost from "./components/CreateEditPost";
-import useGetAllPosts from "../../hooks/modules/post/useGetAllPosts";
-import useGetAllCategories from "../../hooks/modules/category/useGetAllCategories";
+import CustomTable from "../../ui/Table";
+import useFilters from "../../hooks/useFilters";
+import { useGetAllPosts } from "../../hooks/modules/post/useGetAllPosts";
+import { useDeletePost } from "../../hooks/modules/post/useDeletePost";
+import { useNotifications } from "../../utils/notifications";
+import ConfirmDelete from "./components/ConfirmDelete";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import helpers from "../../utils/helpers";
 
 const PostJobPage = () => {
+  const user = useSelector((state) => state.user);
+  const [idJob, setIdJob] = useState(null);
+  const [idDelete, setIdDelete] = useState(null);
   const { open, toggle, shouldRender } = useToggleDialog();
+  const {
+    open: openDelete,
+    shouldRender: shouldRenderDelete,
+    toggle: toggleDelete,
+  } = useToggleDialog();
+  const navigate = useNavigate();
+  const { showSuccess, showError } = useNotifications();
+  const { isLoading, mutateAsync: deletePost } = useDeletePost();
+  const {
+    filters,
+    handleRequestSort,
+    handleSearch,
+    handleSelect,
+    handleSelectAll,
+    handleChangePage,
+    rowsSelected,
+    setFilters,
+  } = useFilters({
+    page: 1,
+    limit: 10,
+    sort: "desc",
+    posted_by: user?.user_id,
+  });
+  const { data, refetch, isLoading: loadingPost } = useGetAllPosts(filters);
+  const handleSetId = (id) => {
+    setIdJob(id);
+    toggle();
+  };
+  const handleDelete = async () => {
+    try {
+      if (idDelete) {
+        await deletePost(idDelete);
+        showSuccess("Đã xóa bài đăng thành công!");
+        toggleDelete();
+        refetch();
+        return;
+      }
+      showError("Đã sảy ra lỗi vui lòng thử lại!");
+    } catch (error) {
+      showError("Error deleting post: " + error);
+    }
+  };
+
   const columns = [
-    { id: "position", label: "Vị trí", numeric: false, sortable: true },
-    { id: "status", label: "Trạng thái", numeric: false, sortable: true },
-    { id: "postDate", label: "Ngày đăng", numeric: false, sortable: true },
-    { id: "dueDate", label: "Ngày hết hạn", numeric: false, sortable: true },
-    { id: "jobType", label: "Loại công việc", numeric: false, sortable: true },
-    { id: "applicants", label: "Số ứng viên", numeric: false, sortable: true },
-    { id: "action", label: "Hành động", numeric: true, sortable: false },
-  ];
-
-  const rows = [
+    { field: "title", headerName: "Tiêu đề" },
+    { field: "experience", headerName: "Kinh nghiệm" },
+    { field: "status", headerName: "Trạng thái" },
     {
-      id: 1,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
+      field: "salary",
+      headerName: "Lương",
+      renderCell: (value) =>
+        `${helpers.numberFormat(value.min)} - ${helpers.numberFormat(
+          value.max
+        )}`,
     },
     {
-      id: 2,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
+      field: "location",
+      headerName: "Địa chỉ",
+      renderCell: (value) => `${value.district.name}, ${value.province.name}`,
     },
     {
-      id: 3,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
+      field: "end_date",
+      headerName: "Ngày hết hạn",
+      renderCell: (value) => moment(value).format("DD/MM/YYYY"),
     },
     {
-      id: 4,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
-    },
-    {
-      id: 5,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
-    },
-    {
-      id: 6,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
-    },
-    {
-      id: 7,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
-    },
-    {
-      id: 8,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
-    },
-    {
-      id: 9,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "05/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
-    },
-    {
-      id: 10,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
-    },
-    {
-      id: 11,
-      position: "FE developer",
-      status: (
-        <ChipMui label={"Đang tuyển"} variant={"outlined"} color={"warning"} />
-      ),
-      postDate: "10/06/2024",
-      dueDate: "10/10/2024",
-      jobType: (
-        <ChipMui label={"Toàn thời gian"} variant={"outlined"} color={"info"} />
-      ),
-      applicants: 12,
-      action: (
-        <Box>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DriveFileRenameOutlineTwoTone />
-          </Button>
-          <Button
-            className="!rounded-full !aspect-square"
-            sx={{ height: "fit-content" }}
-            size="small"
-          >
-            <CommonIcon.DeleteTwoTone color="error" />
-          </Button>
-        </Box>
-      ),
+      field: "_id",
+      headerName: "",
+      renderCell: (value) => {
+        return (
+          <Box className="flex gap-2 items-center">
+            <IconButton
+              onClick={() => {
+                navigate(`${RouteBase.HRJobs}/${value}`);
+              }}
+            >
+              <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                handleSetId(value);
+              }}
+            >
+              <CommonIcon.DriveFileRenameOutline className="text-primary-dark" />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                toggleDelete(), setIdDelete(value);
+              }}
+            >
+              <CommonIcon.DeleteSweep className="text-red-700" />
+            </IconButton>
+          </Box>
+        );
+      },
     },
   ];
-  const handleDelete = (selectedIds) => {
-    console.log("Delete rows with IDs:", selectedIds);
-  };
-
-  const handleRowClick = (event, row) => {
-    console.log("Row clicked:", row);
-  };
-  // const { posts, error, loading } = useGetAllPosts();
-  const { categories, error, loading } = useGetAllCategories();
-  console.log(categories);
-
+  const toolbarActions = [
+    {
+      label: <CommonIcon.Add />,
+      className: "!bg-primary !shadow-none",
+      onClick: toggle,
+    },
+  ];
+  useEffect(() => {
+    if (!open) {
+      setIdJob(null);
+    }
+  }, [open]);
+  useEffect(() => {
+    if (!openDelete) {
+      setIdDelete(null);
+    }
+  }, [openDelete]);
   return (
     <Box className="flex flex-col gap-y-5">
       <div className="flex justify-between p-5 bg-white rounded-md">
@@ -410,37 +169,53 @@ const PostJobPage = () => {
           </Typography>
         </Breadcrumbs>
       </div>
-      <Box className="px-2 bg-white rounded-md">
-        <CommonTable
-          showCheckbox={false}
-          toolbarRight={
-            <Button
-              onClick={toggle}
-              className=" !text-primary"
-              sx={{ backgroundColor: "var(--primary-light)" }}
-            >
-              <CommonIcon.Add />
-            </Button>
-          }
+      <Box className="bg-white rounded-md">
+        <CustomTable
           columns={columns}
-          data={rows}
-          title="Danh sách việc làm"
-          onDelete={handleDelete}
-          onRowClick={handleRowClick}
+          labelRowsPerPage={"Số việc làm trên trang"}
+          rows={data?.data?.data || []}
+          total={data?.data?.pagination.totalPages}
+          page={filters.page}
+          rowsPerPage={filters.limit || 20}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={(newRowsPerPage) => {
+            setFilters((prevFilters) => ({
+              ...prevFilters,
+              rowsPerPage: newRowsPerPage,
+            }));
+          }}
+          loading={loadingPost}
+          toolbarTitle="Danh sách tin tuyển dụng"
+          toolbarActions={toolbarActions}
+          filters={filters}
+          handleRequestSort={handleRequestSort}
+          handleSearch={handleSearch}
+          handleSelect={handleSelect}
+          handleSelectAll={handleSelectAll}
+          rowsSelected={rowsSelected}
         />
       </Box>
       {shouldRender && (
         <DialogMUI
           isPadding={false}
+          title={idJob ? "Cập nhật bài đăng" : "Đăng tin tuyển dụng"}
           disableScrollLock={true}
           className="w-fit"
           open={open}
           toggle={toggle}
+          body={<CreateEditPost id={idJob} toggle={toggle} refetch={refetch} />}
+        />
+      )}
+      {shouldRenderDelete && (
+        <DialogMUI
+          className="w-fit"
+          open={openDelete}
+          toggle={toggleDelete}
           body={
-            <CreateEditPost
-              toggle={() => {
-                toggle();
-              }}
+            <ConfirmDelete
+              onDelete={handleDelete}
+              onClose={toggleDelete}
+              isLoading={isLoading}
             />
           }
         />

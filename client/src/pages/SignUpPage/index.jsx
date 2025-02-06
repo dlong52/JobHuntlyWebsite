@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Box, Divider, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
@@ -8,19 +8,48 @@ import { Button } from "@/ui";
 import FormikField from "@/components/CustomFieldsFormik/FormikField";
 import InputField from "@/components/CustomFieldsFormik/InputField";
 
-import {signUp } from "@/services/AuthServices";
+import { signUp } from "@/services/AuthServices";
 import { useNotifications } from "@/utils/notifications";
 import * as Yup from "yup";
 import { RouteBase } from "../../constants/routeUrl";
 import CommonIcon from "../../ui/CommonIcon";
 import { bgLogin } from "../../assets/images";
-import { useAuthentication } from "../../providers/AuthenticationProvider";
-
+import { ROLE } from "../../constants/enum";
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../../../firebaseConfig";
+import { signInWithGoogle } from "../../services/AuthServices";
+import useCheckRoleNavigate from "../../hooks/useCheckRoleNavigate";
+import * as UserServices from "@/services/UserServices";
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/redux/userSlice";
 const SignUpPage = () => {
   const { showSuccess, showError } = useNotifications();
-  const {signInGoogle} = useAuthentication()
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const { checkRoleNavigate } = useCheckRoleNavigate();
+  const signInGoogle = useCallback(async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const token = await user.getIdToken();
+      const res = await signInWithGoogle(token, "google", ROLE.CANDIDATE);
+      if (res?.status === "success") {
+        showSuccess(res?.message);
+        checkRoleNavigate(res?.data.role);
+        if (res?.data.access_token) {
+          handleGetUserDetails(res?.data.access_token);
+        }
+        return;
+      }
+      showError(res.message);
+    } catch (error) {
+      console.error("Error during Google login: ", error);
+    }
+  }, []);
+  const handleGetUserDetails = async (token) => {
+      const res = await UserServices.getDetailUser(token);
+      dispatch(updateUser({ ...res?.data, accessToken: token }));
+    };
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Họ tên là bắt buộc"),
     email: Yup.string()
@@ -39,7 +68,7 @@ const SignUpPage = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "candidate",
+    role: ROLE.CANDIDATE,
   };
 
   const handleSubmit = async (values) => {
@@ -144,11 +173,7 @@ const SignUpPage = () => {
         </Box>
       </Box>
       <Box className="col-span-6 h-full flex justify-center items-center">
-        <img
-          className="h-3/4"
-          src={bgLogin}
-          alt=""
-        />
+        <img className="h-3/4" src={bgLogin} alt="" />
       </Box>
     </Box>
   );

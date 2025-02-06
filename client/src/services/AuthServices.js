@@ -24,7 +24,6 @@ const signInWithGoogle = async (token, account_type = "google", role = "candidat
         );
         return res.data;
     } catch (error) {
-        console.log({error});
         return error.response.data
     }
 };
@@ -32,9 +31,7 @@ const signUp = async (data) => {
     try {
         // const userCredential = await createUserWithEmailAndPassword(auth, data?.email, data?.password);
         // const user = userCredential.user;
-        // await sendEmailVerification(user);
-        console.log({data});
-        
+        // await sendEmailVerification(user);        
         const res = await httpServices.post(`${prefixAuthApi}/sign-up`, data);
         return res.data;
     } catch (error) {

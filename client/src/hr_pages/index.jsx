@@ -1,5 +1,6 @@
 export {default as OverViewPage} from './OverViewPage'
 export {default as PostJobPage} from './PostJobPage'
+export {default as JobDetailPage} from './JobDetailPage'
 export {default as ProfileHrPage} from './ProfileHrPage'
 export {default as ChatPage} from './ChatPage'
 export {default as PackagePage} from './PackagePage'

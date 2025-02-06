@@ -1,22 +1,27 @@
+import { apiURL } from "../constants/api";
 import httpServices from "./httpServices";
-const prefixAuthApi = `${import.meta.env.VITE_API}/job`;
 
-const getAllPosts = async () => {
-  try {
-    const res = await httpServices.get(prefixAuthApi);
-    return res.data;
-  } catch (error) {
-    return error.response.data;
-  }
+const getAllPosts = async (params) => {
+  return httpServices.get(apiURL.POST, { params: params.queryKey[1] });
+};
+const getPost = async (params) => {
+  return httpServices.get(`${apiURL.POST}/${params.queryKey[1]}`);
+};
+const createPost = (payload) => {
+  return httpServices.post(apiURL.POST, payload);
+};
+const updatePost = (payload) => {
+  const { id, ...data } = payload;
+  return httpServices.put(`${apiURL.POST}/${id}`, data);
+};
+const deleteJob = (id) => {
+  return httpServices.delete(`${apiURL.POST}/${id}`);
 };
 
-const createJob = async () => {
-  try {
-    const res = await httpServices.post(prefixAuthApi);
-    return res.data;
-  } catch (error) {
-    return error.response.data;
-  }
+export const postService = {
+  getAllPosts,
+  createPost,
+  getPost,
+  deleteJob,
+  updatePost,
 };
-
-export { getAllPosts, createJob };

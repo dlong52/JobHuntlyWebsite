@@ -8,7 +8,12 @@ const subscriptionSchema = new mongoose.Schema({
   job_post_remaining: { type: Number, required: true },
   status: { type: String, enum: ['active', 'expired'], default: 'active' },
   created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now }
+  updated_at: { type: Date, default: Date.now },
+});
+
+subscriptionSchema.pre('save', function (next) {
+  this.updated_at = Date.now();
+  next();
 });
 
 module.exports = mongoose.model('Subscription', subscriptionSchema);

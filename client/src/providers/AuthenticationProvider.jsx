@@ -9,8 +9,13 @@ import React, {
 } from "react";
 
 import HttpService from "../services/httpServices";
-import {signInWithGoogle} from "../services/AuthServices"
-import { auth, provider, signInWithPopup } from "../../firebaseConfig";
+import { signInWithGoogle } from "../services/AuthServices";
+import {
+  auth,
+  provider,
+  requestForToken,
+  signInWithPopup,
+} from "../../firebaseConfig";
 import { SIGN_IN } from "../constants/api";
 import { useNotifications } from "../utils/notifications";
 import helpers from "../utils/helpers";
@@ -39,7 +44,7 @@ const AuthProvider = ({ children }) => {
 
   const [isLogged, setIsLogged] = useState(tokenLocalStorage ? true : false);
   const [isLoggingOut, setLoggingOut] = useState(false);
-  const [isLogging, setIsLogging]= useState(false)
+  const [isLogging, setIsLogging] = useState(false);
   const [serviceSelected, setServiceSelected] = useState(
     servicesLocalStorage ? servicesLocalStorage : ""
   );
@@ -63,22 +68,24 @@ const AuthProvider = ({ children }) => {
 
   const signIn = useCallback(async ({ email, password }) => {
     try {
-      setIsLogging(true)
+      setIsLogging(true);
       await helpers.sleepTime(1500);
+
       const res = await HttpService.post(SIGN_IN, { email, password });
+      requestForToken(email);
       const { access_token } = res.data.data;
 
-      HttpService.saveTokenSession(access_token);
+      HttpService.saveTokenStorage(access_token);
       HttpService.attachTokenToHeader(access_token);
 
       showSuccess("Đăng nhập thành công");
       setToken(access_token);
       setIsLogged(true);
-      setIsLogging(false)
+      setIsLogging(false);
       return res.data;
     } catch (error) {
-      setIsLogging(false)
-      return error.response.data
+      setIsLogging(false);
+      return error.response.data;
     }
   }, []);
 
@@ -87,8 +94,8 @@ const AuthProvider = ({ children }) => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       const token = await user.getIdToken();
-      console.log({token});
-      
+      console.log({ token });
+
       const res = await signInWithGoogle(token, role);
 
       if (res?.status === "success") {
@@ -102,12 +109,16 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const logout = useCallback(() => {
+  const logout = useCallback((email) => {
     return new Promise(async (resolve, reject) => {
       try {
         setLoggingOut(true);
+        // const res = await pushFcmToken({
+        //   email: email,
+        //   fcmToken: currentToken,
+        // });
         HttpService.clearUserInfoStorage();
-        HttpService.clearTokenSession();
+        HttpService.clearTokenStorage();
         HttpService.clearServiceStorage();
         sessionStorage.removeItem("path");
         window.location.reload();
