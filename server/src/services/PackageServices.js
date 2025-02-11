@@ -12,18 +12,25 @@ const createPackage = async (packageData) => {
 
 // Get all packages with optional filters
 const getAllPackages = async (filters = {}, options = {}) => {
-  try {
-    const { page = 1, limit = 10, sortBy = 'created_at', order = 'desc' } = options;
-    const sort = { [sortBy]: order === 'desc' ? -1 : 1 };
-    const skip = (page - 1) * limit;
+  const { page = 1, limit = 10, sortBy = "created_at", order = "desc" } = options;
 
-    const packages = await Package.find(filters).sort(sort).skip(skip).limit(parseInt(limit));
-    const total = await Package.countDocuments(filters);
+  const sort = { [sortBy]: order === "desc" ? -1 : 1 };
+  const skip = (page - 1) * limit;
 
-    return { packages, total, page, limit };
-  } catch (error) {
-    throw new Error('Failed to fetch packages');
+  const query = {};
+  if (filters.active !== undefined) query.active = filters.active;
+  if (filters.is_featured !== undefined) query.is_featured = filters.is_featured;
+  if (filters.min_price && filters.max_price) {
+    query.price = { $gte: filters.min_price, $lte: filters.max_price };
   }
+  if (filters.name) {
+    query.name = { $regex: filters.name, $options: "i" };
+  }
+
+  const packages = await Package.find(query).sort(sort).skip(skip).limit(parseInt(limit));
+  const total = await Package.countDocuments(query);
+
+  return { packages, total, page, limit };
 };
 
 // Get a package by ID

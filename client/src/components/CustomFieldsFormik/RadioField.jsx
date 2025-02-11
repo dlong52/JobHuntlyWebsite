@@ -54,9 +54,9 @@ const RadioField = ({
               <Radio
                 disabled={disabled}
                 sx={{
-                  color: activeColor, // Default color
+                  color: activeColor, 
                   "&.Mui-checked": {
-                    color: activeColor, // Active (checked) color
+                    color: activeColor, 
                   },
                 }}
               />

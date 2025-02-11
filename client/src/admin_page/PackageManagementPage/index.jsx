@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useFilters from "../../hooks/useFilters";
 import { useGetAllPackages } from "../../hooks/modules/package/useGetAllPackages";
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import CustomTable from "../../ui/Table";
 import { CommonIcon } from "../../ui";
 import { useToggleDialog } from "../../hooks";
@@ -10,15 +10,18 @@ import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import CreateEditPackage from "./components/CreateEditPackage";
 import DialogMUI from "../../components/Dialogs";
+import helpers from "../../utils/helpers";
+import ChipMui from "../../ui/Chip";
 
 const PackageManagementPage = () => {
+  const [idPackage, setIdPackage] = useState();
   const { open, shouldRender, toggle } = useToggleDialog();
   const { filters, handleChangePage } = useFilters({
     page: 1,
     limit: 10,
     sort: "desc",
   });
-  const { data, isLoading, refetch } = useGetAllPackages();
+  const { data, isLoading, refetch } = useGetAllPackages(filters);
   const toolbarActions = [
     {
       label: <CommonIcon.Add />,
@@ -26,42 +29,67 @@ const PackageManagementPage = () => {
       onClick: toggle,
     },
   ];
+  const handleSetId = (id) => {
+    setIdPackage(id);
+    toggle();
+  };
   const columns = [
     {
-      field: "profile",
-      headerName: "Tài khoản",
+      field: "name",
+      headerName: "Tên dịch vụ",
       renderCell: (value) => {
-        return <Typography>{value?.name}</Typography>;
+        return <Typography>{value}</Typography>;
       },
     },
-    { field: "email", headerName: "email" },
-    { field: "active", headerName: "Trạng thái" },
+    {
+      field: "price",
+      headerName: "Giá",
+      renderCell: (value) => {
+        return <Typography>{helpers.numberFormat(value)} đồng</Typography>;
+      },
+    },
+    {
+      field: "active",
+      headerName: "Trạng thái",
+      renderCell: (value) => {
+        return (
+          <ChipMui
+            color={value ? "success" : "error"}
+            label={value ? "Đang hoạt động" : "Không hoạt động"}
+            variant={"outlined"}
+          />
+        );
+      },
+    },
+    {
+      field: "job_post_limit",
+      headerName: "Giới hạn tin",
+      renderCell: (value) => {
+        return <Typography>{value} tin</Typography>;
+      },
+    },
+    {
+      field: "duration_in_days",
+      headerName: "Thời gian hiệu lực",
+      renderCell: (value) => {
+        return <Typography>{value} ngày</Typography>;
+      },
+    },
     {
       field: "_id",
       headerName: "",
       renderCell: (value) => {
         return (
           <Box className="flex gap-2 items-center">
-            <IconButton
-            // onClick={() => {
-            //   navigate(`${RouteBase.HRJobs}/${value}`);
-            // }}
-            >
+            <IconButton>
               <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
             </IconButton>
             <IconButton
-            // onClick={() => {
-            //   handleSetId(value);
-            // }}
+              onClick={() => {
+                handleSetId(value);
+              }}
             >
               <CommonIcon.DriveFileRenameOutline className="text-primary-dark" />
-            </IconButton>
-            <IconButton
-            // onClick={() => {
-            //   toggleDelete(), setIdDelete(value);
-            // }}
-            >
-              <CommonIcon.DeleteSweep className="text-red-700" />
             </IconButton>
           </Box>
         );
@@ -76,6 +104,11 @@ const PackageManagementPage = () => {
       Quản lí gói dịch vụ
     </Typography>,
   ];
+  useEffect(() => {
+    if (!open) {
+      setIdPackage(null);
+    }
+  }, [open]);
   return (
     <div>
       <BreadcrumbMui title={"Dịch vụ"} breadcrumbs={breadcrumbs} />
@@ -101,7 +134,13 @@ const PackageManagementPage = () => {
           className="w-fit"
           open={open}
           toggle={toggle}
-          body={<CreateEditPackage toggle={toggle} refetch={refetch} />}
+          body={
+            <CreateEditPackage
+              id={idPackage}
+              toggle={toggle}
+              refetch={refetch}
+            />
+          }
         />
       )}
     </div>

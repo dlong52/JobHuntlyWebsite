@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Logo } from "@/components";
@@ -8,10 +8,24 @@ import { RouteBase } from "../../../constants/routeUrl";
 import NotifyPopover from "./components/NotifyPopover";
 import AccountPopover from "./components/AccountPopover";
 import { ROLE } from "../../../constants/enum";
+import useFilters from "../../../hooks/useFilters";
+import { useGetAllNotifications } from "../../../hooks/modules/notification/useGetAllNotifications";
 
 const Header = () => {
   const user = useSelector((state) => state.user);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { filters } = useFilters({
+    page: 1,
+    limit: 5,
+    sort: "desc",
+  });
+  const { data, isLoading } = useGetAllNotifications(user?.user_id, filters);
+  const notifications = useMemo(() => {
+    if (data) {
+      return data?.data?.data;
+    }
+    return [];
+  }, [data]);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -65,13 +79,21 @@ const Header = () => {
             {user.role === ROLE.CANDIDATE && (
               <Box className="flex items-center gap-6">
                 <CommonPopover
-                  body={<NotifyPopover />}
+                  body={
+                    <NotifyPopover
+                      isLoading={isLoading}
+                      notifications={notifications}
+                    />
+                  }
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                   transformOrigin={{ vertical: "top", horizontal: "right" }}
                   zIndex={1300}
-                  onClick={() => console.log("Popover clicked!")}
                 >
-                  <Badge color="error" badgeContent={1000} max={99}>
+                  <Badge
+                    color="error"
+                    badgeContent={data?.data?.unreadCount}
+                    max={99}
+                  >
                     <Box className="rounded-full size-[40px] text-primary bg-[#2121d120] flex justify-center items-center cursor-pointer">
                       <CommonIcon.Notifications />
                     </Box>
@@ -91,7 +113,6 @@ const Header = () => {
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                   transformOrigin={{ vertical: "top", horizontal: "right" }}
                   zIndex={1300}
-                  onClick={() => console.log("Popover clicked!")}
                 >
                   <Box className="cursor-pointer" variant="contained">
                     <CommonAvatar />

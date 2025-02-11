@@ -83,7 +83,7 @@ const ProfileHrPage = () => {
             underline="hover"
             key="1"
             color="inherit"
-            to={RouteBase.Home}
+            to={RouteBase.Home} 
             className="text-primary"
           >
             <CommonIcon.Home fontSize="small" />

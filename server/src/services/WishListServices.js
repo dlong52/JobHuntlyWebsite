@@ -1,4 +1,4 @@
-const WishList = require('../models/WhistList');
+const WishList = require('../models/WishList');
 
 // Add job to wishlist
 const addJobToWishList = async (userId, jobId) => {

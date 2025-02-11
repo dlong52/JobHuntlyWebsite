@@ -109,5 +109,6 @@ export { default as lineBanner } from './background/line_banner.svg'
 export { default as bgGrid } from './background/bg_grid_auth.svg'
 export { default as Employer } from './background/bussiness.webp'
 export { default as mascot_empty } from './background/mascot_empty.webp'
+export { default as notification_empty } from './background/notification_empty.webp'
 export { default as Candidate } from './background/student.webp'
 

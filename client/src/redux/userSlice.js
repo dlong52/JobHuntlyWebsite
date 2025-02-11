@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user_id: "",
+  user_id: null,
   username: "",
   email: "",
   address: "",
@@ -9,6 +9,7 @@ const initialState = {
   avatar_url: "",
   access_token: "",
   role: "",
+  birthday: "",
   isLoading: false,
   company_name: "",
   company_id: "",
@@ -30,12 +31,13 @@ export const userSlide = createSlice({
       const { _id, profile, email, access_token, role, company } =
         action.payload;
       state.user_id = _id;
-      state.username = profile?.name || email;
+      state.username = profile?.name;
       state.email = email;
-      state.address = "";
+      state.address = profile?.address;
       state.avatar_url = profile?.avatar_url || "";
       state.phone_number = profile?.phone_number || "";
       state.access_token = access_token;
+      state.birthday = profile?.birthday || "";
       state.role = role.name || "";
       state.company_id = company?._id || "";
       state.company_name = company?.name || "";

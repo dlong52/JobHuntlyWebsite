@@ -2,6 +2,10 @@ const User = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
+
+const getUserById = async (id) => {
+  return await User.findById(id);
+};
 const updateUser = async (userId, data) => {
   try {
     const checkUser = await User.findOne({ _id: userId });
@@ -110,4 +114,5 @@ module.exports = {
   getAllUsers,
   getUserDetails,
   updateFCMToken,
+  getUserById,
 };

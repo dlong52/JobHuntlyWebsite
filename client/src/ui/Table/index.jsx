@@ -97,7 +97,7 @@ const CustomTable = ({
             <TableRow>
               {columns.map((column) => (
                 <TableCell
-                  className="text-nowrap"
+                  className="text-nowrap text-neutrals-100"
                   key={column.field}
                   align={column.align || "left"}
                 >
@@ -127,8 +127,8 @@ const CustomTable = ({
   return (
     <Paper sx={{boxShadow: "none"}}>
       {/* Toolbar */}
-      <Toolbar style={{ padding: "0px 16px" }}>
-        <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+      <Toolbar className="border-b" style={{ padding: "20px 16px" }}>
+        <Typography variant="h6" className="!text-neutrals-100" component="div" style={{ flexGrow: 1 }}>
           {toolbarTitle || "Table Title"}
         </Typography>
         {toolbarActions &&

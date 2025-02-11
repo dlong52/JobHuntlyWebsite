@@ -1,64 +1,40 @@
 import * as Yup from "yup";
+
 export const validationSchema = Yup.object().shape({
-  title: Yup.string().required("Tiêu đề công việc là bắt buộc"),
-  experience: Yup.string().required("Kinh nghiệm là bắt buộc"),
-  jobDescription: Yup.string().required("Mô tả công việc là bắt buộc"),
-  jobBenefits: Yup.string().required("Quyền lợi là bắt buộc"),
-  jobRequirements: Yup.string().required("Yêu cầu công việc là bắt buộc"),
-  workingTime: Yup.string().required("Thời gian làm việc là bắt buộc"),
-  minSalary: Yup.number()
-    .required("Lương tối thiểu là bắt buộc")
-    .typeError("Lương tối thiểu phải là số"),
-  maxSalary: Yup.number()
-    .required("Lương tối đa là bắt buộc")
-    .typeError("Lương tối đa phải là số")
-    .min(Yup.ref("minSalary"), "Lương tối đa phải lớn hơn lương tối thiểu"),
-  employmentType: Yup.string().required("Hình thức làm việc là bắt buộc"),
-  categories: Yup.array().required("Danh mục công việc là bắt buộc"),
-  province: Yup.string().required("Tỉnh/Thành phố là bắt buộc"),
-  district: Yup.string().required("Quận/Huyện là bắt buộc"),
-  ward: Yup.string().required("Phường/Xã là bắt buộc"),
-  detailAddress: Yup.string().required("Địa chỉ cụ thể là bắt buộc"),
+  name: Yup.string().required("Tên gói dịch vụ không được để trống"),
+  introduce: Yup.string().required(
+    "Giới thiệu gói dịch vụ không được để trống"
+  ),
+  description: Yup.string().required("Mô tả chi tiết không được để trống"),
+  price: Yup.number()
+    .typeError("Giá dịch vụ phải là số")
+    .required("Giá dịch vụ không được để trống")
+    .min(0, "Giá dịch vụ phải lớn hơn hoặc bằng 0"),
+  discount: Yup.number()
+    .typeError("Giảm giá phải là số")
+    .min(0, "Giảm giá không thể nhỏ hơn 0")
+    .max(100, "Giảm giá không thể vượt quá 100%"),
+  job_post_limit: Yup.number()
+    .typeError("Số lượng tin tuyển dụng phải là số")
+    .required("Số lượng tin tuyển dụng không được để trống")
+    .min(1, "Số lượng tin tối thiểu là 1"),
+  duration_in_days: Yup.number()
+    .typeError("Thời gian hiệu lực phải là số")
+    .required("Thời gian hiệu lực không được để trống")
+    .min(1, "Thời gian hiệu lực tối thiểu là 1 ngày"),
+  is_featured: Yup.boolean(),
+  active: Yup.boolean(),
 });
 
 // initialValues
 export const initialValues = {
-  title: "",
-  experience: "",
+  name: "",
+  introduce: "",
+  discount: undefined,
   description: "",
-  requirements: "",
-  job_benefit: "",
-  quantity: 1,
-  work_time: "",
-  level: "",
-  end_date: "",
-  minSalary: "",
-  maxSalary: "",
-  province: "",
-  district: "",
-  ward: "",
-  additional_info: "",
-  categories: "",
-  employment_type: "",
-  posted_by: "",
-};
-
-const payload = {
-  title: "",
-  experience: "",
-  description: "",
-  requirements: "",
-  job_benefit: "",
-  work_time: "",
-  level: "",
-  end_date: "",
-  minSalary: "",
-  maxSalary: "",
-  province: "",
-  district: "",
-  ward: "",
-  additional_info: "",
-  categories: "",
-  employment_type: "",
-  posted_by: "",
+  price: undefined,
+  job_post_limit: undefined,
+  duration_in_days: undefined,
+  is_featured: false,
+  active: false,
 };

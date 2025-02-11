@@ -1,9 +1,10 @@
-// config/vnpayConfig.js
-const dotenv = require("dotenv");
-dotenv.config();
-module.exports = {
-  VNP_URL: process.env.VNP_URL, // URL sandbox
-  VNP_HASH_SECRET: process.env.VNP_HASH_SECRET,
-  VNP_MERCHANT_ID: process.env.VNP_TMN_CODE,
-  VNP_RETURN_URL: process.env.VNP_URL,
+require("dotenv").config();
+
+const vnPayConfig = {
+  tmnCode: process.env.VNP_TMN_CODE,
+  hashSecret: process.env.VNP_HASH_SECRET,
+  url: process.env.VNP_URL,
+  returnUrl: process.env.VNP_RETURN_URL,
 };
+
+module.exports = vnPayConfig;

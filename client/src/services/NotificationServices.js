@@ -2,9 +2,9 @@ import { apiURL } from "../constants/api";
 import httpServices from "./httpServices";
 
 const getAllNotifications = async (user_id, params) => {
-  console.log({user_id});
-  
-  return httpServices.get(`${apiURL.NOTIFICATION}/${user_id}`, { params: params.queryKey[1] });
+  return httpServices.get(`${apiURL.NOTIFICATION}/${user_id}`, {
+    params: params.queryKey[1],
+  });
 };
 const getNotificationByUser = async (params) => {
   return httpServices.get(`${apiURL.NOTIFICATION}/${params.queryKey[1]}`);
@@ -29,5 +29,5 @@ export const NotificationService = {
   getNotificationByUser,
   deleteNotification,
   updateNotification,
-  sendToUser
+  sendToUser,
 };

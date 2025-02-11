@@ -14,7 +14,7 @@ const updateApplicant = (payload) => {
   const { id, ...data } = payload;
   return httpServices.put(`${apiURL.APPLICATION}/${id}`, data);
 };
-const deleteJob = (id) => {
+const deleteApplicant = (id) => {
   return httpServices.delete(`${apiURL.APPLICATION}/${id}`);
 };
 
@@ -22,6 +22,6 @@ export const ApplicantService = {
   getAllApplicants,
   createApplicant,
   getApplicant,
-  deleteJob,
+  deleteApplicant,
   updateApplicant,
 };

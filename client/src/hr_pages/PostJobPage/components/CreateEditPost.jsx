@@ -1,10 +1,12 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { Form, Formik } from "formik";
 import React, { useEffect, useMemo } from "react";
 import {
   AutocompleteField,
+  CheckboxField,
   CkEditerField,
   FormikField,
+  GenderField,
   InputField,
 } from "../../../components/CustomFieldsFormik";
 import { useAddress } from "../../../hooks";
@@ -19,13 +21,11 @@ import { useNotifications } from "../../../utils/notifications";
 import moment from "moment";
 import { useGetPost } from "../../../hooks/modules/post/useGetPost";
 import { CommonStyles } from "../../../ui";
-import { useEditPost } from "../../../hooks/modules/post/useEditPost";
 
 const CreateEditJobPost = ({ id, toggle, refetch }) => {
   const user = useSelector((state) => state.user);
   const { showSuccess, showError } = useNotifications();
   const { data, isLoading } = useGetPost(id, { enabled: !!id });
-  const { isLoading: isLoadingEdit, mutateAsync: updatePost } = useEditPost();
   const { provinces, districts, wards, fetchDistricts, fetchWards } =
     useAddress();
 
@@ -60,7 +60,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
     const payload = {
       ...(id && { id }),
       title: values.title,
-      experience: values.experience,
+      experience: values?.isYear ? values.experience * 12 : values.experience,
       description: values.description,
       requirements: values.requirements,
       job_benefit: values.job_benefit,
@@ -154,21 +154,22 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
       {checkEdit && !isLoading ? (
         <Formik
           initialValues={id ? initialValuesEdit : initialValues}
-          // validationSchema={validationSchema}
+          validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ values }) => {
+            console.log(values);
+
             useEffect(() => {
               if (values?.province?.value)
                 fetchDistricts(values?.province.value);
               if (values?.district?.value) fetchWards(values?.district.value);
             }, [values?.province?.value, values?.district?.value]);
-
             return (
               <Form className="flex flex-col w-[1000px] relative">
                 <div className="grid grid-cols-12 gap-4 p-5">
                   <FormikField
-                    classNameContainer="col-span-6"
+                    classNameContainer="col-span-12"
                     className="bg-[#f8fafc]"
                     required
                     classNameLabel="font-medium text-neutrals-100"
@@ -178,23 +179,33 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     placeholder="Nhập tiêu đề công việc"
                   />
                   {/* Experience */}
-                  <FormikField
-                    classNameContainer="col-span-6"
-                    className="bg-[#f8fafc]"
-                    required
-                    classNameLabel="font-medium text-neutrals-100"
-                    name="experience"
-                    component={InputField}
-                    labelTop="Kinh nghiệm"
-                    placeholder="Ví dụ: 2 năm kinh nghiệm"
-                  />
+                  <div className="col-span-8 flex items-center">
+                    <FormikField
+                      classNameContainer="col-span-6"
+                      className="bg-[#f8fafc]"
+                      classNameLabel="font-medium text-neutrals-100"
+                      name="experience"
+                      type="number"
+                      component={InputField}
+                      labelTop="Kinh nghiệm (không bắt buộc)"
+                      placeholder=""
+                    />
+                    <FormikField
+                      classNameContainer="col-span-6"
+                      className="bg-[#f8fafc]"
+                      classNameLabel="font-medium text-neutrals-100"
+                      name="isYear"
+                      component={CheckboxField}
+                      labelTop="Theo năm"
+                    />
+                  </div>
                   <FormikField
                     classNameContainer="col-span-12"
                     name="description"
-                    component={CkEditerField} // Sử dụng CKEditor làm component
+                    component={CkEditerField}
                     label="Mô tả công việc"
                     classNameLabel="font-medium text-neutrals-100"
-                    required={true}
+                    required
                   />
                   <FormikField
                     classNameContainer="col-span-12"
@@ -206,7 +217,6 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     label="Quyền lợi"
                     placeholder="Mô tả chi tiết quyền lợi"
                   />
-                  {/* requiredments */}
                   <FormikField
                     classNameContainer="col-span-6"
                     className="bg-[#f8fafc]"
@@ -266,7 +276,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     className={"bg-[#f8fafc]"}
                   />
                   <FormikField
-                    classNameContainer="col-span-4"
+                    classNameContainer="col-span-6"
                     className="bg-[#f8fafc]"
                     required
                     classNameLabel="font-medium text-neutrals-100"
@@ -277,7 +287,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     placeholder="Nhập danh mục công việc"
                   />
                   <FormikField
-                    classNameContainer="col-span-4"
+                    classNameContainer="col-span-6"
                     className="bg-[#f8fafc]"
                     classNameLabel="font-medium text-neutrals-100"
                     name="quantity"
@@ -286,7 +296,8 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     labelTop="Số lượng tuyển"
                     placeholder="Nhập số lượng tuyển"
                   />
-                  <SelectLevelField classNameContainer={"col-span-4"} />
+                  <SelectLevelField classNameContainer={"col-span-6"} />
+                  <GenderField classNameContainer={"col-span-6"} />
                   <FormikField
                     classNameContainer="col-span-3"
                     className="bg-[#f8fafc]"

@@ -5,6 +5,7 @@ import { useAddress } from "../../hooks";
 const SelectDistrictField = ({
   provinceId,
   classNameContainer,
+  className,
   required,
   placeholder = "Quận/huyện",
   variant,
@@ -28,6 +29,7 @@ const SelectDistrictField = ({
     <FormikField
       classNameContainer={classNameContainer}
       required={required}
+      className={className}
       name="district"
       variant={variant}
       placeholder={loading ? "Đang tải dữ liệu..." : placeholder}

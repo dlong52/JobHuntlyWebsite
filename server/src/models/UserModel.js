@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: function () {
-      return this.account_type === "default"; // Required nếu account_type là 'default'
+      return this.account_type === "default";
     },
   },
   active: {
@@ -30,10 +30,10 @@ const userSchema = new mongoose.Schema({
   firebaseUid: {
     type: String,
     required: function () {
-      return this.account_type === "google"; // Required nếu account_type là 'google'
+      return this.account_type === "google";
     },
     unique: true,
-    sparse: true, // Unique nhưng chỉ áp dụng với non-null values
+    sparse: true,
   },
   profile: {
     name: {
@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema({
     phone_number: {
       type: String,
     },
+    birthday: { type: Date },
     avatar_url: { type: String },
     address: {
       province: {

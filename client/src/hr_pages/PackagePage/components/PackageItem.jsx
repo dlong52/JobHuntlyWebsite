@@ -1,14 +1,16 @@
 import { Box, Button, Typography } from "@mui/material";
 import React from "react";
-import helpers from "../../../utils/helpers";
 import { CommonIcon } from "../../../ui";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../../constants/routeUrl";
 
-const PackageItem = ({ title, price, description }) => {
+const PackageItem = ({ id, title, price, description }) => {
   return (
     <div className="flex flex-col gap-2 rounded-md transition-all duration-500 bg-white overflow-hidden">
-      <Link to={`${RouteBase.HRPackage}/1`} className="bg-gradient-to-tr from-primary-dark via-primary to-primary-light pt-[6px]">
+      <Link
+        to={`${RouteBase.HRPackage}/${id}`}
+        className="bg-gradient-to-tr from-primary-dark via-primary to-primary-light pt-[6px]"
+      >
         <Box className="bg-neutrals-100 shadow-inner text-white flex items-center justify-center py-3 rounded-t-lg">
           <Typography
             textTransform={"uppercase"}
@@ -32,7 +34,7 @@ const PackageItem = ({ title, price, description }) => {
           fontSize={"30px"}
           fontWeight={600}
         >
-          {helpers.numberFormat(price)}
+          {price?.toLocaleString("vi-VN")}
           <span className="text-sm ml-1 font-extrabold">VNĐ</span>
         </Typography>
         <Button

@@ -5,12 +5,24 @@ const { client } = require("../configs/elasticsearch");
 
 const JobSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  experience: { type: String, required: true },
+  experience: { type: Number, required: true },
   description: { type: String, required: true },
   requirements: { type: String, required: true },
   job_benefit: { type: String, required: true },
   quantity: { type: Number, required: true },
   work_time: { type: String, required: true },
+  gender: { type: String, enum: ["male", "female"] },
+  education: {
+    type: String,
+    enum: [
+      "intermediate",
+      "college",
+      "university",
+      "engineer",
+      "master",
+      "doctor",
+    ],
+  },
   level: { type: mongoose.Schema.Types.ObjectId, ref: "Level", required: true },
   end_date: { type: Date, required: true },
   salary: {
@@ -51,8 +63,8 @@ const JobSchema = new mongoose.Schema({
 
 // JobSchema.plugin(mongooseElasticsearch, {
 //   client,
-//   index: "jobs", 
-//   op_type: "job", 
+//   index: "jobs",
+//   op_type: "job",
 // });
 
 module.exports = mongoose.model("Job", JobSchema);

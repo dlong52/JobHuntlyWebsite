@@ -4,12 +4,13 @@ const companySchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   website: { type: String },
   logo: { type: String },
-  cover: { type: String},
+  cover: { type: String },
   description: { type: String },
-  introduce: { type: String},
+  introduce: { type: String },
+  categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   staff_quantity: {
-    min: { type: Number},
-    max: { type: Number},
+    min: { type: Number },
+    max: { type: Number },
   },
   address: {
     province: {
@@ -27,6 +28,7 @@ const companySchema = new mongoose.Schema({
     additional_info: { type: String },
   },
   phone: { type: String },
+  isVerifiedPhone: { type: Boolean },
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

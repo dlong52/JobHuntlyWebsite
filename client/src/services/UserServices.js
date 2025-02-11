@@ -24,6 +24,9 @@ const pushFcmToken = (payload) => {
 const getAllUsers = async (params) => {
   return httpServices.get(apiURL.USER, { params: params.queryKey[1] });
 };
+const getUserById = async (params) => {
+  return httpServices.get(`${apiURL.USER}/${params.queryKey[1]}`);
+};
 const createUser = (payload) => {
   return httpServices.User(apiURL.USER, payload);
 };
@@ -35,6 +38,7 @@ const deleteUser = (id) => {
   return httpServices.delete(`${apiURL.USER}/${id}`);
 };
 export {
+  getUserById,
   getDetailUser,
   pushFcmToken,
   getAllUsers,

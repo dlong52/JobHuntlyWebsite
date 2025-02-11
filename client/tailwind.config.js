@@ -1,5 +1,3 @@
-import { banner } from "./src/assets/images";
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -44,7 +42,7 @@ export default {
         MonumentExtended: ["MonumentExtended", "sans-serif"],
         Epilogue: ["Epilogue", "sans-serif"],
         ClashDisplay: ["ClashDisplay", "sans-serif"],
-        roboto: ['Roboto', 'sans-serif'], // Tên phông chữ từ Google Fonts
+        roboto: ["Roboto", "sans-serif"], // Tên phông chữ từ Google Fonts
       },
       margin: {
         "content-admin": "273px",
@@ -69,7 +67,8 @@ export default {
       },
       boxShadow: {
         hover: "20px 20px 60px #3c36bd, -20px -20px 60px #514aff",
-        border: "var(--primary-light) 0px 1px 2px 0px, var(--primary-light) 0px 2px 6px 2px",
+        border:
+          "var(--primary-light) 0px 1px 2px 0px, var(--primary-light) 0px 2px 6px 2px",
       },
     },
   },

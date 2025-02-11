@@ -4,3 +4,6 @@ export { default as UserManagementPage } from "./UserManagementPage";
 export { default as PackageManagementPage } from "./PackageManagementPage";
 export { default as NotifyManagementPage } from "./NotifyManagementPage";
 export { default as RevenueManagementPage } from "./RevenueManagementPage";
+export { default as ProfileAdminPage } from "./ProfileAdminPage";
+export { default as UserDetailPage } from "./UserDetailPage";
+export { default as CreateUserPage } from "./CreateUserPage";
