@@ -53,25 +53,25 @@ const AccountPopover = ({ user }) => {
           }}
         >
           <CommonIcon.EditOutlined className="text-primary" />
-          <span className="text-[14px] font-medium">
+          <span className="text-[14px]">
             Cài đặt thông tin cá nhân
           </span>
         </MenuItem>
         <MenuItem>
           <CommonIcon.VisibilityOutlined className="text-primary" />
-          <Link to={"/"} className="text-[14px] font-medium">
+          <Link to={"/"} className="text-[14px]">
             Nhà tuyển dụng xem hồ sơ
           </Link>
         </MenuItem>
         <MenuItem>
           <CommonIcon.LockOutlined className="text-primary" />
-          <Link to={"/"} className="text-[14px] font-medium">
+          <Link to={"/"} className="text-[14px]">
             Đổi mật khẩu
           </Link>
         </MenuItem>
         <MenuItem onClick={logout}>
           <CommonIcon.LogoutOutlined className="text-primary" />
-          <span className="text-[14px] font-medium">Đăng xuất</span>
+          <span className="text-[14px] text-red-600 ">Đăng xuất</span>
         </MenuItem>
       </MenuList>
     </Box>

@@ -1,4 +1,6 @@
+import { ROLE } from "../constants/enum";
 import { RouteBase } from "../constants/routeUrl";
+import { AdminLayout, HRLayout } from "../layouts";
 import {
   CompanyPage,
   CreateCVPage,
@@ -14,9 +16,11 @@ import {
   JobDetailsPage,
   CompanyDetailPage,
   CompanySearchPage,
+  WishListPage,
 } from "../pages";
 import {
   ChatPage,
+  CheckoutPage,
   JobDetailPage,
   MyPackagePage,
   OverViewPage,
@@ -24,15 +28,17 @@ import {
   PackagePage,
   PostJobPage,
   ProfileHrPage,
+  ReturnPaymentPage,
 } from "../hr_pages";
-import { AdminLayout, HRLayout } from "../layouts";
-import { ROLE } from "../constants/enum";
 import {
+  CreateUserPage,
   NotifyManagementPage,
   OverViewAdminPage,
   PackageManagementPage,
   PostManageMentPage,
+  ProfileAdminPage,
   RevenueManagementPage,
+  UserDetailPage,
   UserManagementPage,
 } from "../admin_page";
 const Routes = [
@@ -106,12 +112,18 @@ const Routes = [
     permissionAllow: [ROLE.ALL],
   },
   {
+    path: RouteBase.WishList,
+    component: WishListPage,
+    permissionAllow: [ROLE.ALL],
+  },
+  {
     path: "*",
     component: NotFoundPage,
     permissionAllow: [ROLE.ALL],
     layout: null,
   },
-  // HR
+
+  // HR Routes
   {
     path: RouteBase.HROverview,
     component: OverViewPage,
@@ -160,8 +172,20 @@ const Routes = [
     permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
   },
-  // ADMIN
+  {
+    path: RouteBase.HRCheckout,
+    component: CheckoutPage,
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
+  {
+    path: RouteBase.HRReturnPayment,
+    component: ReturnPaymentPage,
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
 
+  // ADMIN Routes
   {
     path: RouteBase.AdminOverview,
     component: OverViewAdminPage,
@@ -193,8 +217,26 @@ const Routes = [
     layout: AdminLayout,
   },
   {
+    path: `${RouteBase.AdminUserManagement}/:id`,
+    component: UserDetailPage,
+    permissionAllow: [ROLE.ALL],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminCreateUser,
+    component: CreateUserPage,
+    permissionAllow: [ROLE.ALL],
+    layout: AdminLayout,
+  },
+  {
     path: RouteBase.AdminRevenueManagement,
     component: RevenueManagementPage,
+    permissionAllow: [ROLE.ALL],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminProfile,
+    component: ProfileAdminPage,
     permissionAllow: [ROLE.ALL],
     layout: AdminLayout,
   },

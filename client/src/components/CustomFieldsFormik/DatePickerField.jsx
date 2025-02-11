@@ -1,6 +1,5 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
-// import {  } from "lodash";
 import { FormControl } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import moment from "moment";
@@ -9,6 +8,7 @@ const DatePickerField = (props) => {
   const {
     labelTop,
     classNameLabel,
+    className,
     classNameContainer,
     form,
     readOnly = false,
@@ -22,16 +22,13 @@ const DatePickerField = (props) => {
   const { errors, touched, setFieldValue } = form;
 
   const showError = Boolean(touched[name] && errors[name]);
-//   const msgError = get(touched, name) && get(errors, name);
+  //   const msgError = get(touched, name) && get(errors, name);
 
   // Ensure value is a valid moment object or null
   const validValue = value ? moment(value, "DD/MM/YYYY", true) : null;
 
   const handleChange = (date) => {
     const resultDate = date ? date.format("DD/MM/YYYY") : "";
-    console.log(resultDate);
-    console.log(name);
-
     setFieldValue(name, resultDate, true);
   };
 
@@ -42,10 +39,7 @@ const DatePickerField = (props) => {
       error={showError}
     >
       {labelTop && (
-        <label
-          className={`flex items-center ${classNameLabel}`}
-          htmlFor={name}
-        >
+        <label className={`flex items-center ${classNameLabel}`} htmlFor={name}>
           {labelTop}
           {required && <span style={{ color: "red", marginLeft: 4 }}>*</span>}
         </label>
@@ -56,7 +50,7 @@ const DatePickerField = (props) => {
         sx={sx}
         value={validValue}
         onChange={handleChange}
-        className="select-none"
+        className={twMerge("select-none", className)}
         slotProps={{
           textField: {
             disabled,
@@ -69,7 +63,7 @@ const DatePickerField = (props) => {
             InputProps: {
               readOnly,
               className: twMerge(
-                readOnly && "!bg-gray-100",
+                readOnly && "!bg-gray-100"
                 // msgError && "!border-red-500",
                 // "!tw-h-[45px]"
               ),

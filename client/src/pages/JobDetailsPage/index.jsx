@@ -1,7 +1,6 @@
 import { Button, Container, Divider, Typography } from "@mui/material";
-import React, { useEffect } from "react";
-import { CommonIcon, CommonStyles } from "../../ui";
-import { cpLogo } from "../../assets/images";
+import React from "react";
+import { CommonIcon } from "../../ui";
 import DialogMUI from "../../components/Dialogs";
 import { useToggleDialog } from "../../hooks";
 import ApplyJobForm from "./components/ApplyJobForm";
@@ -25,6 +24,11 @@ const JobDetailsPage = () => {
     showError("Bài đăng không tồn tại!");
   }
   const { open, toggle, shouldRender } = useToggleDialog();
+  const currentDate = moment().format("DD/MM/YYYY");
+  const endDate = moment(detailData?.end_date).format("DD/MM/YYYY");
+  const checkDate = moment(endDate, "DD/MM/YYYY").isBefore(
+    moment(currentDate, "DD/MM/YYYY")
+  );
   return (
     <>
       {!isLoading ? (
@@ -80,11 +84,14 @@ const JobDetailsPage = () => {
                   <div className="flex gap-3">
                     <Button
                       size="large"
-                      className="flex-1 !bg-primary !text-white"
+                      className={`flex-1 ${
+                        checkDate ? "!bg-gray-500" : "!bg-primary"
+                      } !text-white`}
                       startIcon={<CommonIcon.SendOutlined />}
                       onClick={toggle}
+                      disabled={checkDate}
                     >
-                      Ứng tuyển ngay
+                      {checkDate ? "Đã quá hạn ứng tuyển" : "Ứng tuyển ngay"}
                     </Button>
                     <Button
                       size="large"
@@ -169,11 +176,15 @@ const JobDetailsPage = () => {
                       <div className="flex gap-3 mt-4">
                         <Button
                           size="large"
-                          className="!bg-primary !text-white !capitalize"
-                          // startIcon={<CommonIcon.SendOutlined />}
+                          className={`${
+                            checkDate ? "!bg-gray-500" : "!bg-primary"
+                          } !text-white`}
                           onClick={toggle}
+                          disabled={checkDate}
                         >
-                          Ứng tuyển ngay
+                          {checkDate
+                            ? "Đã quá hạn ứng tuyển"
+                            : "Ứng tuyển ngay"}
                         </Button>
                         <Button
                           size="large"
@@ -194,7 +205,7 @@ const JobDetailsPage = () => {
                     <img
                       src={detailData?.posted_by?.company?.logo}
                       alt=""
-                      className="rounded-md size-20"
+                      className="rounded-md size-20 border"
                     />
                     <Typography fontWeight={500} fontSize={"16px"}>
                       {detailData?.posted_by?.company?.name}

@@ -4,6 +4,7 @@ import { useAddress } from "../../hooks";
 
 const SelectProvinceField = ({
   classNameContainer,
+  className,
   required,
   placeholder = "Tỉnh/thành phố",
   variant,
@@ -22,6 +23,7 @@ const SelectProvinceField = ({
   return (
     <FormikField
       classNameContainer={classNameContainer}
+      className={className}
       required={required}
       name="province"
       variant={variant}

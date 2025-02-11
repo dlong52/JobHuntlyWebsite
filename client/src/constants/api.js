@@ -20,4 +20,7 @@ export const apiURL = {
   USER: BASE_URL + "/user",
   POST: BASE_URL + "/job",
   PACKAGE: BASE_URL + "/package",
+  WISH_LIST: BASE_URL + "/wishlist",
+  VN_PAY: BASE_URL + "/vnpay",
+  ROLE: BASE_URL + "/role",
 };

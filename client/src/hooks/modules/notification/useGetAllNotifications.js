@@ -1,6 +1,10 @@
-import { useQuery } from 'react-query';
-import { NotificationService } from '../../../services/NotificationServices';
+import { useQuery } from "react-query";
+import { NotificationService } from "../../../services/NotificationServices";
 
-export const useGetAllNotifications = (user_id ,params) => {
-  return useQuery(["user", params], (params) => NotificationService.getAllNotifications(user_id, params));
+export const useGetAllNotifications = (user_id, params) => {
+  return useQuery(
+    ["notifications", params],
+    (params) => NotificationService.getAllNotifications(user_id, params),
+    { enabled: !!user_id }
+  );
 };

@@ -14,6 +14,7 @@ export const RouteBase = {
   Connect: "/connect",
   Profile: "/profile",
   Connect: "/connect",
+  WishList: "/wishlist",
 
   // HR
   HROverview: "/hr",
@@ -22,15 +23,18 @@ export const RouteBase = {
   HRProfile: "/hr/profile",
   HRChat: "/hr/chat",
   HRPackage: "/hr/package",
-  HRMyPackage: "/hr/my-pakage",
+  HRMyPackage: "/hr/my-package",
+  HRCheckout: "/hr/checkout",
+  HRReturnPayment: "/hr/return-payment",
 
   // ADMIN
-
   AdminOverview: "/admin",
   AdminProfile: "/admin/profile",
   AdminPostManagement: "/admin/post-management",
   AdminPackageManagement: "/admin/package-management",
   AdminUserManagement: "/admin/user-management",
+  AdminCreateUser: "/admin/user-management/create",
   AdminNotifyManagement: "/admin/notify-management",
   AdminRevenueManagement: "/admin/revenue-management",
+  AdminProfile: "/admin/profile",
 };

@@ -21,14 +21,13 @@ const getAllPackages = async (req, res) => {
     const options = {
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 10,
-      sortBy: sortBy || 'created_at',
-      order: order || 'desc',
+      sortBy: sortBy || "created_at",
+      order: order || "desc",
     };
 
     const result = await packageService.getAllPackages(filters, options);
     res.status(200).json({
-      status: 'success',
-      message: 'Packages retrieved successfully',
+      status: "success",
       data: result.packages,
       pagination: {
         total: result.total,

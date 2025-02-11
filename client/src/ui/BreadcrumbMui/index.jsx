@@ -4,7 +4,7 @@ import CommonIcon from "../CommonIcon";
 
 const BreadcrumbMui = ({ title, breadcrumbs }) => {
   return (
-    <div className="flex justify-between p-5 bg-white rounded-md shadow-sm">
+    <div className="flex items-center justify-between p-5 bg-white rounded-md shadow-sm">
       <Typography
         sx={{
           fontSize: "20px",
@@ -15,7 +15,11 @@ const BreadcrumbMui = ({ title, breadcrumbs }) => {
         {title}
       </Typography>
       <Breadcrumbs
-        separator={<CommonIcon.NavigateNext fontSize="small" />}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+        }}
+        separator={<Typography fontWeight={500}>/</Typography>}
         aria-label="breadcrumb"
       >
         {breadcrumbs}

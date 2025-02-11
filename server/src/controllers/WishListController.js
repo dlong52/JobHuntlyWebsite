@@ -1,4 +1,4 @@
-const wishListService = require('../services/WhistListServices');
+const wishListService = require('../services/WishListServices');
 
 // Add job to wishlist
 const addToWishList = async (req, res) => {

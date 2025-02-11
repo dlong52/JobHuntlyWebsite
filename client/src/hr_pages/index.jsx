@@ -1,8 +1,10 @@
-export {default as OverViewPage} from './OverViewPage'
-export {default as PostJobPage} from './PostJobPage'
-export {default as JobDetailPage} from './JobDetailPage'
-export {default as ProfileHrPage} from './ProfileHrPage'
-export {default as ChatPage} from './ChatPage'
-export {default as PackagePage} from './PackagePage'
-export {default as PackageDetailPage} from './PackageDetailPage'
-export {default as MyPackagePage} from './MyPackagePage'
+export { default as OverViewPage } from "./OverViewPage";
+export { default as PostJobPage } from "./PostJobPage";
+export { default as JobDetailPage } from "./JobDetailPage";
+export { default as ProfileHrPage } from "./ProfileHrPage";
+export { default as ChatPage } from "./ChatPage";
+export { default as PackagePage } from "./PackagePage";
+export { default as PackageDetailPage } from "./PackageDetailPage";
+export { default as MyPackagePage } from "./MyPackagePage";
+export { default as CheckoutPage } from "./CheckoutPage";
+export { default as ReturnPaymentPage } from "./ReturnPaymentPage";

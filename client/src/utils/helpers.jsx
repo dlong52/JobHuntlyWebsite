@@ -12,12 +12,6 @@ const helpers = {
     const maxSalary = Math.round(max / 1000000);
     return `${minSalary} - ${maxSalary} triệu`;
   },
-  dateFormat: (date) => {
-    return new Date(date).toLocaleString("vi-VN", {
-      dateStyle: "short",
-      timeStyle: "short",
-    });
-  },
   numberFormat: (number) => {
     if (isNaN(number)) return "Invalid number";
 

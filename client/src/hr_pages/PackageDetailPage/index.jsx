@@ -1,9 +1,18 @@
 import { Box, Grid2, Typography } from "@mui/material";
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, CommonIcon } from "../../ui";
 import { package_detail_banner } from "../../assets/images";
+import { useParams } from "react-router-dom";
+import { useGetPackage } from "../../hooks/modules/package/useGetPackage";
 
 const PackageDetailPage = () => {
+  const { id } = useParams();
+  const { data, isLoading } = useGetPackage(id, { enable: !!id });
+  const detailData = useMemo(() => {
+    if (data) {
+      return data?.data?.data;
+    }
+  }, [data]);
   return (
     <Box className="w-full rounded-md overflow-hidden bg-white relative">
       <Box className="bg-gradient-to-tr max-h-60 text-neutrals-100 overflow-hidden from-[#b7a2fb42] via-white to-white p-5  w-full flex items-center justify-between">
@@ -16,7 +25,7 @@ const PackageDetailPage = () => {
             fontSize={"30px"}
             fontWeight={700}
           >
-            Huntly Max Plus
+            {detailData?.name}
           </Typography>
           <Box className="flex w-4/5 gap-1 items-start">
             <CommonIcon.CheckRounded
@@ -24,9 +33,7 @@ const PackageDetailPage = () => {
               className="rounded-full bg-primary p-[2px] text-white"
             />
             <Typography fontSize={"15px"} marginTop={"-4px"}>
-              Trải nghiệm đăng tin tuyển dụng hiệu quả với vị trí nổi bật trong
-              Việc làm tốt nhất kết hợp cùng các dịch vụ cao cấp, giá dùng thử
-              hấp dẫn
+              {detailData?.introduce}
             </Typography>
           </Box>
         </Box>
@@ -82,7 +89,9 @@ const PackageDetailPage = () => {
             </Box>
             <Box className="flex flex-col gap-2">
               {/* <Button variant="outlined" size="large" className="w-full !border-primary !text-primary">Thêm vào giỏ hàng</Button> */}
-              <Button size="large" className="w-full !bg-primary !text-white">Mua ngay</Button>
+              <Button size="large" className="w-full !bg-primary !text-white">
+                Mua ngay
+              </Button>
             </Box>
           </Box>
         </Grid2>

@@ -15,40 +15,48 @@ const CheckboxField = ({
   required = false,
   ...props
 }) => {
-  const { name, value, onChange, onBlur } = field;
-  const { touched, errors } = form;
+  const { name, value } = field;
+  const { touched, errors, setFieldValue } = form;
   const showError = Boolean(touched[name] && errors[name]);
+
+  // Xử lý sự kiện thay đổi giá trị
+  const handleChange = (event) => {
+    setFieldValue(name, event.target.checked);
+  };
 
   return (
     <FormControl
-      className={`flex flex-col gap-1 ${classNameContainer}`}
+      className={`flex gap-1 ${classNameContainer}`}
       fullWidth
       error={showError}
     >
-      {labelTop && (
-        <label
-          className={`flex items-center ${classNameLabel}`}
-          htmlFor={name}
-        >
-          {labelTop}
-          {required && (
-            <span style={{ color: "red", marginLeft: 4 }}>*</span>
-          )}
-        </label>
-      )}
-      <FormControlLabel
-        control={
-          <Checkbox
-            id={name}
-            disabled={disabled}
-            checked={value}
-            onChange={onChange}
-            onBlur={onBlur}
-            {...props}
-          />
-        }
-        label={label}
-      />
+      <div className="flex items-center">
+        <FormControlLabel
+          sx={{
+            margin: 0,
+            padding: 0,
+          }}
+          control={
+            <Checkbox
+              id={name}
+              disabled={disabled}
+              checked={Boolean(value)}
+              onChange={handleChange}
+              {...props}
+            />
+          }
+          label={label}
+        />
+        {labelTop && (
+          <label
+            className={`flex items-center cursor-pointer ${classNameLabel}`}
+            htmlFor={name}
+          >
+            {labelTop}
+            {required && <span style={{ color: "red", marginLeft: 4 }}>*</span>}
+          </label>
+        )}
+      </div>
       {showError && <FormHelperText>{errors[name]}</FormHelperText>}
     </FormControl>
   );

@@ -9,7 +9,7 @@ const AutocompleteField = ({
   field,
   form,
   labelTop,
-  variant,
+  variant = "outlined",
   options = [],
   disabled = false,
   placeholder = "",
@@ -17,8 +17,10 @@ const AutocompleteField = ({
   size = "medium",
   classNameContainer = "",
   classNameLabel = "",
+  className,
   sx,
-  leftIcon, // Add leftIcon prop
+  multiple = false,
+  leftIcon,
   ...props
 }) => {
   const { name, value } = field;
@@ -26,9 +28,8 @@ const AutocompleteField = ({
   const showError = Boolean(touched[name] && errors[name]);
 
   const handleChange = (_, selectedValue) => {
-    setFieldValue(name, selectedValue);
+    setFieldValue(name, multiple ? selectedValue || [] : selectedValue || null);
   };
-
   return (
     <FormControl
       className={`flex flex-col gap-1 ${classNameContainer}`}
@@ -36,36 +37,46 @@ const AutocompleteField = ({
       error={showError}
     >
       {labelTop && (
-        <label className={`${classNameLabel}`} htmlFor="">
+        <label className={`${classNameLabel}`} htmlFor={name}>
           {labelTop} {required && <span style={{ color: "red" }}>*</span>}
         </label>
       )}
       <Autocomplete
         options={options}
         sx={sx}
-        getOptionLabel={(option) => option.label || ""}
-        value={value || null}
+        multiple={multiple}
+        getOptionLabel={(option) => option?.label ?? ""}
+        value={multiple ? value ?? [] : value ?? null}
         onChange={handleChange}
-        isOptionEqualToValue={(option, value) => option.value === value?.value}
+        isOptionEqualToValue={(option, selected) => {
+          return JSON.stringify(option) === JSON.stringify(selected);
+        }}
         disabled={disabled}
         renderInput={(params) => (
           <TextField
             {...params}
             placeholder={placeholder}
             size={size}
+            className={className}
             error={showError}
             variant={variant}
-            helperText={showError ? errors[name] : ""}
+            // helperText={showError ? errors[name] : ""}
             InputProps={{
               ...params.InputProps,
               startAdornment: leftIcon && (
-                <InputAdornment className={ disabled ? "opacity-30" : ""} position="start">{leftIcon}</InputAdornment>
+                <InputAdornment
+                  className={disabled ? "opacity-30" : ""}
+                  position="start"
+                >
+                  {leftIcon}
+                </InputAdornment>
               ),
             }}
           />
         )}
         {...props}
       />
+
       {showError && <FormHelperText>{errors[name]}</FormHelperText>}
     </FormControl>
   );

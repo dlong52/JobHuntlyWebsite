@@ -23,7 +23,7 @@ const CkEditerField = ({
   const editorConfig = {
     isReadOnly: disabled || readOnly,
     removePlugins: [
-      "ImageUpload",
+      // "ImageUpload",
       "EasyImage",
       "MediaEmbed",
       "BlockQuote",
@@ -44,7 +44,6 @@ const CkEditerField = ({
     
     const data = editor.getData();
     if (required && !data.trim()) {
-      console.log("vjzsjdkn: ", data);
       form.setFieldError(name, `${name} là bắt buộc`); // Đặt lỗi nếu trống      
     } else {
       form.setFieldError(name, undefined); // Xóa lỗi nếu đã có dữ liệu

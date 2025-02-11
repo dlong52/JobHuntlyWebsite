@@ -1,5 +1,8 @@
+import Button from "./Button";
+import CommonAvatar from "./CommonAvatar";
 import HtmlContent from "./HtmlContent";
 import LoadingForm from "./LoadingForm";
+import LoadingNotify from "./LoadingNotify";
 
 export { default as Button } from "./Button";
 export { default as CommonIcon } from "./CommonIcon";
@@ -10,5 +13,8 @@ export { default as CommonTable } from "./CommonTable";
 
 export const CommonStyles = {
   LoadingForm,
-  HtmlContent
+  LoadingNotify,
+  HtmlContent,
+  Button,
+  CommonAvatar,
 };

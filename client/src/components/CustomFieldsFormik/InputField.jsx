@@ -47,7 +47,7 @@ const InputField = ({
         {...props}
         type={type}
         sx={sx}
-        className={twMerge("", className)}
+        className={twMerge(disabled ? "opacity-60" : "", className)}
         placeholder={placeholder}
         InputProps={{
           readOnly: readOnly,
@@ -55,7 +55,7 @@ const InputField = ({
             <InputAdornment position="start">{leftIcon}</InputAdornment>
           ),
         }}
-        required={required}
+        // required={required}
         error={showError}
       />
       {showError && <FormHelperText>{errors[name]}</FormHelperText>}

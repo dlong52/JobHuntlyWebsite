@@ -36,7 +36,7 @@ const Button = ({
         className,
         `${
           disabled ? "!bg-slate-300" : ""
-        } !flex !items-center text-nowrap !justify-center !capitalize`
+        } !flex !items-center text-nowrap !justify-center`
       )}
       color={color}
       sx={{ ...sx }} // Combine styles
@@ -48,6 +48,8 @@ const Button = ({
     >
       {isLoading ? (
         <>{loadingText || <CircularProgress size={25} color="inherit" />}</>
+      ) : typeof children === "string" ? (
+        children.charAt(0).toUpperCase() + children.slice(1)
       ) : (
         children
       )}

@@ -1,5 +1,20 @@
 const UserServices = require("../services/UserServices");
 
+const getUserById = async (req, res) => {
+  try {
+    const user = await UserServices.getUserById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({
+      status: "success",
+      message: "User was successfully retrieved",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 const updateUser = async (req, res, next) => {
   try {
     const userId = req.params.id;
@@ -97,4 +112,5 @@ module.exports = {
   getAllUsers,
   getUserDetails,
   updateFCMToken,
+  getUserById
 };

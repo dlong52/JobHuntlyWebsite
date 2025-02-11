@@ -26,12 +26,14 @@ const getNotifications = async (userId, filters = {}, options = {}) => {
       .limit(parseInt(limit));
       
     const total = await Notification.countDocuments(query);
+    const unreadCount = await Notification.countDocuments({ ...query, isRead: false });
 
-    return { notifications, total, page, limit };
+    return { notifications, total, unreadCount, page, limit };
   } catch (error) {
     throw new Error('Failed to fetch notifications');
   }
 };
+
 
 // Mark notification as read
 const markNotificationAsRead = async (notificationId) => {

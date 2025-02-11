@@ -7,7 +7,7 @@ const CommonAvatar = (props) => {
   const { className, src = avatar, char, sx, active } = props;
   return (
     <div className="relative">
-      <Avatar sx={sx} src={src} className={`${className}`}>
+      <Avatar sx={sx} src={!char ? src : undefined} className={`${className}`}>
         {char}
       </Avatar>
       {active && (
@@ -21,7 +21,7 @@ CommonAvatar.propTypes = {
   className: PropTypes.string,
   src: PropTypes.string,
   char: PropTypes.string,
-  sx: PropTypes.object, 
+  sx: PropTypes.object,
 };
 
 export default CommonAvatar;

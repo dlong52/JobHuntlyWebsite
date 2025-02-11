@@ -118,6 +118,7 @@ const getNotifications = async (req, res) => {
       status: "success",
       message: "Notifications retrieved successfully",
       data: result.notifications,
+      unreadCount: result.unreadCount,
       pagination: {
         total: result.total,
         page: result.page,

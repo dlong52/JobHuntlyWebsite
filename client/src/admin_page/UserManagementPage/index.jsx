@@ -7,12 +7,15 @@ import useFilters from "../../hooks/useFilters";
 import RoleChip from "../../ui/Role";
 import { useToggleDialog } from "../../hooks";
 import Status from "./components/Status";
-import ChipMui from "../../ui/Chip";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
+import TooltipMui from "../../ui/TooltipMui";
+import DialogMUI from "../../components/Dialogs";
+import CreateUserForm from "./components/CreateUserForm";
 
 const UserManagementPage = () => {
+  const navigate = useNavigate();
   const { open, toggle, shouldRender } = useToggleDialog();
   const { filters, handleChangePage } = useFilters({
     page: 1,
@@ -27,7 +30,11 @@ const UserManagementPage = () => {
       renderCell: (value) => {
         return (
           <Box className="flex items-center gap-2">
-            <CommonAvatar src={value?.avatar_url} />
+            <CommonAvatar
+              char={!value?.avatar_url ? value?.name?.charAt(0) : null}
+              className={"border-2 border-accent-blue !bg-primary"}
+              src={value?.avatar_url}
+            />
             <Box>
               <Typography
                 className="!text-neutrals-80"
@@ -36,7 +43,9 @@ const UserManagementPage = () => {
               >
                 {value?.name}
               </Typography>
-              <Typography>{value?.address?.district?.name}</Typography>
+              <Typography fontSize={"14px"} className="text-neutrals-60">
+                {value?.address?.province?.name}
+              </Typography>
             </Box>
           </Box>
         );
@@ -57,9 +66,13 @@ const UserManagementPage = () => {
         return (
           <>
             {!value ? (
-              <CommonIcon.DoNotDisturb className="text-red-700" />
+              <TooltipMui content={"Chưa xác thực"}>
+                <CommonIcon.DoNotDisturb className="text-red-700" />
+              </TooltipMui>
             ) : (
-              <CommonIcon.CheckCircle className="text-green-700" />
+              <TooltipMui content={"Đã xác thực"}>
+                <CommonIcon.CheckCircle className="text-green-700" />
+              </TooltipMui>
             )}
           </>
         );
@@ -78,13 +91,15 @@ const UserManagementPage = () => {
       renderCell: (value) => {
         return (
           <Box className="flex gap-2 items-center">
-            <IconButton
-            // onClick={() => {
-            //   navigate(`${RouteBase.HRJobs}/${value}`);
-            // }}
-            >
-              <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
-            </IconButton>
+            <TooltipMui content={"Thông tin người dùng"}>
+              <IconButton
+                onClick={() => {
+                  navigate(`${RouteBase.AdminUserManagement}/${value}`);
+                }}
+              >
+                <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
+              </IconButton>
+            </TooltipMui>
             <IconButton
             // onClick={() => {
             //   handleSetId(value);
@@ -112,11 +127,15 @@ const UserManagementPage = () => {
     },
   ];
   const breadcrumbs = [
-    <Link to={RouteBase.AdminOverview} className="hover:underline font-[500]">Trang chủ</Link>,
-    <Typography fontWeight={500} className="text-neutrals-100">Quản lí người dùng</Typography>,
+    <Link to={RouteBase.AdminOverview} className="hover:underline text-sm font-[500]">
+      Trang chủ
+    </Link>,
+    <Typography fontWeight={500} className="text-neutrals-100 !text-sm">
+      Quản lí người dùng
+    </Typography>,
   ];
   return (
-    <div>
+    <Box>
       <BreadcrumbMui title={"Quản lí người dùng"} breadcrumbs={breadcrumbs} />
       <Box className="bg-white rounded-md mt-5">
         <CustomTable
@@ -132,7 +151,15 @@ const UserManagementPage = () => {
           toolbarActions={toolbarActions}
         />
       </Box>
-    </div>
+      {shouldRender && (
+        <DialogMUI
+          body={<CreateUserForm />}
+          toggle={toggle}
+          open={open}
+          title={"Thêm người dùng mới"}
+        />
+      )}
+    </Box>
   );
 };
 

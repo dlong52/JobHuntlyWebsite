@@ -5,6 +5,7 @@ import { useAddress } from "../../hooks";
 const SelectWardField = ({
   districtId,
   classNameContainer,
+  className,
   required,
   placeholder = "Phường/xã",
   variant,
@@ -27,6 +28,7 @@ const SelectWardField = ({
   return (
     <FormikField
       classNameContainer={classNameContainer}
+      className={className}
       required={required}
       name="ward"
       variant={variant}
