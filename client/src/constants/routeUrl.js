@@ -31,10 +31,12 @@ export const RouteBase = {
   AdminOverview: "/admin",
   AdminProfile: "/admin/profile",
   AdminPostManagement: "/admin/post-management",
+  AdminCompanyManagement: "/admin/company-management",
   AdminPackageManagement: "/admin/package-management",
   AdminUserManagement: "/admin/user-management",
   AdminCreateUser: "/admin/user-management/create",
   AdminNotifyManagement: "/admin/notify-management",
   AdminRevenueManagement: "/admin/revenue-management",
   AdminProfile: "/admin/profile",
+  AdminCategory: "/admin/category",
 };

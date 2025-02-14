@@ -15,6 +15,7 @@ import ConfirmDelete from "./components/ConfirmDelete";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import helpers from "../../utils/helpers";
+import BreadcrumbMui from "../../ui/BreadcrumbMui";
 
 const PostJobPage = () => {
   const user = useSelector((state) => state.user);
@@ -135,40 +136,20 @@ const PostJobPage = () => {
       setIdDelete(null);
     }
   }, [openDelete]);
+  const breadcrumbs = [
+    <Link
+      to={RouteBase.AdminOverview}
+      className="hover:underline text-sm font-[500]"
+    >
+      Trang chủ
+    </Link>,
+    <Typography fontWeight={500} className="text-neutrals-100 !text-sm">
+      Tuyển dụng
+    </Typography>,
+  ];
   return (
     <Box className="flex flex-col gap-y-5">
-      <div className="flex justify-between p-5 bg-white rounded-md">
-        <Typography
-          sx={{
-            fontSize: "20px",
-            fontWeight: 500,
-            color: "var(--neutrals-100)",
-          }}
-        >
-          Tuyển dụng
-        </Typography>
-        <Breadcrumbs
-          separator={<CommonIcon.NavigateNext />}
-          aria-label="breadcrumb"
-          className="flex items-center"
-        >
-          <Link
-            underline="hover"
-            key="1"
-            color="inherit"
-            to={RouteBase.Home}
-            className="text-primary"
-          >
-            <CommonIcon.Home fontSize="small" />
-          </Link>
-          <Typography
-            key="3"
-            sx={{ fontWeight: 500, fontSize: "14px", color: "text.primary" }}
-          >
-            Tuyển dụng
-          </Typography>
-        </Breadcrumbs>
-      </div>
+      <BreadcrumbMui breadcrumbs={breadcrumbs} title={"Tuyển dụng"} />
       <Box className="bg-white rounded-md">
         <CustomTable
           columns={columns}

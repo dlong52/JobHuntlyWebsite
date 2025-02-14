@@ -42,7 +42,7 @@ export default {
         MonumentExtended: ["MonumentExtended", "sans-serif"],
         Epilogue: ["Epilogue", "sans-serif"],
         ClashDisplay: ["ClashDisplay", "sans-serif"],
-        roboto: ["Roboto", "sans-serif"], // Tên phông chữ từ Google Fonts
+        roboto: ["Roboto", "sans-serif"],
       },
       margin: {
         "content-admin": "273px",

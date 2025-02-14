@@ -61,6 +61,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
       ...(id && { id }),
       title: values.title,
       experience: values?.isYear ? values.experience * 12 : values.experience,
+      gender: values?.gender,
       description: values.description,
       requirements: values.requirements,
       job_benefit: values.job_benefit,
@@ -109,9 +110,14 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
   const initialValuesEdit = useMemo(() => {
     if (data) {
       const dataEdit = data?.data?.data;
+      const checkIsYear = dataEdit?.experience % 12 === 0;
       return {
         title: dataEdit?.title,
-        experience: dataEdit?.experience,
+        experience: checkIsYear
+          ? dataEdit?.experience / 12
+          : dataEdit?.experience,
+        isYear: checkIsYear ? true : false,
+        gender: dataEdit?.gender,
         description: dataEdit?.description,
         requirements: dataEdit?.requirements,
         job_benefit: dataEdit?.job_benefit,
@@ -158,8 +164,6 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
           onSubmit={handleSubmit}
         >
           {({ values }) => {
-            console.log(values);
-
             useEffect(() => {
               if (values?.province?.value)
                 fetchDistricts(values?.province.value);
@@ -179,7 +183,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     placeholder="Nhập tiêu đề công việc"
                   />
                   {/* Experience */}
-                  <div className="col-span-8 flex items-center">
+                  <div className="col-span-6 flex items-center">
                     <FormikField
                       classNameContainer="col-span-6"
                       className="bg-[#f8fafc]"
@@ -199,6 +203,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                       labelTop="Theo năm"
                     />
                   </div>
+                  <GenderField classNameContainer={"col-span-6"} />
                   <FormikField
                     classNameContainer="col-span-12"
                     name="description"
@@ -218,7 +223,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     placeholder="Mô tả chi tiết quyền lợi"
                   />
                   <FormikField
-                    classNameContainer="col-span-6"
+                    classNameContainer="col-span-12"
                     className="bg-[#f8fafc]"
                     required
                     classNameLabel="font-medium text-neutrals-100"
@@ -228,7 +233,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     placeholder="Nhập các yêu cầu (phân cách bằng dấu phẩy)"
                   />
                   <FormikField
-                    classNameContainer="col-span-6"
+                    classNameContainer="col-span-12"
                     className="bg-[#f8fafc]"
                     required
                     classNameLabel="font-medium text-neutrals-100"
@@ -260,7 +265,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                   />
                   {/* Employment Type */}
                   <FormikField
-                    classNameContainer="col-span-6"
+                    classNameContainer="col-span-4"
                     className="bg-[#f8fafc]"
                     required
                     classNameLabel="font-medium text-neutrals-100"
@@ -270,13 +275,8 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     labelTop="Hình thức làm việc"
                     placeholder="Chọn hình thức làm việc"
                   />
-                  {/* Categories */}
-                  <SelectCategoryField
-                    labelTop={"Danh mục công việc"}
-                    className={"bg-[#f8fafc]"}
-                  />
                   <FormikField
-                    classNameContainer="col-span-6"
+                    classNameContainer="col-span-4"
                     className="bg-[#f8fafc]"
                     required
                     classNameLabel="font-medium text-neutrals-100"
@@ -287,7 +287,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     placeholder="Nhập danh mục công việc"
                   />
                   <FormikField
-                    classNameContainer="col-span-6"
+                    classNameContainer="col-span-4"
                     className="bg-[#f8fafc]"
                     classNameLabel="font-medium text-neutrals-100"
                     name="quantity"
@@ -296,8 +296,13 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     labelTop="Số lượng tuyển"
                     placeholder="Nhập số lượng tuyển"
                   />
+                  {/* Categories */}
+                  <SelectCategoryField
+                    labelTop={"Danh mục công việc"}
+                    className={"bg-[#f8fafc]"}
+                  />
                   <SelectLevelField classNameContainer={"col-span-6"} />
-                  <GenderField classNameContainer={"col-span-6"} />
+
                   <FormikField
                     classNameContainer="col-span-3"
                     className="bg-[#f8fafc]"

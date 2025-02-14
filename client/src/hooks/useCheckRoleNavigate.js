@@ -5,11 +5,9 @@ import { ROLE } from "../constants/enum";
 const useCheckRoleNavigate = () => {
   const navigate = useNavigate();
   const checkRoleNavigate = (role) => {
-    console.log(role);
-    
     if (role === ROLE.CANDIDATE) navigate(RouteBase.Home);
     if (role === ROLE.EMPLOYER) navigate(RouteBase.HROverview);
-    if (role === ROLE.ADMIN) navigate(RouteBase.Home);
+    if (role === ROLE.ADMIN) navigate(RouteBase.AdminOverview);
   };
   return { checkRoleNavigate };
 };

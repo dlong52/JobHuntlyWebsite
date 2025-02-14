@@ -1,3 +1,5 @@
+import { ROLE } from "../constants/enum";
+
 const helpers = {
   isJsonString: (data) => {
     try {
@@ -8,9 +10,33 @@ const helpers = {
     return true;
   },
   convertSalary: (min, max) => {
-    const minSalary = Math.round(min / 1000000);
-    const maxSalary = Math.round(max / 1000000);
-    return `${minSalary} - ${maxSalary} triệu`;
+    if (isNaN(min) || isNaN(max)) return "Invalid salary";
+
+    if (min === max) {
+      return helpers.numberFormat(min); // Nếu min = max, chỉ hiển thị 1 giá trị
+    }
+
+    return `${helpers.numberFormat(min)} - ${helpers.numberFormat(max)}`;
+},
+
+  convertTime: (month) => {
+    const checkRound = month % 12 === 0;
+    const year = month / 12;
+    if (checkRound && year > 1) {
+      return `${year} năm kinh nghiệm`;
+    }
+    return month;
+  },
+  convertRole: (role) => {
+    if (role === ROLE.ADMIN) {
+      return "Quản trị viên";
+    }
+    if (role === ROLE.CANDIDATE) {
+      return "Ứng viên";
+    }
+    if (role === ROLE.EMPLOYER) {
+      return "Nhà tuyển dụng";
+    }
   },
   numberFormat: (number) => {
     if (isNaN(number)) return "Invalid number";

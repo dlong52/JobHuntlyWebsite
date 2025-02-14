@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { empty } from "../../assets/images";
+import { twMerge } from "tailwind-merge";
 
 const CustomTable = ({
   columns,
@@ -26,6 +27,7 @@ const CustomTable = ({
   toolbarTitle,
   toolbarActions,
   loading,
+  isHeader = true,
 }) => {
   const useStyles = makeStyles((theme) => ({
     Pagination: {
@@ -93,19 +95,24 @@ const CustomTable = ({
     return (
       <TableContainer>
         <Table>
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  className="text-nowrap text-neutrals-100"
-                  key={column.field}
-                  align={column.align || "left"}
-                >
-                  {column.headerName}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
+          {isHeader && (
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    className={twMerge(
+                      "text-nowrap text-neutrals-100",
+                      column?.classNameHeader
+                    )}
+                    key={column.field}
+                    align={column.align || "left"}
+                  >
+                    {column.headerName}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+          )}
           <TableBody>
             {rows.map((row, index) => (
               <TableRow key={row.id || index}>
@@ -125,10 +132,15 @@ const CustomTable = ({
   };
 
   return (
-    <Paper sx={{boxShadow: "none"}}>
+    <Paper sx={{ boxShadow: "none" }}>
       {/* Toolbar */}
       <Toolbar className="border-b" style={{ padding: "20px 16px" }}>
-        <Typography variant="h6" className="!text-neutrals-100" component="div" style={{ flexGrow: 1 }}>
+        <Typography
+          variant="h6"
+          className="!text-neutrals-100"
+          component="div"
+          style={{ flexGrow: 1 }}
+        >
           {toolbarTitle || "Table Title"}
         </Typography>
         {toolbarActions &&

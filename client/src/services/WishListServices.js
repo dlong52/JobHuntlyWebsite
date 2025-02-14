@@ -1,8 +1,8 @@
 import { apiURL } from "../constants/api";
 import httpServices from "./httpServices";
 
-const getWishListByUser = async (params) => {
-  return httpServices.get(`${apiURL.WISH_LIST}/${params.queryKey[1]}`, {
+const getWishListByUser = async (userId, params) => {
+  return httpServices.get(`${apiURL.WISH_LIST}/${userId}`, {
     params: params.queryKey[1],
   });
 };

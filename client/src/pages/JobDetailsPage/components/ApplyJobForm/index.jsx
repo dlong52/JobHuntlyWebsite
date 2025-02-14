@@ -16,7 +16,6 @@ import { ApplicantService } from "../../../../services/ApplicationServices";
 
 const ApplyJobForm = ({ onClose, jobId, name, posted_by }) => {
   const user = useSelector((state) => state.user);
-  console.log({ posted_by });
 
   const { showSuccess, showError, showInfo } = useNotifications();
 

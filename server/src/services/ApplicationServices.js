@@ -1,6 +1,5 @@
 const Application = require("../models/Application");
 
-// Create new application
 const createApplication = async (data) => {
   try {
     const application = new Application(data);
@@ -10,16 +9,20 @@ const createApplication = async (data) => {
   }
 };
 
-// Get all applications with pagination & filter
 const getAllApplications = async (filters = {}, options = {}) => {
-  const { page = 1, limit = 10, sortBy = "applied_date", order = "desc" } = options;
+  const {
+    page = 1,
+    limit = 10,
+    sortBy = "applied_date",
+    order = "desc",
+  } = options;
   const sort = { [sortBy]: order === "desc" ? -1 : 1 };
-  
+
   const query = {};
   if (filters.status) query.status = filters.status;
   if (filters.candidate) query.candidate = filters.candidate;
   if (filters.job) query.job = filters.job;
-  
+
   const skip = (page - 1) * limit;
 
   const applications = await Application.find(query)
@@ -33,7 +36,6 @@ const getAllApplications = async (filters = {}, options = {}) => {
   return { applications, total, page, limit };
 };
 
-// Get application by ID
 const getApplicationById = async (id) => {
   try {
     return await Application.findById(id)
@@ -44,7 +46,6 @@ const getApplicationById = async (id) => {
   }
 };
 
-// Update application
 const updateApplication = async (id, updateData) => {
   try {
     return await Application.findByIdAndUpdate(id, updateData, { new: true });
@@ -53,7 +54,6 @@ const updateApplication = async (id, updateData) => {
   }
 };
 
-// Delete application
 const deleteApplication = async (id) => {
   try {
     return await Application.findByIdAndDelete(id);

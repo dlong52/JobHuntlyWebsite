@@ -1,4 +1,4 @@
-import { Button, Container, Divider, Typography } from "@mui/material";
+import { Button, Container, Divider, Typography, Box } from "@mui/material";
 import React from "react";
 import { CommonIcon } from "../../ui";
 import DialogMUI from "../../components/Dialogs";
@@ -11,14 +11,16 @@ import Loading from "../../ui/Loading";
 import moment from "moment";
 import { RouteBase } from "../../constants/routeUrl";
 import { useNotifications } from "../../utils/notifications";
-import { employmentTypeOptions } from "../../constants/enum";
+import { employmentTypeOptions, GENDER } from "../../constants/enum";
+import useConvertData from "../../hooks/useConvertData";
+import helpers from "../../utils/helpers";
 
 const JobDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { showError } = useNotifications();
   const { data, isLoading, error } = useGetPost(id, { enabled: !!id });
-  const detailData = data?.data?.data;
+  const { dataConvert: detailData } = useConvertData(data);
   if (error) {
     navigate(RouteBase.Home);
     showError("Bài đăng không tồn tại!");
@@ -32,47 +34,47 @@ const JobDetailsPage = () => {
   return (
     <>
       {!isLoading ? (
-        <div>
+        <Box>
           <Container className="py-10">
-            <div className="grid grid-cols-12 gap-5">
-              <div className="col-span-8 flex flex-col gap-y-5">
-                <div className="bg-white p-5 rounded-md flex flex-col gap-5">
+            <Box className="grid grid-cols-12 gap-5">
+              <Box className="col-span-8 flex flex-col gap-y-5">
+                <Box className="bg-white p-5 rounded-md flex flex-col gap-5">
                   <Typography fontSize={"20px"} fontWeight={700}>
                     {detailData?.title}
                   </Typography>
-                  <div className="flex justify-between py-2">
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="w-10 flex items-center justify-center rounded-full bg-gradient-to-bl from-primary to-primary-200 aspect-square">
+                  <Box className="flex justify-between py-2">
+                    <Box className="flex items-center gap-3 flex-1">
+                      <Box className="w-10 flex items-center justify-center rounded-full bg-gradient-to-bl from-primary to-primary-200 aspect-square">
                         <CommonIcon.Paid className="text-white" />
-                      </div>
-                      <div className="">
+                      </Box>
+                      <Box className="">
                         <Typography>Mức lương</Typography>
                         <Typography fontWeight={500}>Tới 3 triệu</Typography>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="w-10 flex items-center justify-center rounded-full bg-gradient-to-bl from-primary to-primary-200 aspect-square">
+                      </Box>
+                    </Box>
+                    <Box className="flex items-center gap-3 flex-1">
+                      <Box className="w-10 flex items-center justify-center rounded-full bg-gradient-to-bl from-primary to-primary-200 aspect-square">
                         <CommonIcon.LocationOnRounded className="text-white" />
-                      </div>
-                      <div className="">
+                      </Box>
+                      <Box className="">
                         <Typography>Địa điểm</Typography>
                         <Typography fontWeight={500}>
                           {detailData?.location?.province.name}
                         </Typography>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="w-10 flex items-center justify-center rounded-full bg-gradient-to-bl from-primary to-primary-200 aspect-square">
+                      </Box>
+                    </Box>
+                    <Box className="flex items-center gap-3 flex-1">
+                      <Box className="w-10 flex items-center justify-center rounded-full bg-gradient-to-bl from-primary to-primary-200 aspect-square">
                         <CommonIcon.HourglassBottom className="text-white" />
-                      </div>
-                      <div className="">
+                      </Box>
+                      <Box className="">
                         <Typography>Kinh nghiệm</Typography>
                         <Typography fontWeight={500}>
-                          {detailData?.experience}
+                          {helpers.convertTime(detailData?.experience)}
                         </Typography>
-                      </div>
-                    </div>
-                  </div>
+                      </Box>
+                    </Box>
+                  </Box>
                   <Typography
                     fontSize={"14px"}
                     className="flex items-center gap-2 bg-gray-200 text-gray-500 px-3 py-1 rounded-md size-fit"
@@ -81,7 +83,7 @@ const JobDetailsPage = () => {
                     Hạn nộp hồ sơ:{" "}
                     {moment(detailData.end_date).format("DD/MM/YYYY")}
                   </Typography>
-                  <div className="flex gap-3">
+                  <Box className="flex gap-3">
                     <Button
                       size="large"
                       className={`flex-1 ${
@@ -101,10 +103,10 @@ const JobDetailsPage = () => {
                     >
                       Lưu tin
                     </Button>
-                  </div>
-                </div>
-                <div className="bg-white p-5 rounded-md flex flex-col gap-y-5">
-                  <div className="flex gap-3">
+                  </Box>
+                </Box>
+                <Box className="bg-white p-5 rounded-md flex flex-col gap-y-5">
+                  <Box className="flex gap-3">
                     <Divider
                       orientation="vertical"
                       className="bg-primary w-[6px]"
@@ -113,58 +115,58 @@ const JobDetailsPage = () => {
                     <Typography fontSize={"20px"} fontWeight={700}>
                       Chi tiết tuyển dụng
                     </Typography>
-                  </div>
+                  </Box>
                   {detailData?.description && (
-                    <div className="flex flex-col gap-2">
+                    <Box className="flex flex-col gap-2">
                       <Typography fontWeight={500}>Mô tả công việc</Typography>
-                      <div className="pl-7">
+                      <Box className="pl-7">
                         <HtmlContent string={detailData?.description} />
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
                   )}
                   {detailData?.requirements && (
-                    <div className="flex flex-col gap-5">
+                    <Box className="flex flex-col gap-5">
                       <Typography fontWeight={500}>Yêu cầu ứng viên</Typography>
-                      <div className="pl-7">
+                      <Box className="pl-7">
                         <HtmlContent string={detailData?.requirements} />
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
                   )}
                   {detailData?.job_benefit && (
-                    <div className="flex flex-col gap-5">
+                    <Box className="flex flex-col gap-5">
                       <Typography fontWeight={500}>Quyền lợi</Typography>
-                      <div className="pl-7">
+                      <Box className="pl-7">
                         <HtmlContent string={detailData?.job_benefit} />
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
                   )}
                   {detailData?.work_time && (
-                    <div className="flex flex-col gap-5">
+                    <Box className="flex flex-col gap-5">
                       <Typography fontWeight={500}>
                         Thời gian làm việc
                       </Typography>
-                      <div className="pl-7">
+                      <Box className="pl-7">
                         <HtmlContent string={detailData?.work_time} />
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
                   )}
                   {detailData?.location && (
-                    <div className="flex flex-col gap-5">
+                    <Box className="flex flex-col gap-5">
                       <Typography fontWeight={500}>
                         Địa điểm làm việc
                       </Typography>
-                      <div className="pl-7">
+                      <Box className="pl-7">
                         <ul>
                           <li>{`${detailData?.location?.additional_info}, ${detailData?.location?.ward.name}, ${detailData?.location?.district.name}, ${detailData?.location?.province.name}`}</li>
                         </ul>
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
                   )}
-                  <div className="flex flex-col gap-5">
+                  <Box className="flex flex-col gap-5">
                     <Typography fontWeight={500}>
                       Cách thức ứng tuyển
                     </Typography>
-                    <div className="">
+                    <Box className="">
                       <Typography>
                         Ứng viên nộp hồ sơ trực tuyến bằng cách bấm{" "}
                         <b>Ứng tuyển</b> ngay dưới đây.
@@ -173,7 +175,7 @@ const JobDetailsPage = () => {
                         Hạn nộp hồ sơ:{" "}
                         {moment(detailData.end_date).format("DD/MM/YYYY")}
                       </Typography>
-                      <div className="flex gap-3 mt-4">
+                      <Box className="flex gap-3 mt-4">
                         <Button
                           size="large"
                           className={`${
@@ -194,14 +196,14 @@ const JobDetailsPage = () => {
                         >
                           Lưu tin
                         </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-4 flex flex-col gap-y-5">
-                <div className="bg-white p-5 rounded-md flex flex-col gap-5">
-                  <div className="flex gap-5">
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+              <Box className="col-span-4 flex flex-col gap-y-5">
+                <Box className="bg-white p-5 rounded-md flex flex-col gap-5">
+                  <Box className="flex gap-5">
                     <img
                       src={detailData?.posted_by?.company?.logo}
                       alt=""
@@ -210,9 +212,9 @@ const JobDetailsPage = () => {
                     <Typography fontWeight={500} fontSize={"16px"}>
                       {detailData?.posted_by?.company?.name}
                     </Typography>
-                  </div>
-                  <div className="flex flex-col gap-y-3">
-                    <div className="flex gap-2 items-start">
+                  </Box>
+                  <Box className="flex flex-col gap-y-3">
+                    <Box className="flex gap-2 items-start">
                       <Typography
                         className="flex items-center gap-1 !text-gray-500 text-nowrap w-24"
                         fontSize={"14px"}
@@ -227,8 +229,8 @@ const JobDetailsPage = () => {
                       >
                         25 - 99 nhân viên
                       </Typography>
-                    </div>
-                    <div className="flex gap-2 items-start">
+                    </Box>
+                    <Box className="flex gap-2 items-start">
                       <Typography
                         className="flex items-center gap-1 !text-gray-500 text-nowrap w-24"
                         fontSize={"14px"}
@@ -243,8 +245,8 @@ const JobDetailsPage = () => {
                       >
                         {detailData?.categories[0]?.name}
                       </Typography>
-                    </div>
-                    <div className="flex gap-2 items-start">
+                    </Box>
+                    <Box className="flex gap-2 items-start">
                       <Typography
                         className="flex items-center gap-1 !text-gray-500 text-nowrap w-24"
                         fontSize={"14px"}
@@ -259,57 +261,57 @@ const JobDetailsPage = () => {
                       >
                         Số 29 Galaxy 4, 69 Tố Hữu, Hà Đông, Hà Nội
                       </Typography>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white p-5 rounded-md flex flex-col gap-5">
+                    </Box>
+                  </Box>
+                </Box>
+                <Box className="bg-white p-5 rounded-md flex flex-col gap-5">
                   <Typography fontSize={"20px"} fontWeight={700}>
                     Thông tin chung
                   </Typography>
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
+                  <Box className="flex items-center gap-3 flex-1">
+                    <Box className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
                       <CommonIcon.WorkspacePremium className="text-white" />
-                    </div>
-                    <div className="">
+                    </Box>
+                    <Box className="">
                       <Typography fontSize={"14px"} className="text-gray-500">
                         Cấp bậc
                       </Typography>
                       <Typography fontWeight={500}>
                         {detailData?.level?.name}
                       </Typography>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
+                    </Box>
+                  </Box>
+                  <Box className="flex items-center gap-3 flex-1">
+                    <Box className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
                       <CommonIcon.HourglassBottom className="text-white" />
-                    </div>
-                    <div className="">
+                    </Box>
+                    <Box className="">
                       <Typography fontSize={"14px"} className="text-gray-500">
                         Kinh nghiệm
                       </Typography>
                       <Typography fontWeight={500}>
-                        {detailData?.experience}
+                        {helpers.convertTime(detailData?.experience)}
                       </Typography>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
+                    </Box>
+                  </Box>
+                  <Box className="flex items-center gap-3 flex-1">
+                    <Box className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
                       <CommonIcon.PeopleAltOutlined className="text-white" />
-                    </div>
-                    <div className="">
+                    </Box>
+                    <Box className="">
                       <Typography fontSize={"14px"} className="text-gray-500">
                         Số lượng tuyển
                       </Typography>
                       <Typography fontWeight={500}>
                         {detailData?.quantity} người
                       </Typography>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
+                    </Box>
+                  </Box>
+                  <Box className="flex items-center gap-3 flex-1">
+                    <Box className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
                       <CommonIcon.BusinessCenterRounded className="text-white" />
-                    </div>
-                    <div className="">
+                    </Box>
+                    <Box className="">
                       <Typography fontSize={"14px"} className="text-gray-500">
                         Hình thức làm việc
                       </Typography>
@@ -320,22 +322,28 @@ const JobDetailsPage = () => {
                           })[0].label
                         }
                       </Typography>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
+                    </Box>
+                  </Box>
+                  <Box className="flex items-center gap-3 flex-1">
+                    <Box className="w-10 flex items-center justify-center rounded-full bg-primary aspect-square">
                       <CommonIcon.PersonRounded className="text-white" />
-                    </div>
-                    <div className="">
+                    </Box>
+                    <Box className="">
                       <Typography fontSize={"14px"} className="text-gray-500">
                         Giới tính
                       </Typography>
-                      <Typography fontWeight={500}>Không yêu cầu</Typography>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                      <Typography fontWeight={500}>
+                        {detailData?.gender === GENDER.MALE
+                          ? "Nam"
+                          : detailData?.gender === GENDER.FEMALE
+                          ? "Nữ"
+                          : "Không yêu cầu"}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
           </Container>
           {shouldRender && (
             <DialogMUI
@@ -359,11 +367,11 @@ const JobDetailsPage = () => {
               }
             />
           )}
-        </div>
+        </Box>
       ) : (
-        <div className=" relative w-full h-screen flex items-center justify-center">
+        <Box className=" relative w-full h-screen flex items-center justify-center">
           <Loading />
-        </div>
+        </Box>
       )}
     </>
   );

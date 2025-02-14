@@ -4,10 +4,15 @@ import PropTypes from "prop-types";
 import { avatar } from "../../assets/images";
 
 const CommonAvatar = (props) => {
-  const { className, src = avatar, char, sx, active } = props;
+  const { className, src = avatar, char, sx, active, variant } = props;
   return (
     <div className="relative">
-      <Avatar sx={sx} src={!char ? src : undefined} className={`${className}`}>
+      <Avatar
+        variant={variant}
+        sx={sx}
+        src={!char ? src : undefined}
+        className={`${className}`}
+      >
         {char}
       </Avatar>
       {active && (
@@ -22,6 +27,7 @@ CommonAvatar.propTypes = {
   src: PropTypes.string,
   char: PropTypes.string,
   sx: PropTypes.object,
+  variant: PropTypes.string
 };
 
 export default CommonAvatar;

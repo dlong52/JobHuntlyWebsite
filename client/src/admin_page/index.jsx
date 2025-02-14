@@ -7,3 +7,5 @@ export { default as RevenueManagementPage } from "./RevenueManagementPage";
 export { default as ProfileAdminPage } from "./ProfileAdminPage";
 export { default as UserDetailPage } from "./UserDetailPage";
 export { default as CreateUserPage } from "./CreateUserPage";
+export { default as CompanyManagementPage } from "./CompanyManagementPage";
+export { default as CategoryManagementPage } from "./CategoryManagementPage";

@@ -22,7 +22,7 @@ const OverViewPage = () => {
         <Box className="bg-primary rounded-md p-4 flex-1 flex justify-between items-center">
           <div className="text-white">
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              CV Tiếp nhận
+              CV tiếp nhận
             </Typography>
             <Typography variant="h5" sx={{ fontWeight: "900" }}>
               100
@@ -34,7 +34,7 @@ const OverViewPage = () => {
         <Box className="bg-accent-blue rounded-md p-4 flex-1 flex justify-between items-center">
           <div className="text-white">
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              CV Tiếp nhận
+              CV ứng tuyển mới
             </Typography>
             <Typography variant="h5" sx={{ fontWeight: "900" }}>
               100
@@ -46,7 +46,7 @@ const OverViewPage = () => {
         <Box className="bg-accent-red rounded-md p-4 flex-1 flex justify-between items-center">
           <div className="text-white">
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              CV Tiếp nhận
+              Tin tuyển dụng hiển thị
             </Typography>
             <Typography variant="h5" sx={{ fontWeight: "900" }}>
               100

@@ -15,6 +15,10 @@ const nodemailerRouter = require("./NodemailerRouter");
 const packageRouter = require("./PackageRouter");
 const vnPayRouter = require("./VnPayRouter");
 const wishListRouter = require("./WishListRouter");
+const paymentRouter = require("./PaymentRouter");
+const subscriptionRouter = require("./SubscriptionRouter");
+const conversationRouter = require("./ConversationRouter");
+const messageRouter = require("./MessageRouter");
 
 const prefixApi = process.env.PREFIX_API;
 const routes = (app) => {
@@ -31,6 +35,10 @@ const routes = (app) => {
   app.use(`${prefixApi}/nodemailer`, nodemailerRouter);
   app.use(`${prefixApi}/package`, packageRouter);
   app.use(`${prefixApi}/wishlist`, wishListRouter);
+  app.use(`${prefixApi}/conversation`, conversationRouter);
+  app.use(`${prefixApi}/message`, messageRouter);
+  app.use(`${prefixApi}/payment`, paymentRouter);
+  app.use(`${prefixApi}/subscription`, subscriptionRouter);
   app.use(`${prefixApi}/vnpay`, vnPayRouter);
 };
 module.exports = routes;

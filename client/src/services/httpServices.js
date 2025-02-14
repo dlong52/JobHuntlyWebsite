@@ -1,4 +1,5 @@
 import axios from "axios";
+import { RouteBase } from "../constants/routeUrl";
 
 const KEY_USER = "user";
 const KEY_TOKEN = "accessToken";
@@ -15,7 +16,7 @@ class Services {
         if (error.response.status === 401) {
           this.clearUserInfoStorage();
           localStorage.removeItem(KEY_TOKEN);
-          window.location.reload();
+          window.location.href = RouteBase.Company;
           return;
         }
         return Promise.reject(error);

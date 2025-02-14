@@ -60,6 +60,11 @@ const sidebarAdminRoutes = [
     icon: CommonIcon.Notifications,
   },
   {
+    path: RouteBase.AdminCompanyManagement,
+    name: "Quản lí công ty",
+    icon: CommonIcon.Business,
+  },
+  {
     path: RouteBase.AdminUserManagement,
     name: "Quản lí người dùng",
     icon: CommonIcon.People,
@@ -68,6 +73,11 @@ const sidebarAdminRoutes = [
     path: RouteBase.AdminRevenueManagement,
     name: "Quản lí doanh thu",
     icon: CommonIcon.Troubleshoot,
+  },
+  {
+    path: RouteBase.AdminCategory,
+    name: "Quản lí danh mục",
+    icon: CommonIcon.Category,
   },
 ];
 export { sidebarHrRoutes, sidebarAdminRoutes };

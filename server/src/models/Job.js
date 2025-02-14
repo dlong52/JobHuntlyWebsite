@@ -67,4 +67,21 @@ const JobSchema = new mongoose.Schema({
 //   op_type: "job",
 // });
 
+JobSchema.post("save", async function (doc, next) {
+  await mongoose
+    .model("Category")
+    .updateMany({ _id: { $in: doc.categories } }, { $inc: { job_count: 1 } });
+  next();
+});
+JobSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    await mongoose
+      .model("Category")
+      .updateMany(
+        { _id: { $in: doc.categories } },
+        { $inc: { job_count: -1 } }
+      );
+  }
+});
+
 module.exports = mongoose.model("Job", JobSchema);
