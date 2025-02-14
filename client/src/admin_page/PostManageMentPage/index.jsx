@@ -16,6 +16,7 @@ import { ConfirmDelete } from "../../components";
 import ChipMui from "../../ui/Chip";
 import TooltipMui from "../../ui/TooltipMui";
 import PostDetail from "./components/PostDetail";
+import BreadcrumbMui from "../../ui/BreadcrumbMui";
 
 const PostManageMentPage = () => {
   const user = useSelector((state) => state.user);
@@ -138,39 +139,20 @@ const PostManageMentPage = () => {
     }
     return undefined;
   }, [data]);
+  const breadcrumbs = [
+    <Link
+      to={RouteBase.AdminOverview}
+      className="hover:underline text-sm font-[500]"
+    >
+      Trang chủ
+    </Link>,
+    <Typography fontWeight={500} className="text-neutrals-100 !text-sm">
+      Tuyển dụng
+    </Typography>,
+  ];
   return (
     <Box className="flex flex-col gap-y-5">
-      <div className="flex justify-between p-5 bg-white rounded-md">
-        <Typography
-          sx={{
-            fontSize: "20px",
-            fontWeight: 500,
-            color: "var(--neutrals-100)",
-          }}
-        >
-          Tuyển dụng
-        </Typography>
-        <Breadcrumbs
-          separator={<CommonIcon.NavigateNext />}
-          aria-label="breadcrumb"
-          className="flex items-center"
-        >
-          <Link
-            key="1"
-            color="inherit"
-            to={RouteBase.Home}
-            className="text-primary"
-          >
-            <CommonIcon.Home fontSize="small" />
-          </Link>
-          <Typography
-            key="3"
-            sx={{ fontWeight: 500, fontSize: "14px", color: "text.primary" }}
-          >
-            Tuyển dụng
-          </Typography>
-        </Breadcrumbs>
-      </div>
+      <BreadcrumbMui title={"Tuyển dụng"} breadcrumbs={breadcrumbs} />
       <Box className="bg-white rounded-md">
         <CustomTable
           columns={columns}

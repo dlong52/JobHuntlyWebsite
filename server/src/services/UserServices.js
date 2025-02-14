@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const getUserById = async (id) => {
-  return await User.findById(id);
+  return await User.findById(id).populate("role").populate("company");
 };
 const updateUser = async (userId, data) => {
   try {

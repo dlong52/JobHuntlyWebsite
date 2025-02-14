@@ -15,7 +15,7 @@ import { useNotifications } from "./utils/notifications";
 
 function App() {
   const dispatch = useDispatch();
-  const { showSuccess, showInfo } = useNotifications();
+  const { showInfo } = useNotifications();
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("/firebase-messaging-sw.js")
@@ -31,7 +31,7 @@ function App() {
   }
   useEffect(() => {
     const messageListener = async (payload) => {
-      showSuccess(payload.notification.body, payload.notification.title);
+      showInfo(payload.notification.body, payload.notification.title);
     };
     onMessageListener(messageListener);
     return () => {

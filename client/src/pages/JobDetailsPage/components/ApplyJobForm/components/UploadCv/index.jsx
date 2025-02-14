@@ -48,7 +48,11 @@ const UploadCV = ({ field, form, disabled = false, ...props }) => {
 
   return (
     <Box className="flex items-center justify-center h-fit w-full">
-      <Box className={`relative w-full flex flex-col gap-2 items-center border border-dashed border-primary py-5 ${showError && "border-red-600 rounded-md"}`}>
+      <Box
+        className={`relative w-full flex flex-col gap-2 items-center border border-dashed border-primary py-5 ${
+          showError && "border-red-600 rounded-md"
+        }`}
+      >
         <CommonIcon.CloudUploadTwoTone className="!text-[40px] text-primary" />
         <Typography>Tải lên CV từ máy tính, chọn hoặc kéo thả</Typography>
         <Typography>
@@ -75,6 +79,7 @@ const UploadCV = ({ field, form, disabled = false, ...props }) => {
       </Box>
       <input
         type="file"
+        accept=".pdf, .docx"
         style={{ display: "none" }}
         ref={fileInputRef}
         onChange={handleUpload}

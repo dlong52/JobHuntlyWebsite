@@ -5,7 +5,7 @@ import { genderOptions } from "../../constants/enum";
 const GenderField = ({classNameContainer}) => {
   return (
     <FormikField
-      classNameLabel="text-neutrals-100 font-medium text-sm"
+      classNameLabel="font-medium text-neutrals-100"
       classNameContainer={classNameContainer}
       name="gender"
       options={genderOptions}

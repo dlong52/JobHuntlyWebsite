@@ -97,10 +97,13 @@ const PackageManagementPage = () => {
     },
   ];
   const breadcrumbs = [
-    <Link to={RouteBase.AdminOverview} className="hover:underline font-[500]">
+    <Link
+      to={RouteBase.AdminOverview}
+      className="hover:underline text-sm font-[500]"
+    >
       Trang chủ
     </Link>,
-    <Typography fontWeight={500} className="text-neutrals-100">
+    <Typography fontWeight={500} className="text-neutrals-100 !text-sm">
       Quản lí gói dịch vụ
     </Typography>,
   ];

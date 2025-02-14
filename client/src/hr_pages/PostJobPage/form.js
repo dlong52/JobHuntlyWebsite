@@ -12,11 +12,21 @@ export const validationSchema = Yup.object().shape({
     .required("Lương tối đa là bắt buộc")
     .typeError("Lương tối đa phải là số")
     .min(Yup.ref("minSalary"), "Lương tối đa phải lớn hơn lương tối thiểu"),
-  employment_type: Yup.string().required("Hình thức làm việc là bắt buộc"),
-  categories: Yup.array().required("Danh mục công việc là bắt buộc"),
-  province: Yup.string().required("Tỉnh/Thành phố là bắt buộc"),
-  district: Yup.string().required("Quận/Huyện là bắt buộc"),
-  ward: Yup.string().required("Phường/Xã là bắt buộc"),
+  employment_type: Yup.object({
+    value: Yup.string().required("Hình thức làm việc là bắt buộc"),
+  }),
+  categories: Yup.object({
+    value: Yup.string().required("Danh mục công việc là bắt buộc"),
+  }),
+  province: Yup.object({
+    value: Yup.string().required("Tỉnh/Thành phố là bắt buộc"),
+  }),
+  district: Yup.object({
+    value: Yup.string().required("Quận/Huyện là bắt buộc"),
+  }),
+  ward: Yup.object({
+    value: Yup.string().required("Phường/Xã là bắt buộc"),
+  }),
   additional: Yup.string().required("Địa chỉ cụ thể là bắt buộc"),
 });
 
@@ -36,26 +46,7 @@ export const initialValues = {
   maxSalary: "",
   province: "",
   district: "",
-  ward: "",
-  additional_info: "",
-  categories: "",
-  employment_type: "",
-  posted_by: "",
-};
-
-const payload = {
-  title: "",
-  experience: "",
-  description: "",
-  requirements: "",
-  job_benefit: "",
-  work_time: "",
-  level: "",
-  end_date: "",
-  minSalary: "",
-  maxSalary: "",
-  province: "",
-  district: "",
+  gender: "",
   ward: "",
   additional_info: "",
   categories: "",

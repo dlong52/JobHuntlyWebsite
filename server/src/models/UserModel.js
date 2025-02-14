@@ -42,6 +42,9 @@ const userSchema = new mongoose.Schema({
     phone_number: {
       type: String,
     },
+    description: {
+      type: String,
+    },
     birthday: { type: Date },
     avatar_url: { type: String },
     address: {

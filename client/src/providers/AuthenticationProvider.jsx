@@ -4,7 +4,6 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 
@@ -16,9 +15,9 @@ import {
   requestForToken,
   signInWithPopup,
 } from "../../firebaseConfig";
-import { SIGN_IN } from "../constants/api";
 import { useNotifications } from "../utils/notifications";
 import helpers from "../utils/helpers";
+import { apiURL } from "../constants/api";
 const AuthenticationContext = createContext({
   token: "",
   isLogged: false,
@@ -34,21 +33,17 @@ const AuthenticationContext = createContext({
 
 export const useAuthentication = () => useContext(AuthenticationContext);
 
-let timerInterval = null;
 const AuthProvider = ({ children }) => {
-  //! State
-
   const tokenLocalStorage = HttpService.getTokenSession();
   const servicesLocalStorage = HttpService.getServiceStorage();
-  const userInfoStorage = HttpService.getUserInfoStorage();
-
+  
+  //! State
   const [isLogged, setIsLogged] = useState(tokenLocalStorage ? true : false);
   const [isLoggingOut, setLoggingOut] = useState(false);
   const [isLogging, setIsLogging] = useState(false);
   const [serviceSelected, setServiceSelected] = useState(
     servicesLocalStorage ? servicesLocalStorage : ""
   );
-  const [userInfo, setUserInfo] = useState(userInfoStorage || {});
   const [token, setToken] = useState(tokenLocalStorage || "");
   const { showSuccess, showError } = useNotifications();
 
@@ -71,7 +66,7 @@ const AuthProvider = ({ children }) => {
       setIsLogging(true);
       await helpers.sleepTime(1500);
 
-      const res = await HttpService.post(SIGN_IN, { email, password });
+      const res = await HttpService.post(apiURL.SIGN_IN, { email, password });
       requestForToken(email);
       const { access_token } = res.data.data;
 
@@ -113,10 +108,7 @@ const AuthProvider = ({ children }) => {
     return new Promise(async (resolve, reject) => {
       try {
         setLoggingOut(true);
-        // const res = await pushFcmToken({
-        //   email: email,
-        //   fcmToken: currentToken,
-        // });
+        setIsLogged(false); // Đặt trước khi reload để đảm bảo cập nhật UI
         HttpService.clearUserInfoStorage();
         HttpService.clearTokenStorage();
         HttpService.clearServiceStorage();
@@ -143,7 +135,6 @@ const AuthProvider = ({ children }) => {
       serviceSelected,
       chooseService,
       token,
-      userInfo,
     };
   }, [
     isLogged,
@@ -154,7 +145,6 @@ const AuthProvider = ({ children }) => {
     isLoggingOut,
     chooseService,
     token,
-    userInfo,
   ]);
 
   return (

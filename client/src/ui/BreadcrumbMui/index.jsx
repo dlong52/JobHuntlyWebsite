@@ -1,10 +1,10 @@
-import { Breadcrumbs, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Typography } from "@mui/material";
 import React from "react";
 import CommonIcon from "../CommonIcon";
 
 const BreadcrumbMui = ({ title, breadcrumbs }) => {
   return (
-    <div className="flex items-center justify-between p-5 bg-white rounded-md shadow-sm">
+    <Box className="flex items-center justify-between p-5 bg-white rounded-md shadow-sm">
       <Typography
         sx={{
           fontSize: "20px",
@@ -24,7 +24,7 @@ const BreadcrumbMui = ({ title, breadcrumbs }) => {
       >
         {breadcrumbs}
       </Breadcrumbs>
-    </div>
+    </Box>
   );
 };
 

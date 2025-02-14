@@ -1,5 +1,5 @@
 import { Box, IconButton, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CommonAvatar, CommonIcon } from "../../ui";
 import CustomTable from "../../ui/Table";
 import { useGetAllUsers } from "../../hooks/modules/user/useGetAllUsers";
@@ -13,10 +13,19 @@ import { RouteBase } from "../../constants/routeUrl";
 import TooltipMui from "../../ui/TooltipMui";
 import DialogMUI from "../../components/Dialogs";
 import CreateUserForm from "./components/CreateUserForm";
+import DrawerMui from "../../ui/DrawerMui";
+import UserInfo from "./components/UserInfo";
 
 const UserManagementPage = () => {
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
   const { open, toggle, shouldRender } = useToggleDialog();
+  const {
+    open: openUpdateStatus,
+    toggle: toggleUpdateStatus,
+    shouldRender: shouldRenderUpdateStatus,
+  } = useToggleDialog();
+  const { open: openInfo, toggle: toggleInfo } = useToggleDialog();
   const { filters, handleChangePage } = useFilters({
     page: 1,
     limit: 10,
@@ -94,26 +103,22 @@ const UserManagementPage = () => {
             <TooltipMui content={"Thông tin người dùng"}>
               <IconButton
                 onClick={() => {
-                  navigate(`${RouteBase.AdminUserManagement}/${value}`);
+                  toggleInfo();
+                  setUserId(value);
                 }}
               >
                 <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
               </IconButton>
             </TooltipMui>
-            <IconButton
-            // onClick={() => {
-            //   handleSetId(value);
-            // }}
-            >
-              <CommonIcon.DriveFileRenameOutline className="text-primary-dark" />
-            </IconButton>
-            <IconButton
-            // onClick={() => {
-            //   toggleDelete(), setIdDelete(value);
-            // }}
-            >
-              <CommonIcon.DeleteSweep className="text-red-700" />
-            </IconButton>
+            <TooltipMui content={"Cập nhật trạng thái tài khoản"}>
+              <IconButton
+              // onClick={() => {
+              //   toggleDelete(), setIdDelete(value);
+              // }}
+              >
+                <CommonIcon.DriveFileRenameOutline className="text-red-700" />
+              </IconButton>
+            </TooltipMui>
           </Box>
         );
       },
@@ -123,17 +128,29 @@ const UserManagementPage = () => {
     {
       label: <CommonIcon.Add />,
       className: "!bg-primary !shadow-none",
-      onClick: toggle,
+      onClick: () => {
+        navigate(RouteBase.AdminCreateUser);
+      },
     },
   ];
   const breadcrumbs = [
-    <Link to={RouteBase.AdminOverview} className="hover:underline text-sm font-[500]">
+    <Link
+      to={RouteBase.AdminOverview}
+      className="hover:underline text-sm font-[500]"
+    >
       Trang chủ
     </Link>,
     <Typography fontWeight={500} className="text-neutrals-100 !text-sm">
       Quản lí người dùng
     </Typography>,
   ];
+  useEffect(() => {
+    if (!openInfo) {
+      setUserId(null);
+    }
+  }, [openInfo]);
+
+  // Render
   return (
     <Box>
       <BreadcrumbMui title={"Quản lí người dùng"} breadcrumbs={breadcrumbs} />
@@ -153,12 +170,26 @@ const UserManagementPage = () => {
       </Box>
       {shouldRender && (
         <DialogMUI
-          body={<CreateUserForm />}
           toggle={toggle}
           open={open}
           title={"Thêm người dùng mới"}
+          body={<CreateUserForm />}
         />
       )}
+      {shouldRenderUpdateStatus && (
+        <DialogMUI
+          toggle={toggleUpdateStatus}
+          open={openUpdateStatus}
+          title={"Cập nhật trạng thái tài khoản"}
+          body={<CreateUserForm />}
+        />
+      )}
+      <DrawerMui
+        content={<UserInfo userId={userId} onClose={toggleInfo} />}
+        onClose={toggleInfo}
+        anchor={"right"}
+        open={openInfo}
+      />
     </Box>
   );
 };
