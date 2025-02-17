@@ -100,7 +100,7 @@ const UserInfo = ({ userId, onClose }) => {
                   />
                   <Box className="flex flex-col">
                     <Link
-                      to={`${RouteBase.Company}/${dataConvert?._id}`}
+                      to={`${RouteBase.Company}/${dataConvert?.company?._id}`}
                       className="font-semibold hover:underline"
                     >
                       {dataConvert?.company?.name}

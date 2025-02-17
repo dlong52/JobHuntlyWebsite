@@ -1,7 +1,7 @@
 import { employmentTypeOptions } from "../../constants/enum";
 import { FormikField, RadioField } from "../CustomFieldsFormik";
 const RadioEmploymentTypeField = ({ classNameContainer }) => {
-  const options = [{ label: "Tất cả", value: "all" }, ...employmentTypeOptions];
+  const options = [{ label: "Tất cả", value: "" }, ...employmentTypeOptions];
 
   return (
     <FormikField

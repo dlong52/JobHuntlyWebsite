@@ -4,21 +4,21 @@ import FormikField from "../../components/CustomFieldsFormik/FormikField";
 import InputField from "../../components/CustomFieldsFormik/InputField";
 import { Button } from "@/ui";
 import * as Yup from "yup";
-import { Box, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { CommonAvatar, CommonIcon } from "../../ui";
+import { updateUser } from "../../services/UserServices";
+import { useNotifications } from "../../utils/notifications";
 
 const ProfileSettingPage = () => {
   const user = useSelector((state) => state.user);
-
+  const { showError, showSuccess } = useNotifications();
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Tên là bắt buộc"),
-    phone_number: Yup.string()
-      .min(6, "Số điện thoại phải ít nhất 6 ký tự")
-      .required("Số điện thoại là bắt buộc"),
-    email: Yup.string()
-      .email("Email không hợp lệ")
-      .required("Email là bắt buộc"),
+    phone_number: Yup.string().matches(
+      /^(?:\+84|0)(?:[1-9][0-9]{8})$/,
+      "Số điện thoại không hợp lệ"
+    ),
   });
 
   const initialValues = {
@@ -28,13 +28,23 @@ const ProfileSettingPage = () => {
   };
 
   const handleSubmit = async (values) => {
-    console.log("Form Values:", values);
-    // Your submission logic here
+    const payload = {
+      id: user?.user_id,
+      "profile.name": values?.name,
+      "profile.phone_number": values?.phone_number,
+    };
+    try {
+      await updateUser(payload);
+      showSuccess("Cập nhật thông tin tài khoản thành công!");
+      window.location.reload();
+    } catch (error) {
+      showError("Đã sảy ra lỗi khi cập nhật thông tin tài khoản");
+    }
   };
 
   return (
     <Box className="pt-5">
-      <Box className="container mx-auto my-10">
+      <Container className="my-10">
         <Box className="grid grid-cols-12 gap-10">
           <Box className="col-span-8 bg-white shadow-md rounded-md p-8">
             <Formik
@@ -93,12 +103,12 @@ const ProfileSettingPage = () => {
               )}
             </Formik>
           </Box>
-          <Box className="col-span-4 bg-white shadow-md rounded-md p-8">
+          <Box className="col-span-4 h-fit bg-white shadow-md rounded-md p-8">
             <Box className="flex gap-4 items-center">
               <Box className="size-[80px] relative">
                 <CommonAvatar className="!size-full " />
                 <Box className="size-6 flex items-center justify-center bg-primary text-white absolute bottom-0 right-0 rounded-full aspect-square">
-                  <CommonIcon.PhotoCamera className="!size-4"/>
+                  <CommonIcon.PhotoCamera className="!size-4" />
                 </Box>
               </Box>
               <Box className="flex flex-col">
@@ -108,7 +118,7 @@ const ProfileSettingPage = () => {
             </Box>
           </Box>
         </Box>
-      </Box>
+      </Container>
     </Box>
   );
 };

@@ -103,7 +103,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
       refetch();
       toggle();
     } catch (error) {
-      showError(error.response.data.error);
+      // showError(error.response.data.error);
       return error;
     }
   };
@@ -166,8 +166,8 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
           {({ values }) => {
             useEffect(() => {
               if (values?.province?.value)
-                fetchDistricts(values?.province.value);
-              if (values?.district?.value) fetchWards(values?.district.value);
+                fetchDistricts(values?.province?.value);
+              if (values?.district?.value) fetchWards(values?.district?.value);
             }, [values?.province?.value, values?.district?.value]);
             return (
               <Form className="flex flex-col w-[1000px] relative">
@@ -183,27 +183,24 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     placeholder="Nhập tiêu đề công việc"
                   />
                   {/* Experience */}
-                  <div className="col-span-6 flex items-center">
+                  <div className="col-span-8 flex items-center">
                     <FormikField
-                      classNameContainer="col-span-6"
                       className="bg-[#f8fafc]"
                       classNameLabel="font-medium text-neutrals-100"
                       name="experience"
                       type="number"
                       component={InputField}
                       labelTop="Kinh nghiệm (không bắt buộc)"
-                      placeholder=""
+                      placeholder="Nhập kinh nghiệm mong muốn"
                     />
                     <FormikField
-                      classNameContainer="col-span-6"
-                      className="bg-[#f8fafc]"
                       classNameLabel="font-medium text-neutrals-100"
                       name="isYear"
                       component={CheckboxField}
                       labelTop="Theo năm"
                     />
                   </div>
-                  <GenderField classNameContainer={"col-span-6"} />
+                  <GenderField classNameContainer={"col-span-4"} />
                   <FormikField
                     classNameContainer="col-span-12"
                     name="description"

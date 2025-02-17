@@ -46,9 +46,9 @@ const UserManagementPage = () => {
             />
             <Box>
               <Typography
-                className="!text-neutrals-80"
+                className="!text-neutrals-100"
                 fontSize={"16px"}
-                fontWeight={500}
+                fontWeight={400}
               >
                 {value?.name}
               </Typography>

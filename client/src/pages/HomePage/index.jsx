@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { cpLogo, lineBanner, Location, Search } from "@/assets/images";
 import { Link, useNavigate } from "react-router-dom";
 import { CategoryItem } from "../../components";
@@ -11,10 +11,21 @@ import SelectProvinceField from "../../components/SelectField/SelectProvinceFiel
 import { requestForToken } from "../../../firebaseConfig";
 import { useGetAllCategories } from "../../hooks/modules/category/useGetAllCategories";
 import { RouteBase } from "../../constants/routeUrl";
+import useFilters from "../../hooks/useFilters";
 const HomePage = () => {
   const navigate = useNavigate();
-  const { data, isLoading } = useGetAllCategories();
-  const categories = data?.data;
+  const { filters } = useFilters({
+    page: 1,
+    limit: 8,
+    sort: "desc",
+  });
+  const { data, isLoading } = useGetAllCategories(filters);
+  const categories = useMemo(() => {
+    if (data) {
+      return data?.data;
+    }
+    return [];
+  }, [data]);
   return (
     <Box className="">
       <Box className="bg-banner bg-no-repeat bg-contain bg-right h-[700px] bg-neutrals-0 flex items-end">
@@ -77,7 +88,10 @@ const HomePage = () => {
           <h1 className="font-ClashDisplay font-semibold text-3xl text-neutrals-100">
             Khám phá theo <span className="text-accent-blue"> ngành nghề</span>
           </h1>
-          <Link to={RouteBase.Job} className="font-semibold text-[16px] text-primary flex items-center gap-1">
+          <Link
+            to={RouteBase.Job}
+            className="font-semibold text-[16px] text-primary flex items-center gap-1"
+          >
             Hiển thị tất cả{" "}
             <CommonIcon.ArrowForwardRounded className="w-5 font-semibold" />
           </Link>
@@ -86,7 +100,7 @@ const HomePage = () => {
           {categories?.map((category, index) => {
             return (
               <Link
-                key={index}
+                key={categories?._id}
                 to={`${RouteBase.Job}?category=${category._id}`}
                 className="col-span-3 border rounded-sm overflow-hidden"
               >

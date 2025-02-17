@@ -1,42 +1,61 @@
-const WishList = require('../models/WishList');
+const WishList = require("../models/WishList");
 
-// Add job to wishlist
+const isJobInWishList = async (userId, jobId) => {
+  try {
+    const wishList = await WishList.findOne({ user: userId });
+
+    if (wishList && wishList.jobs.includes(jobId)) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error checking wishlist:", error);
+    return false;
+  }
+};
 const addJobToWishList = async (userId, jobId) => {
   try {
     const wishList = await WishList.findOneAndUpdate(
       { user: userId },
-      { $addToSet: { jobs: jobId } }, // Ensure no duplicates
-      { new: true, upsert: true } // Create if not exist
-    ).populate('jobs', 'title company');
+      { $addToSet: { jobs: jobId } },
+      { new: true, upsert: true }
+    ).populate("jobs", "title company");
     return wishList;
   } catch (error) {
-    throw new Error('Failed to add job to wishlist');
+    throw new Error("Failed to add job to wishlist");
   }
 };
 
-// Remove job from wishlist
 const removeJobFromWishList = async (userId, jobId) => {
   try {
     const wishList = await WishList.findOneAndUpdate(
       { user: userId },
-      { $pull: { jobs: jobId } }, // Remove job from array
+      { $pull: { jobs: jobId } },
       { new: true }
-    ).populate('jobs', 'title company');
+    ).populate("jobs", "title company");
     return wishList;
   } catch (error) {
-    throw new Error('Failed to remove job from wishlist');
+    throw new Error("Failed to remove job from wishlist");
   }
 };
 
-// Get wishlist by user
 const getWishListByUser = async (userId) => {
   try {
     const wishList = await WishList.findOne({ user: userId })
-      .populate('jobs', 'title company location')
-      .populate('user', 'name email');
+      .populate({
+        path: "jobs",
+        select: "title location employment_type",
+        populate: {
+          path: "company",
+          select: "name logo",
+        },
+      })
+      .populate("user", "name email");
+
     return wishList;
   } catch (error) {
-    throw new Error('Failed to retrieve wishlist');
+    throw new Error("Failed to retrieve wishlist");
   }
 };
 
@@ -44,4 +63,5 @@ module.exports = {
   addJobToWishList,
   removeJobFromWishList,
   getWishListByUser,
+  isJobInWishList,
 };

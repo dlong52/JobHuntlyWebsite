@@ -1,4 +1,4 @@
-import { ROLE } from "../constants/enum";
+import { EmploymentType, exps, ROLE } from "../constants/enum";
 
 const helpers = {
   isJsonString: (data) => {
@@ -10,18 +10,80 @@ const helpers = {
     return true;
   },
   convertSalary: (min, max) => {
-    if (isNaN(min) || isNaN(max)) return "Invalid salary";
-
-    if (min === max) {
-      return helpers.numberFormat(min); // Nếu min = max, chỉ hiển thị 1 giá trị
-    }
+    if (!min && !max) return "Thỏa thuận";
+    if (!min && !!max) return `Tối thiểu ${helpers.numberFormat(min)}`;
+    if (!!min && !max) return `Lên đến ${helpers.numberFormat(max)}`;
+    if (min === max) return helpers.numberFormat(min);
 
     return `${helpers.numberFormat(min)} - ${helpers.numberFormat(max)}`;
-},
-
+  },
+  convertEpmT: (epmT) => {
+    if (epmT === EmploymentType.FULL_TIME) {
+      return "Toàn thời gian";
+    }
+    if (epmT === EmploymentType.INTERN){
+      return "Thực tập"
+    }
+    if (epmT === EmploymentType.PART_TIME){
+      return "Bán thời gian"
+    }
+  },
+  checkExp: (exp) => {
+    if (exp === exps.NOT_REQUIRE) {
+      return {
+        min_experience: "0",
+        max_experience: "0",
+      };
+    }
+    if (exp === exps.UNDER_ONE_YEAR) {
+      return {
+        min_experience: 1,
+        max_experience: 11,
+      };
+    }
+    if (exp === exps.ONE_YEAR) {
+      return {
+        min_experience: 12,
+        max_experience: 12,
+      };
+    }
+    if (exp === exps.TWO_YEAR) {
+      return {
+        min_experience: 12 * 2,
+        max_experience: 12 * 2,
+      };
+    }
+    if (exp === exps.THREE_YEAR) {
+      return {
+        min_experience: 12 * 3,
+        max_experience: 12 * 3,
+      };
+    }
+    if (exp === exps.FOUR_YEAR) {
+      return {
+        min_experience: 12 * 4,
+        max_experience: 12 * 4,
+      };
+    }
+    if (exp === exps.FIVE_YEAR) {
+      return {
+        min_experience: 12 * 5,
+        max_experience: 12 * 5,
+      };
+    }
+    if (exp === exps.OVER_FIVE_YEAR) {
+      return {
+        min_experience: 5 * 12,
+        max_experience: null,
+      };
+    }
+  },
   convertTime: (month) => {
     const checkRound = month % 12 === 0;
     const year = month / 12;
+    if(!month){
+      return "Không yêu cầu"
+    }
     if (checkRound && year > 1) {
       return `${year} năm kinh nghiệm`;
     }

@@ -25,13 +25,13 @@ const RadioField = ({
 
   return (
     <FormControl
-      className={`flex flex-col gap-1 ${classNameContainer}`}
+      className={`flex flex-col gap-1 select-none ${classNameContainer}`}
       fullWidth
       error={showError}
     >
       {labelTop && (
         <label
-          className={`flex items-center ${classNameLabel}`}
+          className={`flex items-center select-none ${classNameLabel}`}
           htmlFor=""
         >
           {labelTop}

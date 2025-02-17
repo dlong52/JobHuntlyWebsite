@@ -13,8 +13,10 @@ export const RouteBase = {
   CompanySearch: "/company/search",
   Connect: "/connect",
   Profile: "/profile",
+  ChangePassword: "/profile/change-password",
   Connect: "/connect",
   WishList: "/wishlist",
+  ViewedResume: "/viewed_resume",
 
   // HR
   HROverview: "/hr",

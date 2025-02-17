@@ -14,13 +14,22 @@ import { useNotifications } from "../../utils/notifications";
 import { employmentTypeOptions, GENDER } from "../../constants/enum";
 import useConvertData from "../../hooks/useConvertData";
 import helpers from "../../utils/helpers";
+import { WishListService } from "../../services/WishListServices";
+import { useSelector } from "react-redux";
+import { useGetStatusWishlist } from "../../hooks/modules/wishlist/useGetStatusWishlist";
 
 const JobDetailsPage = () => {
+  const user = useSelector((state) => state.user);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { showError } = useNotifications();
+  const { showError, showSuccess } = useNotifications();
   const { data, isLoading, error } = useGetPost(id, { enabled: !!id });
+  const { data: statusData, isLoading: loadingStatus } = useGetStatusWishlist(
+    user?.user_id,
+    id
+  );
   const { dataConvert: detailData } = useConvertData(data);
+  const { dataConvert: status } = useConvertData(statusData);
   if (error) {
     navigate(RouteBase.Home);
     showError("Bài đăng không tồn tại!");
@@ -31,6 +40,23 @@ const JobDetailsPage = () => {
   const checkDate = moment(endDate, "DD/MM/YYYY").isBefore(
     moment(currentDate, "DD/MM/YYYY")
   );
+  const handleAddToWishlist = async () => {
+    try {
+      const payload = { userId: user?.user_id, jobId: id };
+      await WishListService.addToWishList(payload);
+      showSuccess("Lưu tin thành công!");
+    } catch (error) {
+      showError("Đã xảy ra lỗi khi lưu tin");
+    }
+  };
+  const handleRemoveToWishlist = async () => {
+    try {
+      await WishListService.removeFromWishList(user?.user_id, id);
+      showSuccess("Bỏ lưu tin thành công!");
+    } catch (error) {
+      showError("Đã xảy ra lỗi khi lưu tin");
+    }
+  };
   return (
     <>
       {!isLoading ? (
@@ -49,7 +75,12 @@ const JobDetailsPage = () => {
                       </Box>
                       <Box className="">
                         <Typography>Mức lương</Typography>
-                        <Typography fontWeight={500}>Tới 3 triệu</Typography>
+                        <Typography fontWeight={500}>
+                          {helpers.convertSalary(
+                            detailData?.salary?.min,
+                            detailData?.salary?.max
+                          )}
+                        </Typography>
                       </Box>
                     </Box>
                     <Box className="flex items-center gap-3 flex-1">
@@ -95,14 +126,27 @@ const JobDetailsPage = () => {
                     >
                       {checkDate ? "Đã quá hạn ứng tuyển" : "Ứng tuyển ngay"}
                     </Button>
-                    <Button
-                      size="large"
-                      variant="outlined"
-                      className="!text-primary !capitalize !border-primary"
-                      startIcon={<CommonIcon.FavoriteBorder />}
-                    >
-                      Lưu tin
-                    </Button>
+                    {status ? (
+                      <Button
+                        size="large"
+                        variant="filled"
+                        className="!bg-primary !capitalize !text-white"
+                        startIcon={<CommonIcon.BookmarkAdded />}
+                        onClick={handleRemoveToWishlist}
+                      >
+                        Đã lưu
+                      </Button>
+                    ) : (
+                      <Button
+                        size="large"
+                        variant="outlined"
+                        className="!text-primary !capitalize !border-primary"
+                        startIcon={<CommonIcon.FavoriteBorder />}
+                        onClick={handleAddToWishlist}
+                      >
+                        Lưu tin
+                      </Button>
+                    )}
                   </Box>
                 </Box>
                 <Box className="bg-white p-5 rounded-md flex flex-col gap-y-5">
@@ -192,7 +236,7 @@ const JobDetailsPage = () => {
                           size="large"
                           variant="outlined"
                           className="!text-primary !capitalize !border-primary"
-                          // startIcon={<CommonIcon.FavoriteBorder />}
+                          onClick={handleAddToWishlist}
                         >
                           Lưu tin
                         </Button>

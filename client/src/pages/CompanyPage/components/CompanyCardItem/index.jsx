@@ -11,9 +11,20 @@ const CompanyCardItem = ({ id, avatar, cover, name, description }) => {
       ) : (
         <Box className="bg-slate-200 h-[150px]" />
       )}
-      <img src={avatar} alt="" className="size-16 rounded-md border translate-x-5 -translate-y-1/2" />
+      <img
+        src={avatar}
+        alt=""
+        className="size-16 rounded-md border translate-x-5 -translate-y-1/2"
+      />
       <div className="px-5 pb-5">
-        {name && <Link className="text-lg font-semibold " to={`${RouteBase.Company}/${id}`}>{name}</Link>}
+        {name && (
+          <Link
+            className="text-lg font-semibold hover:underline"
+            to={`${RouteBase.Company}/${id}`}
+          >
+            {name}
+          </Link>
+        )}
         {description && <Typography>{description}</Typography>}
       </div>
     </div>
