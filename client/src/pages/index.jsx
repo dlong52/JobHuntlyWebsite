@@ -11,6 +11,8 @@ export { default as JobDetailsPage } from "./JobDetailsPage";
 export { default as CompanyProfilePage } from "./CompanyProfilePage";
 export { default as ConnectPage } from "./ConnectPage";
 export { default as WishListPage } from "./WishListPage";
+export { default as ViewedResumePage } from "./ViewedResumePage";
+export { default as ChangePasswordPage } from "./ChangePasswordPage";
 // Auth
 export { default as SignInPage } from "./SignInPage";
 export { default as SignUpPage } from "./SignUpPage";

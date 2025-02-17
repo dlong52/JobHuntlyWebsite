@@ -138,12 +138,13 @@ const PostJobPage = () => {
   }, [openDelete]);
   const breadcrumbs = [
     <Link
+      key={1}
       to={RouteBase.AdminOverview}
       className="hover:underline text-sm font-[500]"
     >
       Trang chủ
     </Link>,
-    <Typography fontWeight={500} className="text-neutrals-100 !text-sm">
+    <Typography key={2} fontWeight={500} className="text-neutrals-100 !text-sm">
       Tuyển dụng
     </Typography>,
   ];

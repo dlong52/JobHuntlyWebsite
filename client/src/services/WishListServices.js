@@ -6,15 +6,21 @@ const getWishListByUser = async (userId, params) => {
     params: params.queryKey[1],
   });
 };
+const getStatusWishlist = async (userId, jobId, params) => {
+  return httpServices.get(`${apiURL.WISH_LIST}/${userId}/${jobId}`, {
+    params: params.queryKey[1],
+  });
+};
 const addToWishList = (payload) => {
   return httpServices.post(apiURL.WISH_LIST, payload);
 };
-const removeFromWishList = (id) => {
-  return httpServices.delete(`${apiURL.WISH_LIST}/${id}`);
+const removeFromWishList = (userId, jobId) => {
+  return httpServices.delete(`${apiURL.WISH_LIST}/${userId}/${jobId}`);
 };
 
 export const WishListService = {
   getWishListByUser,
   addToWishList,
   removeFromWishList,
+  getStatusWishlist,
 };

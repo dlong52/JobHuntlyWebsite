@@ -4,16 +4,41 @@ import {
   MenuItem,
   menuItemClasses,
   MenuList,
+  Typography,
 } from "@mui/material";
 import React from "react";
 import { CommonAvatar, CommonIcon } from "../../../../ui";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RouteBase } from "../../../../constants/routeUrl";
 import { useAuthentication } from "../../../../providers/AuthenticationProvider";
 
 const AccountPopover = ({ user }) => {
   const { logout } = useAuthentication();
   const navigate = useNavigate();
+
+  const menuItems = [
+    {
+      icon: <CommonIcon.EditOutlined className="text-primary" />,
+      text: "Cài đặt thông tin cá nhân",
+      route: RouteBase.Profile,
+    },
+    {
+      icon: <CommonIcon.VisibilityOutlined className="text-primary" />,
+      text: "Nhà tuyển dụng xem hồ sơ",
+      route: RouteBase.ViewedResume,
+    },
+    {
+      icon: <CommonIcon.FavoriteBorder className="text-primary" />,
+      text: "Danh sách tin đã lưu",
+      route: RouteBase.WishList,
+    },
+    {
+      icon: <CommonIcon.LockOutlined className="text-primary" />,
+      text: "Đổi mật khẩu",
+      route: RouteBase.ChangePassword,
+    },
+  ];
+
   return (
     <Box className="p-4 flex flex-col gap-4 min-w-[350px]">
       <Box className="flex gap-4">
@@ -27,9 +52,9 @@ const AccountPopover = ({ user }) => {
       <MenuList
         disablePadding
         sx={{
-          gap: 1,
           display: "flex",
           flexDirection: "column",
+          gap: 1,
           [`& .${menuItemClasses.root}`]: {
             p: 2,
             display: "flex",
@@ -37,8 +62,7 @@ const AccountPopover = ({ user }) => {
             gap: 2,
             borderRadius: 0.75,
             bgcolor: "#54555513",
-            lineHeight: "100%",
-            "&:hover": { color: "#4640DE" },
+            "&:hover": { color: "var(--primary)" },
             [`&.${menuItemClasses.selected}`]: {
               color: "#4640DE",
               bgcolor: "action.selected",
@@ -47,31 +71,19 @@ const AccountPopover = ({ user }) => {
           },
         }}
       >
-        <MenuItem
-          onClick={() => {
-            navigate(RouteBase.Profile);
-          }}
-        >
-          <CommonIcon.EditOutlined className="text-primary" />
-          <span className="text-[14px]">
-            Cài đặt thông tin cá nhân
-          </span>
-        </MenuItem>
-        <MenuItem>
-          <CommonIcon.VisibilityOutlined className="text-primary" />
-          <Link to={"/"} className="text-[14px]">
-            Nhà tuyển dụng xem hồ sơ
-          </Link>
-        </MenuItem>
-        <MenuItem>
-          <CommonIcon.LockOutlined className="text-primary" />
-          <Link to={"/"} className="text-[14px]">
-            Đổi mật khẩu
-          </Link>
-        </MenuItem>
+        {menuItems.map(({ icon, text, route }, index) => (
+          <MenuItem
+            className="flex items-center"
+            key={index}
+            onClick={() => navigate(route)}
+          >
+            {icon}
+            <Typography fontSize={"14px"} >{text}</Typography>
+          </MenuItem>
+        ))}
         <MenuItem onClick={logout}>
           <CommonIcon.LogoutOutlined className="text-primary" />
-          <span className="text-[14px] text-red-600 ">Đăng xuất</span>
+          <Typography fontSize={"14px"} className="text-red-600" >Đăng xuất</Typography>
         </MenuItem>
       </MenuList>
     </Box>

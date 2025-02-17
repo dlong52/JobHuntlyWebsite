@@ -7,9 +7,9 @@ const RadioLevelField = ({ classNameContainer }) => {
     if (levels) {
       const options = levels?.data?.map((level) => ({
         label: level?.name,
-        value: level?.name,
+        value: level?._id,
       }));
-      options?.unshift({ label: "Tất cả", value: "all" });
+      options?.unshift({ label: "Tất cả", value: "" });
       return options;
     }
     return [];

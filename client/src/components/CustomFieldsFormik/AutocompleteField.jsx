@@ -17,6 +17,7 @@ const AutocompleteField = ({
   size = "medium",
   classNameContainer = "",
   classNameLabel = "",
+  defaultValue,
   className,
   sx,
   multiple = false,
@@ -26,7 +27,6 @@ const AutocompleteField = ({
   const { name, value } = field;
   const { touched, errors, setFieldValue } = form;
   const showError = Boolean(touched[name] && errors[name]);
-
   const handleChange = (_, selectedValue) => {
     setFieldValue(name, multiple ? selectedValue || [] : selectedValue || null);
   };
@@ -44,6 +44,7 @@ const AutocompleteField = ({
       <Autocomplete
         options={options}
         sx={sx}
+        defaultValue={defaultValue}
         multiple={multiple}
         getOptionLabel={(option) => option?.label ?? ""}
         value={multiple ? value ?? [] : value ?? null}
@@ -77,7 +78,7 @@ const AutocompleteField = ({
         {...props}
       />
 
-      {showError && <FormHelperText>{errors[name]}</FormHelperText>}
+      {showError && <FormHelperText>{errors[name]?.value}</FormHelperText>}
     </FormControl>
   );
 };

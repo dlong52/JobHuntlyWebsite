@@ -6,7 +6,7 @@ const companySchema = new mongoose.Schema({
   logo: { type: String },
   cover: { type: String },
   description: { type: String },
-  active: { type: Boolean, default: true},
+  active: { type: Boolean, default: true },
   introduce: { type: String },
   categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   staff_quantity: {
@@ -28,6 +28,7 @@ const companySchema = new mongoose.Schema({
     },
     additional_info: { type: String },
   },
+  is_featured: { type: Boolean, default: false },
   phone: { type: String },
   isVerifiedPhone: { type: Boolean },
   created_by: {

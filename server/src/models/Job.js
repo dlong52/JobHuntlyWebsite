@@ -5,7 +5,7 @@ const { client } = require("../configs/elasticsearch");
 
 const JobSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  experience: { type: Number, required: true },
+  experience: { type: Number},
   description: { type: String, required: true },
   requirements: { type: String, required: true },
   job_benefit: { type: String, required: true },

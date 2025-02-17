@@ -17,6 +17,8 @@ import {
   CompanyDetailPage,
   CompanySearchPage,
   WishListPage,
+  ViewedResumePage,
+  ChangePasswordPage,
 } from "../pages";
 import {
   ChatPage,
@@ -43,6 +45,7 @@ import {
   UserDetailPage,
   UserManagementPage,
 } from "../admin_page";
+
 const Routes = [
   {
     path: RouteBase.Home,
@@ -114,8 +117,18 @@ const Routes = [
     permissionAllow: [ROLE.ALL],
   },
   {
+    path: RouteBase.ChangePassword,
+    component: ChangePasswordPage,
+    permissionAllow: [ROLE.ALL],
+  },
+  {
     path: RouteBase.WishList,
     component: WishListPage,
+    permissionAllow: [ROLE.ALL],
+  },
+  {
+    path: RouteBase.ViewedResume,
+    component: ViewedResumePage,
     permissionAllow: [ROLE.ALL],
   },
   {

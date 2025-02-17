@@ -7,7 +7,7 @@ const RoleChip = ({ role }) => {
   let color = "";
   if (role === ROLE.ADMIN) {
     label = "Quản trị viên";
-    color = "primary";
+    color = "default";
   }
   if (role === ROLE.EMPLOYER) {
     label = "Nhà tuyển dụng";
@@ -17,7 +17,7 @@ const RoleChip = ({ role }) => {
     label = "Ứng viên";
     color = "info";
   }
-  return <ChipMui variant={"outlined"} label={label} color={color} />;
+  return <ChipMui variant={"filled"} label={label} color={color} />;
 };
 
 export default RoleChip;
