@@ -5,10 +5,10 @@ export const validationSchema = Yup.object().shape({
   job_benefit: Yup.string().required("Quyền lợi là bắt buộc"),
   requirements: Yup.string().required("Yêu cầu công việc là bắt buộc"),
   work_time: Yup.string().required("Thời gian làm việc là bắt buộc"),
-  minSalary: Yup.number().typeError("Lương tối thiểu phải là số"),
-  maxSalary: Yup.number()
-    .typeError("Lương tối đa phải là số")
-    .min(Yup.ref("minSalary"), "Lương tối đa phải lớn hơn lương tối thiểu"),
+  // minSalary: Yup.number().typeError("Lương tối thiểu phải là số"),
+  // maxSalary: Yup.number()
+  //   .typeError("Lương tối đa phải là số")
+  //   .min(Yup.ref("minSalary"), "Lương tối đa phải lớn hơn lương tối thiểu"),
   employment_type: Yup.object({
     value: Yup.string().required("Hình thức làm việc là bắt buộc"),
   }),

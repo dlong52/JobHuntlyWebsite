@@ -19,20 +19,24 @@ const { initSocket } = require("./src/configs/socket");
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 5000;
-const allowedOrigins = ["http://localhost:8000"];
-
+const allowedOrigins = [
+  "https://jobhuntlyclient.vercel.app",
+  "http://localhost:8000",
+];
 
 // CORS
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.includes(origin) || !origin) {
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 

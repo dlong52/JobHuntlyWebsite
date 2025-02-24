@@ -24,7 +24,7 @@ const CkEditerField = ({
     isReadOnly: disabled || readOnly,
     removePlugins: [
       // "ImageUpload",
-      "EasyImage",
+      // "EasyImage",
       "MediaEmbed",
       "BlockQuote",
       "Table",

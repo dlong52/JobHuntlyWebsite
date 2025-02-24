@@ -22,7 +22,9 @@ const updateNotification = (payload) => {
 const deleteNotification = (id) => {
   return httpServices.delete(`${apiURL.NOTIFICATION}/${id}`);
 };
-
+const markAllNotifications = (userId) => {
+  return httpServices.patch(`${apiURL.NOTIFICATION}/${userId}/read-all`);
+};
 export const NotificationService = {
   getAllNotifications,
   createNotification,
@@ -30,4 +32,5 @@ export const NotificationService = {
   deleteNotification,
   updateNotification,
   sendToUser,
+  markAllNotifications,
 };

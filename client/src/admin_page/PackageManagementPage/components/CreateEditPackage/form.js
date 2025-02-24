@@ -37,4 +37,5 @@ export const initialValues = {
   duration_in_days: undefined,
   is_featured: false,
   active: false,
+  features: [""]
 };

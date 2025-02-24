@@ -39,7 +39,7 @@ const getAllApplications = async (filters = {}, options = {}) => {
 const getApplicationById = async (id) => {
   try {
     return await Application.findById(id)
-      .populate("candidate", "name email")
+      .populate("candidate", "profile email")
       .populate("job", "title company");
   } catch (error) {
     throw new Error("Application not found");

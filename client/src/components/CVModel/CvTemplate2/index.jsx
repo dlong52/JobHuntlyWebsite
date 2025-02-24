@@ -73,7 +73,7 @@ const CvTemplate2 = () => {
                   />
                 </p>
               </section>
-
+ 
               {/* Work Experiences */}
               <FieldArray name="work_experiences">
                 {({ remove, push }) => (

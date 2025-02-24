@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
 
 const cvSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  theme: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "CvTheme",
+    required: true,
+  },
   profile: {
     name: { type: String, required: true },
     email: { type: String, required: true },

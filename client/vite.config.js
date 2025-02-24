@@ -2,16 +2,18 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { resolve } from "path";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  server: {
-    port: 8000,
-  },
+  base: '/',  // 👈 Đặt lại base URL
   plugins: [react()],
-  publicDir: 'public',
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
     },
+  },
+  build: {
+    outDir: 'dist', // Vercel yêu cầu build output ở đây
+  },
+  server: {
+    port: 8000,
   },
 });

@@ -22,6 +22,7 @@ import useCheckRoleNavigate from "../../hooks/useCheckRoleNavigate";
 import * as UserServices from "@/services/UserServices";
 import { useDispatch } from "react-redux";
 import { updateUser } from "@/redux/userSlice";
+import httpServices from "../../services/httpServices";
 const SignUpPage = () => {
   const { showSuccess, showError } = useNotifications();
   const navigate = useNavigate();
@@ -38,6 +39,8 @@ const SignUpPage = () => {
         checkRoleNavigate(res?.data.role);
         if (res?.data.access_token) {
           handleGetUserDetails(res?.data.access_token);
+          httpServices.saveTokenStorage(res?.data?.access_token);
+          httpServices.attachTokenToHeader(res?.data?.access_token);
         }
         return;
       }
@@ -47,9 +50,9 @@ const SignUpPage = () => {
     }
   }, []);
   const handleGetUserDetails = async (token) => {
-      const res = await UserServices.getDetailUser(token);
-      dispatch(updateUser({ ...res?.data, accessToken: token }));
-    };
+    const res = await UserServices.getDetailUser(token);
+    dispatch(updateUser({ ...res?.data, accessToken: token }));
+  };
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Họ tên là bắt buộc"),
     email: Yup.string()

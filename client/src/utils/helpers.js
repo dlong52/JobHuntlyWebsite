@@ -17,15 +17,23 @@ const helpers = {
 
     return `${helpers.numberFormat(min)} - ${helpers.numberFormat(max)}`;
   },
+  convertStaffQuantity: (min, max) => {
+    if (!min && !max) return "";
+    if (!min && !!max) return max;
+    if (!!min && !max) return `${min}+`;
+    if (min === max) return min;
+
+    return `${min} - ${max}`;
+  },
   convertEpmT: (epmT) => {
     if (epmT === EmploymentType.FULL_TIME) {
       return "Toàn thời gian";
     }
-    if (epmT === EmploymentType.INTERN){
-      return "Thực tập"
+    if (epmT === EmploymentType.INTERN) {
+      return "Thực tập";
     }
-    if (epmT === EmploymentType.PART_TIME){
-      return "Bán thời gian"
+    if (epmT === EmploymentType.PART_TIME) {
+      return "Bán thời gian";
     }
   },
   checkExp: (exp) => {
@@ -81,8 +89,8 @@ const helpers = {
   convertTime: (month) => {
     const checkRound = month % 12 === 0;
     const year = month / 12;
-    if(!month){
-      return "Không yêu cầu"
+    if (!month) {
+      return "Không yêu cầu";
     }
     if (checkRound && year > 1) {
       return `${year} năm kinh nghiệm`;

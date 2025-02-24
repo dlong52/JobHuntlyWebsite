@@ -12,6 +12,8 @@ import { useGetAllPosts } from "../../hooks/modules/post/useGetAllPosts";
 import JobListItem from "../FindJobPage/components/JobListItem";
 import PaginationMui from "../../ui/Pagination";
 import MascotEmpty from "../../components/MascotEmpty";
+import useConvertData from "../../hooks/useConvertData";
+import { company, companyLogoDefault } from "../../assets/images";
 
 const CompanyDetailPage = () => {
   const { id } = useParams();
@@ -26,9 +28,9 @@ const CompanyDetailPage = () => {
   });
 
   const { data: postData } = useGetAllPosts(filters);
-  const jobData = postData?.data?.data;
+  const { dataConvert: jobData } = useConvertData(postData);
   const { data, isLoading, error } = useGetCompany(id, { enabled: !!id });
-  const detailData = data?.data?.data;
+  const { dataConvert: detailData } = useConvertData(data);
   if (error) {
     navigate(RouteBase.Home);
     showError("Bài đăng không tồn tại!");
@@ -72,7 +74,7 @@ const CompanyDetailPage = () => {
         {!detailData?.cover && <Box className="bg-slate-200 h-[225px]" />}
         <Box className="relative">
           <img
-            src={detailData?.logo}
+            src={detailData?.logo ? detailData?.logo : companyLogoDefault}
             alt=""
             className="size-[180px] rounded-full absolute  object-cover -top-[90px] left-5"
           />
@@ -111,25 +113,34 @@ const CompanyDetailPage = () => {
                 Tuyển dụng
               </Typography>
             </Box>
-            <div className="p-5 flex flex-col gap-6">
-              {jobData?.map((job) => (
-                <JobListItem
-                  key={job._id}
-                  id={job._id}
-                  title={job?.title}
-                  salary={job?.salary}
-                  company={job?.company}
-                  logo={job?.company?.logo}
+            {!!jobData?.length ? (
+              <div className="p-5 flex flex-col gap-6">
+                {jobData?.map((job) => (
+                  <JobListItem
+                    key={job._id}
+                    id={job._id}
+                    title={job?.title}
+                    salary={job?.salary}
+                    company={job?.company}
+                    logo={job?.company?.logo}
+                    employment_type={job?.employment_type}
+                  />
+                ))}
+              </div>
+            ) : (
+              <Box>
+                <MascotEmpty message={"Chưa có việc làm nào"} />
+              </Box>
+            )}
+            {!!jobData?.length && (
+              <div className="flex justify-center">
+                <PaginationMui
+                  handleChangePage={handleChangePage}
+                  page={filters.page}
+                  totalPages={postData?.data?.pagination.totalPages}
                 />
-              ))}
-            </div>
-            <div className="flex justify-center">
-              <PaginationMui
-                handleChangePage={handleChangePage}
-                page={filters.page}
-                totalPages={postData?.data?.pagination.totalPages}
-              />
-            </div>
+              </div>
+            )}
           </Box>
         </Box>
         <Box className="col-span-4 flex flex-col gap-5">

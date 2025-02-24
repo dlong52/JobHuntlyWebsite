@@ -12,8 +12,11 @@ import httpServices from "./services/httpServices";
 import withPermission from "./HOCs/withPermission";
 import { onMessageListener } from "../firebaseConfig";
 import { useNotifications } from "./utils/notifications";
+import ScrollToTop from "./components/ScrollToTop";
+import { useLoadingUser } from "./providers/LoadingUserProvider";
 
 function App() {
+  const { setIsLoading } = useLoadingUser();
   const dispatch = useDispatch();
   const { showInfo } = useNotifications();
   if ("serviceWorker" in navigator) {
@@ -39,41 +42,46 @@ function App() {
     };
   }, []);
 
+  const storageData = httpServices.getTokenStorage();
   useEffect(() => {
-    const storageData = httpServices.getTokenStorage();
     if (storageData) {
       handleGetUserDetails(storageData);
     }
-  }, []);
+  }, [storageData]);
   const handleGetUserDetails = async (token) => {
+    setIsLoading(true);
     const res = await UserService.getDetailUser(token);
     dispatch(updateUser({ ...res?.data, access_token: token }));
+    setIsLoading(false);
   };
 
   return (
-    <Routes>
-      {routes.map((route, index) => {
-        const Page = route.component;
-        let Layout = MainLayout;
+    <>
+      {/* <ScrollToTop /> */}
+      <Routes>
+        {routes.map((route, index) => {
+          const Page = route.component;
+          let Layout = MainLayout;
 
-        const WrappedPage = withPermission(Page, route.permissionAllow || []);
+          const WrappedPage = withPermission(Page, route.permissionAllow || []);
 
-        if (route.layout) Layout = route.layout;
-        if (route.layout === null) Layout = Fragment;
+          if (route.layout) Layout = route.layout;
+          if (route.layout === null) Layout = Fragment;
 
-        return (
-          <Route
-            key={index}
-            path={route.path}
-            element={
-              <Layout>
-                <WrappedPage />
-              </Layout>
-            }
-          />
-        );
-      })}
-    </Routes>
+          return (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <Layout>
+                  <WrappedPage />
+                </Layout>
+              }
+            />
+          );
+        })}
+      </Routes>
+    </>
   );
 }
 

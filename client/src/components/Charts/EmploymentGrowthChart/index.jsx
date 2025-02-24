@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 const EmploymentGrowthChart = ({ data }) => {
   return (
     <div className="">
-      <h2 className=" text-white font-bold mb-4">Nhu cầu tuyển dụng theo ngành nghề</h2>
+      <h2 className=" text-white font-bold mb-4">Tăng trưởng cơ hội việc làm</h2>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart
           data={data}

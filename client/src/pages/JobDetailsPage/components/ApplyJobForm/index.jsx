@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import {
   FormikField,
   InputField,
@@ -14,8 +14,9 @@ import { ROLE } from "../../../../constants/enum";
 import { NotificationService } from "../../../../services/NotificationServices";
 import { ApplicantService } from "../../../../services/ApplicationServices";
 
-const ApplyJobForm = ({ onClose, jobId, name, posted_by }) => {
+const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
   const user = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
 
   const { showSuccess, showError, showInfo } = useNotifications();
 
@@ -36,8 +37,10 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by }) => {
       candidate: user?.user_id,
       job: jobId,
       cv_url: values?.cv_url,
+      company: companyId,
       cover_letter: values?.cover_letter,
     };
+    setLoading(true);
     try {
       if (user?.user_id && user?.role === ROLE.CANDIDATE) {
         const res = await ApplicantService.createApplicant(payload);
@@ -49,11 +52,14 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by }) => {
           });
         }
         showSuccess("Ứng tuyển thành công!");
+        setLoading(false);
       } else {
         showInfo("Bạn cần đăng nhập để ứng tuyển");
       }
     } catch (error) {
       showError(error);
+    } finally {
+      setLoading(false);
     }
   };
   // Render
@@ -108,6 +114,7 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by }) => {
                   Hủy
                 </Button>
                 <Button
+                  isLoading={loading}
                   className="!bg-primary !text-white flex-1 "
                   size="large"
                   type="submit"

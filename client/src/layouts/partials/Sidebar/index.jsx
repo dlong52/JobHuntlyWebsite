@@ -9,7 +9,7 @@ const Sidebar = () => {
   return (
     <Box className="w-sidebar min-h-screen bg-white fixed left-0 top-0 bottom-0 z-10 font-serif">
       <Box>
-        <Box className="pb-8">
+        <Box className="pb-4">
           <Box className="px-6 h-header-hr flex items-center">
             <Logo />
           </Box>

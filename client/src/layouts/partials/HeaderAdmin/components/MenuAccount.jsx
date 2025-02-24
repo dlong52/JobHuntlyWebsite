@@ -56,12 +56,6 @@ const MenuAccount = ({ user }) => {
           <span className="text-[14px] font-medium">Cài đặt tài khoản</span>
         </MenuItem>
         <MenuItem>
-          <CommonIcon.VisibilityOutlined className="text-primary" />
-          <Link to={"/"} className="text-[14px] font-medium">
-            Hồ sơ doanh nghiệp
-          </Link>
-        </MenuItem>
-        <MenuItem>
           <CommonIcon.KeyOutlined className="text-primary" />
           <Link to={"/"} className="text-[14px] font-medium">
             Đổi mật khẩu

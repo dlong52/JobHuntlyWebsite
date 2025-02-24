@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { levelService } from "../../../services/Levelservices";
+import { levelService } from "../../../services/LevelServices";
 
 const useGetAllLevels = () => {
   const [levels, setLevels] = useState([]);

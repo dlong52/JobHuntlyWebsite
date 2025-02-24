@@ -13,17 +13,17 @@ const sidebarHrRoutes = [
     icon: CommonIcon.NewspaperOutlined,
   },
   {
-    path: "/hr1",
+    path: RouteBase.HRRecruitmentReport,
     name: "Báo cáo tuyển dụng",
     icon: CommonIcon.FeedOutlined,
   },
   {
-    path: "/hr1",
+    path: RouteBase.HRCvManagement,
     name: "Quản lí CV",
     icon: CommonIcon.AccountCircleOutlined,
   },
   {
-    path: "/hr1",
+    path: RouteBase.HRMyCompany,
     name: "Doanh nghiệp",
     icon: CommonIcon.Business,
   },

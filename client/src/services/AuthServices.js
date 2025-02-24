@@ -2,15 +2,12 @@ import axios from "axios";
 import httpServices from "./httpServices";
 import { apiURL } from "../constants/api";
 const axiosJwt = axios.create();
-const prefixAuthApi = `${import.meta.env.VITE_API}/auth`;
 
 const signIn = async (data) => {
   try {
     const res = await httpServices.post(apiURL.SIGN_IN, data);
     return res.data;
   } catch (error) {
-    console.log({ error });
-
     return error.response.data;
   }
 };
@@ -22,7 +19,7 @@ const signInWithGoogle = async (
 ) => {
   try {
     const res = await axios.post(
-      `${prefixAuthApi}/sign-in-google`,
+      apiURL.SIGN_IN_GOOGLE,
       { token, account_type, role },
       { withCredentials: true }
     );
@@ -33,7 +30,7 @@ const signInWithGoogle = async (
 };
 const signUp = async (data) => {
   try {
-    const res = await httpServices.post(`${prefixAuthApi}/sign-up`, data);
+    const res = await httpServices.post(apiURL.SIGN_UP, data);
     return res.data;
   } catch (error) {
     return error.response.data;
@@ -65,5 +62,15 @@ const refreshToken = async () => {
     console.log("error: ", error);
   }
 };
-
-export { axiosJwt, signIn, signInWithGoogle, signUp, signOut, refreshToken };
+const changePassword = (payload) => {
+  return httpServices.post(`${apiURL.CHANGE_PASSWORD}`, payload);
+};
+export {
+  axiosJwt,
+  signIn,
+  signInWithGoogle,
+  signUp,
+  signOut,
+  refreshToken,
+  changePassword,
+};

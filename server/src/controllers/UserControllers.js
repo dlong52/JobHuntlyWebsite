@@ -1,5 +1,14 @@
 const UserServices = require("../services/UserServices");
 
+const createUser = async (req, res) => {
+  try {
+    const user = await UserServices.createUser(req.body);
+    res.status(201).json({ status: "success", message: "User created", data: user });
+  } catch (error) {
+    res.status(400).json({ status: "error", message: error.message });
+  }
+};
+
 const getUserById = async (req, res) => {
   try {
     const user = await UserServices.getUserById(req.params.id);
@@ -112,5 +121,6 @@ module.exports = {
   getAllUsers,
   getUserDetails,
   updateFCMToken,
-  getUserById
+  getUserById,
+  createUser
 };

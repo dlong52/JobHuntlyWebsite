@@ -134,8 +134,8 @@ const getNotifications = async (req, res) => {
 // Mark a notification as read
 const markNotificationAsRead = async (req, res) => {
   try {
-    const { id } = req.params;
-    const notification = await notificationService.markNotificationAsRead(id);
+    const { userId } = req.params;
+    const notification = await notificationService.markNotificationAsRead(userId);
     res.status(200).json({
       status: "success",
       message: "Notification marked as read",
@@ -145,7 +145,24 @@ const markNotificationAsRead = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const markAllNotifications = async (req, res) => {
+  const { userId } = req.params; 
 
+  try {
+    const result = await notificationService.markAllNotificationsAsRead(userId);
+
+    if (result.modifiedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "No unread notifications found." });
+    }
+    return res
+      .status(200)
+      .json({ message: "All notifications marked as read." });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 // Delete a notification
 const deleteNotification = async (req, res) => {
   try {
@@ -161,6 +178,7 @@ const deleteNotification = async (req, res) => {
 };
 
 module.exports = {
+  markAllNotifications,
   createNotification,
   markNotificationAsRead,
   getNotifications,

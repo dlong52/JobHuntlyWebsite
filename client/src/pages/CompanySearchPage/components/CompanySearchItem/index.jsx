@@ -2,11 +2,16 @@ import { Typography } from "@mui/material";
 import React from "react";
 import { CommonIcon } from "../../../../ui";
 import Address from "../../../../components/Address";
+import { companyLogoDefault } from "../../../../assets/images";
 
 const CompanySearchItem = ({ logo, name, quantity, address, description }) => {
   return (
     <div className="flex gap-5 rounded-md shadow overflow-hidden p-4">
-      <img src={logo} alt="" className="size-[80px] rounded-sm" />
+      <img
+        src={logo ? logo : companyLogoDefault}
+        alt=""
+        className="size-[80px] rounded-sm"
+      />
       <div className="flex flex-col">
         <div className=" flex items-center gap-1">
           <Typography>{name}</Typography>

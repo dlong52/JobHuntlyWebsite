@@ -1,0 +1,46 @@
+import { Box, Typography } from "@mui/material";
+import React from "react";
+import { Button, CommonIcon } from "../../../../ui";
+import { error } from "../../../../assets/images";
+
+const Error = () => {
+  return (
+    <Box className="grid grid-cols-12 bg-white p-8 rounded">
+      <Box className="col-span-6 flex items-center justify-end">
+        <img src={error} alt="" />
+      </Box>
+      <Box className="col-span-6 flex flex-col justify-center gap-5">
+        <Box>
+          <Typography
+            className="text-primary flex items-center gap-2"
+            fontSize={"30px"}
+            fontWeight={600}
+          >
+            <CommonIcon.Error fontSize="30px" /> Đã có lỗi xảy ra!
+          </Typography>
+          <Typography fontSize={"16px"} className="text-neutrals-80">
+            Không thể xử lí thông tin đơn hàng. Vui lòng quay trở lại và thử lại
+          </Typography>
+        </Box>
+        <Box className="flex gap-4">
+          <Button
+            sx={{ textTransform: "none" }}
+            endIcon={<CommonIcon.East />}
+            className={"!bg-primary !text-white !px-5"}
+          >
+            Trang chủ
+          </Button>
+          <Button
+            sx={{ textTransform: "none" }}
+            // variant={"outline"}
+            className={"!border-2 !border-primary !text-primary"}
+          >
+            Tìm dịch vụ
+          </Button>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+export default Error;

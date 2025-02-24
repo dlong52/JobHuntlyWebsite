@@ -1,14 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import { VNFlag } from "../../assets/images";
-import { Link } from "react-router-dom";
 import { CVItem } from "../../components";
 import { Box, Container } from "@mui/material";
+import { useConvertData, useFilters } from "../../hooks";
+import { useGetAllCvThemes } from "../../hooks/modules/cv_theme/useGetAllCvThemes";
 
 const CvManagementPage = () => {
   const cv = [null, null, null, null];
-
+  const { filters } = useFilters({
+    page: 1,
+    limit: 10,
+    sort: "desc",
+    sortBy: "createdAt",
+  });
+  const { data, isLoading } = useGetAllCvThemes(filters);
+  const { dataConvert } = useConvertData(data);
+  
   return (
-    <Box className="">
+    <>
       <Box className=" bg-white flex items-end">
         <Box className="flex flex-col gap-8 bg-gradient-to-tr from-blue-950 to-blue-800 text-white w-full">
           <Box className="w-full bg-banner bg-no-repeat bg-contain bg-right h-full">
@@ -28,13 +37,11 @@ const CvManagementPage = () => {
       <Container className="grid grid-cols-12 gap-6 my-8">
         {cv.map((item, index) => (
           <Box key={index} className="col-span-3">
-            <Link>
-              <CVItem data={item} />
-            </Link>
+            <CVItem data={item} />
           </Box>
         ))}
       </Container>
-    </Box>
+    </>
   );
 };
 

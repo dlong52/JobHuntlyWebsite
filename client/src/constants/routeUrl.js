@@ -5,6 +5,7 @@ export const RouteBase = {
   SignIn: "/sign-in",
   SignUp: "/sign-up",
   SignUpHr: "/sign-up-hr",
+  ForgotPassword: "/forgot-password",
 
   Job: "/job",
   JobDetail: "/job/:id",
@@ -16,7 +17,8 @@ export const RouteBase = {
   ChangePassword: "/profile/change-password",
   Connect: "/connect",
   WishList: "/wishlist",
-  ViewedResume: "/viewed_resume",
+  ViewedResume: "/viewed-resume",
+  VerifyAccount: "/verify-account",
 
   // HR
   HROverview: "/hr",
@@ -28,6 +30,10 @@ export const RouteBase = {
   HRMyPackage: "/hr/my-package",
   HRCheckout: "/hr/checkout",
   HRReturnPayment: "/hr/return-payment",
+  HRRecruitmentReport: "/hr/recruitment-report",
+  HRMyCompany: "/hr/my-company",
+  HRVerify: "/hr/verify",
+  HRCvManagement: "/hr/cv-management",
 
   // ADMIN
   AdminOverview: "/admin",

@@ -1,14 +1,29 @@
-import { Box, Container, Typography } from "@mui/material";
-import React from "react";
+import { Badge, Box, Container, Typography } from "@mui/material";
+import React, { useMemo } from "react";
 import { CommonAvatar, CommonIcon, CommonPopover } from "../../../ui";
 import MenuAccount from "./components/MenuAccount";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../../constants/routeUrl";
 import { useSelector } from "react-redux";
+import { useLoadingUser } from "../../../providers/LoadingUserProvider";
+import { useConvertData, useFilters } from "../../../hooks";
+import { useGetAllNotifications } from "../../../hooks/modules/notification/useGetAllNotifications";
+import NotifyPopover from "./components/NotifyPopover";
 
 const HeaderHr = () => {
   const user = useSelector((state) => state.user);
-  
+  const { isLoading: loadingUser } = useLoadingUser();
+  const { filters } = useFilters({
+    page: 1,
+    limit: 5,
+    sort: "desc",
+  });
+  const { data, isLoading, refetch } = useGetAllNotifications(
+    user?.user_id,
+    filters
+  );
+  const { dataConvert: notifications } = useConvertData(data);
+
   return (
     <Box className="h-header-hr w-content-hr fixed top-0 right-0 z-50 flex items-center bg-white">
       <Container className="h-5 flex items-center justify-between">
@@ -17,18 +32,39 @@ const HeaderHr = () => {
           sx={{ fontWeight: 600 }}
           variant="h5"
         >
-          Hello, {user?.username}👋
+          Xin chào, {user?.username}👋
         </Typography>
         <Box className="flex items-center gap-3">
-          <Link to={RouteBase.HRChat} className="size-9 flex items-center justify-center rounded-md bg-primary-light text-primary">
+          <Link
+            to={RouteBase.HRChat}
+            className="size-9 flex items-center justify-center rounded-md bg-primary-light text-primary"
+          >
             <CommonIcon.QuestionAnswer />
           </Link>
-          <Box className="size-9 flex items-center justify-center rounded-md bg-primary-light text-primary">
-            <CommonIcon.ShoppingCartTwoTone />
-          </Box>
-          <Box className="size-9 flex items-center justify-center rounded-md bg-primary-light text-primary">
-            <CommonIcon.NotificationsTwoTone />
-          </Box>
+
+          <CommonPopover
+            body={
+              <NotifyPopover
+                refetch={refetch}
+                isLoading={isLoading}
+                notifications={notifications}
+              />
+            }
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            zIndex={1300}
+          >
+            <Badge
+              color="error"
+              badgeContent={data?.data?.unreadCount}
+              max={99}
+            >
+              <Box className="size-9 flex items-center justify-center rounded-md bg-primary-light text-primary">
+                <CommonIcon.NotificationsTwoTone />
+              </Box>
+            </Badge>
+          </CommonPopover>
+
           <CommonPopover
             body={<MenuAccount user={user} />}
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

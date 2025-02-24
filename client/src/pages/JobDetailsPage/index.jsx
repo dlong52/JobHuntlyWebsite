@@ -1,28 +1,30 @@
-import { Button, Container, Divider, Typography, Box } from "@mui/material";
-import React from "react";
-import { CommonIcon } from "../../ui";
+import { Container, Divider, Typography, Box } from "@mui/material";
+import React, { useState } from "react";
+import { Button, CommonIcon } from "../../ui";
 import DialogMUI from "../../components/Dialogs";
 import { useToggleDialog } from "../../hooks";
 import ApplyJobForm from "./components/ApplyJobForm";
 import { useGetPost } from "../../hooks/modules/post/useGetPost";
 import { useNavigate, useParams } from "react-router-dom";
 import HtmlContent from "../../ui/HtmlContent";
-import Loading from "../../ui/Loading";
-import moment from "moment";
 import { RouteBase } from "../../constants/routeUrl";
 import { useNotifications } from "../../utils/notifications";
-import { employmentTypeOptions, GENDER } from "../../constants/enum";
+import { employmentTypeOptions, GENDER, ROLE } from "../../constants/enum";
 import useConvertData from "../../hooks/useConvertData";
 import helpers from "../../utils/helpers";
 import { WishListService } from "../../services/WishListServices";
 import { useSelector } from "react-redux";
 import { useGetStatusWishlist } from "../../hooks/modules/wishlist/useGetStatusWishlist";
+import Address from "../../components/Address";
+import JobDetailLoading from "../../ui/JobDetailLoading";
+import moment from "moment";
 
 const JobDetailsPage = () => {
   const user = useSelector((state) => state.user);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { showError, showSuccess } = useNotifications();
+  const { showError, showSuccess, showInfo } = useNotifications();
+  const [loading, setLoading] = useState(false);
   const { data, isLoading, error } = useGetPost(id, { enabled: !!id });
   const { data: statusData, isLoading: loadingStatus } = useGetStatusWishlist(
     user?.user_id,
@@ -30,6 +32,7 @@ const JobDetailsPage = () => {
   );
   const { dataConvert: detailData } = useConvertData(data);
   const { dataConvert: status } = useConvertData(statusData);
+
   if (error) {
     navigate(RouteBase.Home);
     showError("Bài đăng không tồn tại!");
@@ -41,20 +44,34 @@ const JobDetailsPage = () => {
     moment(currentDate, "DD/MM/YYYY")
   );
   const handleAddToWishlist = async () => {
+    if (!user?.user_id || user.role !== ROLE.CANDIDATE) {
+      showInfo("Bạn cần đăng nhập để thực hiện hành động này!");
+      return;
+    }
+    setLoading(true);
     try {
       const payload = { userId: user?.user_id, jobId: id };
       await WishListService.addToWishList(payload);
       showSuccess("Lưu tin thành công!");
     } catch (error) {
       showError("Đã xảy ra lỗi khi lưu tin");
+    } finally {
+      setLoading(false);
     }
   };
   const handleRemoveToWishlist = async () => {
+    if (!user?.user_id || user.role !== ROLE.CANDIDATE) {
+      showInfo("Bạn cần đăng nhập để thực hiện hành động này!");
+      return;
+    }
+    setLoading(true);
     try {
       await WishListService.removeFromWishList(user?.user_id, id);
       showSuccess("Bỏ lưu tin thành công!");
     } catch (error) {
       showError("Đã xảy ra lỗi khi lưu tin");
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -129,15 +146,19 @@ const JobDetailsPage = () => {
                     {status ? (
                       <Button
                         size="large"
+                        loading={loading}
                         variant="filled"
                         className="!bg-primary !capitalize !text-white"
                         startIcon={<CommonIcon.BookmarkAdded />}
                         onClick={handleRemoveToWishlist}
+                        disabled={loading}
                       >
                         Đã lưu
                       </Button>
                     ) : (
                       <Button
+                        loading={loading}
+                        disabled={loading}
                         size="large"
                         variant="outlined"
                         className="!text-primary !capitalize !border-primary"
@@ -234,6 +255,8 @@ const JobDetailsPage = () => {
                         </Button>
                         <Button
                           size="large"
+                          loading={loading}
+                          disabled={loading}
                           variant="outlined"
                           className="!text-primary !capitalize !border-primary"
                           onClick={handleAddToWishlist}
@@ -271,7 +294,11 @@ const JobDetailsPage = () => {
                         fontWeight={500}
                         fontSize={"15px"}
                       >
-                        25 - 99 nhân viên
+                        {helpers.convertStaffQuantity(
+                          detailData?.posted_by?.company?.staff_quantity?.min,
+                          detailData?.posted_by?.company?.staff_quantity?.max
+                        )}{" "}
+                        nhân viên
                       </Typography>
                     </Box>
                     <Box className="flex gap-2 items-start">
@@ -303,7 +330,10 @@ const JobDetailsPage = () => {
                         fontWeight={500}
                         fontSize={"15px"}
                       >
-                        Số 29 Galaxy 4, 69 Tố Hữu, Hà Đông, Hà Nội
+                        <Address
+                          className={"!font-[500] !text-[15px]"}
+                          address={detailData?.location}
+                        />
                       </Typography>
                     </Box>
                   </Box>
@@ -406,6 +436,7 @@ const JobDetailsPage = () => {
                   onClose={toggle}
                   name={detailData?.title}
                   jobId={detailData?._id}
+                  companyId={detailData?.company?._id}
                   posted_by={detailData?.posted_by}
                 />
               }
@@ -413,8 +444,8 @@ const JobDetailsPage = () => {
           )}
         </Box>
       ) : (
-        <Box className=" relative w-full h-screen flex items-center justify-center">
-          <Loading />
+        <Box >
+          <JobDetailLoading  />
         </Box>
       )}
     </>

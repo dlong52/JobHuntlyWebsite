@@ -3,7 +3,25 @@ const helpers = require("../utils/helpers");
 // Import Services
 const AuthServices = require("../services/AuthServices");
 const JwtService = require("../services/JwtServices");
-
+const changePassword = async (req, res, next) => {
+  try {
+    const { userId, oldPassword, newPassword } = req.body;
+    if (!userId || !oldPassword || !newPassword) {
+      return res.status(500).json({
+        status: "error",
+        message: "Hãy nhập đủ thông tin",
+      });
+    }
+    const result = await AuthServices.changePassword(
+      userId,
+      oldPassword,
+      newPassword
+    );
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ status: "error", message: error });
+  }
+};
 const signUp = async (req, res, next) => {
   try {
     const { email, password, confirmPassword } = req.body;
@@ -53,8 +71,6 @@ const signIn = async (req, res, next) => {
 };
 const signInWithGoogle = async (req, res) => {
   const { token, role } = req.body;
-  console.log("body: ", req.body);
-
   try {
     const result = await AuthServices.signInWithGoogle(token, role);
     const { refresh_token, ...newResult } = result;
@@ -114,4 +130,5 @@ module.exports = {
   signUp,
   signOut,
   refreshToken,
+  changePassword
 };

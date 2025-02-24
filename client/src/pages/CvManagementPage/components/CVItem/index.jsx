@@ -4,15 +4,15 @@ import {
   RemoveRedEyeOutlined,
 } from "@mui/icons-material";
 import React from "react";
-import { useToggleDialog } from "../../hooks";
-import CVModel1 from "../CVModel/CVModel1";
+import { useToggleDialog } from "../../../../hooks";
+import CVModel1 from "../../../../components/CVModel/CVModel1";
 import { Box } from "@mui/material";
-import DialogCustom from '../Dialogs'
-import { Link, useNavigate, useNavigation } from "react-router-dom";
-import { RouteBase } from "../../constants/routeUrl";
+import DialogCustom from "../../../../components/Dialogs";
+import { Link, useNavigate } from "react-router-dom";
+import { RouteBase } from "../../../../constants/routeUrl";
 const CVItem = ({ data }) => {
-  const navigate = useNavigate()
-  const {open, toggle, shouldRender} = useToggleDialog();
+  const navigate = useNavigate();
+  const { open, toggle, shouldRender } = useToggleDialog();
   const Content = () => {
     return (
       <Box className="grid grid-cols-12 gap-6 bg-white">
@@ -24,7 +24,10 @@ const CVItem = ({ data }) => {
             Mẫu CV chuyên nghiệp
           </h1>
           <Box className="flex flex-col gap-5">
-            <Link to={`${RouteBase.CVTemplate}/1`} className="py-2 px-4 w-full bg-primary text-center text-white rounded-sm">
+            <Link
+              to={`${RouteBase.CVTemplate}/1`}
+              className="py-2 px-4 w-full bg-primary text-center text-white rounded-sm"
+            >
               <BorderColorOutlined /> Dùng mẫu này
             </Link>
             <button
@@ -39,10 +42,10 @@ const CVItem = ({ data }) => {
     );
   };
   return (
-    <Box>
+    <>
       <Box className="w-full bg-white rounded-lg border-2 hover:border-primary transition-all duration-300 hover:shadow-xl overflow-hidden">
         <Box
-          className="size-[300px] flex flex-col justify-end relative overflow-hidden group bg-contain"
+          className="size-[300px] flex flex-col justify-end relative overflow-hidden group bg-center bg-contain"
           style={{
             backgroundImage:
               "url(https://www.topcv.vn/images/cv/screenshots/thumbs/cv-template-thumbnails-v1.2/experts.png?v=1.0.6)",
@@ -56,7 +59,12 @@ const CVItem = ({ data }) => {
               <RemoveRedEyeOutlined />
               Xem trước
             </button>
-            <button onClick={navigate(`${RouteBase.CVTemplate}/1`)} className="text-white flex items-center gap-2 px-4 py-1 bg-primary w-fit rounded-full text-xs hover:bg-primary-dark transition-colors duration-300">
+            <button
+              onClick={() => {
+                navigate(`${RouteBase.CVTemplate}/1`);
+              }}
+              className="text-white flex items-center gap-2 px-4 py-1 bg-primary w-fit rounded-full text-xs hover:bg-primary-dark transition-colors duration-300"
+            >
               <DriveFileMoveOutlined />
               Dùng mẫu
             </button>
@@ -67,14 +75,9 @@ const CVItem = ({ data }) => {
         </Box>
       </Box>
       {shouldRender && (
-        <DialogCustom
-          open={open}
-          toggle={toggle}
-          body={Content}
-          size={"lg"}
-        />
+        <DialogCustom open={open} toggle={toggle} body={Content} size={"lg"} />
       )}
-    </Box>
+    </>
   );
 };
 

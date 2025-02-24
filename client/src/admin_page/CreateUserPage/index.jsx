@@ -79,9 +79,9 @@ const CreateUserPage = () => {
                 type="password"
                 placeholder="Nhập mật khẩu"
               />
-              <SelectRoleField labelTop={"Vai trò"} className="bg-[#f8fafc]" />
+              <SelectRoleField classNameContainer="col-span-4" labelTop={"Vai trò"} className="bg-[#f8fafc]" />
               <FormikField
-                classNameContainer="col-span-6"
+                classNameContainer="col-span-4"
                 className="bg-[#f8fafc]"
                 classNameLabel="font-medium text-neutrals-100"
                 name="phone_number"
@@ -90,7 +90,7 @@ const CreateUserPage = () => {
                 placeholder="Nhập số điện thoại"
               />
               <FormikField
-                classNameContainer="col-span-6"
+                classNameContainer="col-span-4"
                 className="bg-[#f8fafc]"
                 classNameLabel="font-medium text-neutrals-100"
                 name="birthday"

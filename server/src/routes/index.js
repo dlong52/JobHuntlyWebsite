@@ -19,6 +19,8 @@ const paymentRouter = require("./PaymentRouter");
 const subscriptionRouter = require("./SubscriptionRouter");
 const conversationRouter = require("./ConversationRouter");
 const messageRouter = require("./MessageRouter");
+const cvThemeRouter = require("./CvThemeRouter");
+const overviewRouter = require("./OverviewRouter");
 
 const prefixApi = process.env.PREFIX_API;
 const routes = (app) => {
@@ -28,6 +30,7 @@ const routes = (app) => {
   app.use(`${prefixApi}/category`, categoryRouter);
   app.use(`${prefixApi}/job`, jobRouter);
   app.use(`${prefixApi}/cv`, cvRouter);
+  app.use(`${prefixApi}/cv-theme`, cvThemeRouter);
   app.use(`${prefixApi}/application`, applicationRouter);
   app.use(`${prefixApi}/level`, levelRouter);
   app.use(`${prefixApi}/notify`, notificationRouter);
@@ -40,5 +43,6 @@ const routes = (app) => {
   app.use(`${prefixApi}/payment`, paymentRouter);
   app.use(`${prefixApi}/subscription`, subscriptionRouter);
   app.use(`${prefixApi}/vnpay`, vnPayRouter);
+  app.use(`${prefixApi}/overview`, overviewRouter);
 };
 module.exports = routes;

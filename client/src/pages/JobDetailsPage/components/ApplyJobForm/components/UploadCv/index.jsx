@@ -79,7 +79,7 @@ const UploadCV = ({ field, form, disabled = false, ...props }) => {
       </Box>
       <input
         type="file"
-        accept=".pdf, .docx"
+        accept=".pdf"
         style={{ display: "none" }}
         ref={fileInputRef}
         onChange={handleUpload}

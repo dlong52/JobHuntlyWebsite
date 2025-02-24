@@ -8,3 +8,7 @@ export { default as PackageDetailPage } from "./PackageDetailPage";
 export { default as MyPackagePage } from "./MyPackagePage";
 export { default as CheckoutPage } from "./CheckoutPage";
 export { default as ReturnPaymentPage } from "./ReturnPaymentPage";
+export { default as CvManagementHrPage } from "./CvManagementHrPage";
+export { default as RecruitmentReportPage } from "./RecruitmentReportPage";
+export { default as MyCompanyPage } from "./MyCompanyPage";
+export { default as VerifyPage } from "./VerifyPage";

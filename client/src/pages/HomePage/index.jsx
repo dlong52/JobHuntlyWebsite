@@ -12,6 +12,8 @@ import { requestForToken } from "../../../firebaseConfig";
 import { useGetAllCategories } from "../../hooks/modules/category/useGetAllCategories";
 import { RouteBase } from "../../constants/routeUrl";
 import useFilters from "../../hooks/useFilters";
+import CategoryLoading from "../../ui/CategoryLoading";
+import { banner, bannerChild } from "../../assets/images";
 const HomePage = () => {
   const navigate = useNavigate();
   const { filters } = useFilters({
@@ -28,10 +30,18 @@ const HomePage = () => {
   }, [data]);
   return (
     <Box className="">
-      <Box className="bg-banner bg-no-repeat bg-contain bg-right h-[700px] bg-neutrals-0 flex items-end">
+      <Box
+        sx={{
+          backgroundImage: `url(${banner})`,
+        }}
+        className="bg-banner bg-no-repeat bg-contain bg-right h-[700px] bg-neutrals-0 flex items-end"
+      >
         <Container
-          className="flex flex-col gap-6 justify-center bg-banner-child bg-no-repeat bg-contain bg-right"
+          className="relative flex flex-col gap-6 justify-center bg-no-repeat bg-contain bg-right"
           style={{ height: "calc(100% - 75px)" }}
+          sx={{
+            backgroundImage: `url(${bannerChild})`,
+          }}
         >
           <Box className="">
             <h1 className="font-ClashDisplay font-semibold text-[72px] text-neutrals-100 leading-tight">
@@ -52,7 +62,7 @@ const HomePage = () => {
             initialValues={{ name: "" }}
             onSubmit={(values) => {
               navigate(
-                `${RouteBase.Job}?location=${values.province.label}&position=${values.position}`
+                `${RouteBase.Job}?location=${values.province.label}&title=${values.position}`
               );
             }}
           >
@@ -96,19 +106,36 @@ const HomePage = () => {
             <CommonIcon.ArrowForwardRounded className="w-5 font-semibold" />
           </Link>
         </Box>
-        <Box className="grid grid-cols-12 gap-6">
-          {categories?.map((category, index) => {
-            return (
-              <Link
-                key={categories?._id}
-                to={`${RouteBase.Job}?category=${category._id}`}
-                className="col-span-3 border rounded-sm overflow-hidden"
-              >
-                <CategoryItem loading={isLoading} data={category} />
-              </Link>
-            );
-          })}
-        </Box>
+        {!isLoading ? (
+          <Box className="grid grid-cols-12 gap-6">
+            {categories?.map((category, index) => {
+              return (
+                <Link
+                  key={categories?._id}
+                  to={`${RouteBase.Job}?category=${category._id}`}
+                  className="col-span-3 border rounded-sm overflow-hidden"
+                >
+                  <CategoryItem loading={isLoading} data={category} />
+                </Link>
+              );
+            })}
+          </Box>
+        ) : (
+          <Box className="grid grid-cols-12 gap-6">
+            {Array(8)
+              .fill(null)
+              .map((_, index) => {
+                return (
+                  <Box
+                    key={index}
+                    className="col-span-3 border rounded-sm overflow-hidden"
+                  >
+                    <CategoryLoading />
+                  </Box>
+                );
+              })}
+          </Box>
+        )}
       </Container>
       <Container className="pt-10">
         <JobTrending />

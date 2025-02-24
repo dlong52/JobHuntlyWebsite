@@ -8,8 +8,10 @@ export const apiURL = {
   SIGN_UP: BASE_URL + "/auth/sign-up",
   REFRESH_TOKEN: BASE_URL + "/auth/refresh-token",
   LOG_OUT: BASE_URL + "/auth/log-out",
+  CHANGE_PASSWORD: BASE_URL + "/auth/change-password",
   // MODULES
   CATEGORY: BASE_URL + "/category",
+  LEVEL: BASE_URL + "/level",
   NOTIFICATION: BASE_URL + "/notify",
   COMPANY: BASE_URL + "/company",
   APPLICATION: BASE_URL + "/application",
@@ -22,7 +24,9 @@ export const apiURL = {
   WISH_LIST: BASE_URL + "/wishlist",
   ROLE: BASE_URL + "/role",
   CV: BASE_URL + "/cv",
+  CV_THEME: BASE_URL + "/cv-theme",
   PAYMENT: BASE_URL + "/payment",
   SUBSCRIPTION: BASE_URL + "/subscription",
+  OVERVIEW: BASE_URL + "/overview",
   VN_PAY: BASE_URL + "/vnpay",
 };

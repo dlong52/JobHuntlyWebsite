@@ -36,6 +36,7 @@ export default {
 
         active: "#4640DE",
       },
+
       fontFamily: {
         RedHatDisplay: ["RedHatDisplay", "sans-serif"],
         Inter: ["Inter", "sans-serif"],
@@ -43,6 +44,10 @@ export default {
         Epilogue: ["Epilogue", "sans-serif"],
         ClashDisplay: ["ClashDisplay", "sans-serif"],
         roboto: ["Roboto", "sans-serif"],
+      },
+      spacing: {
+        "header": "75px",
+        "header-hr": "80px",
       },
       margin: {
         "content-admin": "273px",

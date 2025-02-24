@@ -16,6 +16,8 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import helpers from "../../utils/helpers";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
+import ChipMui from "../../ui/Chip";
+import TooltipMui from "../../ui/TooltipMui";
 
 const PostJobPage = () => {
   const user = useSelector((state) => state.user);
@@ -67,15 +69,26 @@ const PostJobPage = () => {
 
   const columns = [
     { field: "title", headerName: "Tiêu đề" },
-    { field: "experience", headerName: "Kinh nghiệm" },
-    { field: "status", headerName: "Trạng thái" },
+    {
+      field: "experience",
+      headerName: "Kinh nghiệm",
+      renderCell: (value) => helpers.convertTime(value),
+    },
+    {
+      field: "status",
+      headerName: "Trạng thái",
+      renderCell: (value) => (
+        <ChipMui
+          label={value ? "Đang hiển thị" : "Chưa duyệt"}
+          variant={"outlined"}
+          color={value ? "success" : "warning"}
+        />
+      ),
+    },
     {
       field: "salary",
       headerName: "Lương",
-      renderCell: (value) =>
-        `${helpers.numberFormat(value.min)} - ${helpers.numberFormat(
-          value.max
-        )}`,
+      renderCell: (value) => helpers.convertSalary(value?.min, value?.max),
     },
     {
       field: "location",
@@ -93,27 +106,33 @@ const PostJobPage = () => {
       renderCell: (value) => {
         return (
           <Box className="flex gap-2 items-center">
-            <IconButton
-              onClick={() => {
-                navigate(`${RouteBase.HRJobs}/${value}`);
-              }}
-            >
-              <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                handleSetId(value);
-              }}
-            >
-              <CommonIcon.DriveFileRenameOutline className="text-primary-dark" />
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                toggleDelete(), setIdDelete(value);
-              }}
-            >
-              <CommonIcon.DeleteSweep className="text-red-700" />
-            </IconButton>
+            <TooltipMui content={"Xem ứng viên"}>
+              <IconButton
+                onClick={() => {
+                  navigate(`${RouteBase.HRJobs}/${value}`);
+                }}
+              >
+                <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
+              </IconButton>
+            </TooltipMui>
+            <TooltipMui content={"Cập nhật tin tuyển dụng"}>
+              <IconButton
+                onClick={() => {
+                  handleSetId(value);
+                }}
+              >
+                <CommonIcon.DriveFileRenameOutline className="text-primary-dark" />
+              </IconButton>
+            </TooltipMui>
+            <TooltipMui content={"Xóa tin tuyển dụng"}>
+              <IconButton
+                onClick={() => {
+                  toggleDelete(), setIdDelete(value);
+                }}
+              >
+                <CommonIcon.DeleteSweep className="text-red-700" />
+              </IconButton>
+            </TooltipMui>
           </Box>
         );
       },
@@ -154,27 +173,14 @@ const PostJobPage = () => {
       <Box className="bg-white rounded-md">
         <CustomTable
           columns={columns}
-          labelRowsPerPage={"Số việc làm trên trang"}
           rows={data?.data?.data || []}
           total={data?.data?.pagination.totalPages}
           page={filters.page}
           rowsPerPage={filters.limit || 20}
           onPageChange={handleChangePage}
-          onRowsPerPageChange={(newRowsPerPage) => {
-            setFilters((prevFilters) => ({
-              ...prevFilters,
-              rowsPerPage: newRowsPerPage,
-            }));
-          }}
           loading={loadingPost}
           toolbarTitle="Danh sách tin tuyển dụng"
           toolbarActions={toolbarActions}
-          filters={filters}
-          handleRequestSort={handleRequestSort}
-          handleSearch={handleSearch}
-          handleSelect={handleSelect}
-          handleSelectAll={handleSelectAll}
-          rowsSelected={rowsSelected}
         />
       </Box>
       {shouldRender && (

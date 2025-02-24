@@ -2,7 +2,10 @@ import React, { memo, useEffect, useMemo, useState, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useSearchParams } from "react-router-dom";
-import { FormikField, RadioField } from "../../../../components/CustomFieldsFormik";
+import {
+  FormikField,
+  RadioField,
+} from "../../../../components/CustomFieldsFormik";
 import RadioLevelField from "../../../../components/RadioField/RadioLevelField";
 import RadioSalaryField from "../../../../components/RadioField/RadioSalaryField";
 import RadioEmploymentTypeField from "../../../../components/RadioField/RadioEmploymentTypeField";
@@ -15,13 +18,16 @@ const JobFilter = ({ setFilters }) => {
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
   const filterBoxRef = useRef(null);
 
-  const initialValues = useMemo(() => ({
-    experience: searchParams.get("experience") || "",
-    level: searchParams.get("level") || "",
-    salary: JSON.stringify({ min: "", max: "" }),
-    employment_type: searchParams.get("employment_type") || "",
-    category: searchParams.get("category") || "",
-  }), [searchParams]);
+  const initialValues = useMemo(
+    () => ({
+      experience: searchParams.get("experience") || "",
+      level: searchParams.get("level") || "",
+      salary: JSON.stringify({ min: "", max: "" }),
+      employment_type: searchParams.get("employment_type") || "",
+      category: searchParams.get("category") || "",
+    }),
+    [searchParams]
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,14 +53,21 @@ const JobFilter = ({ setFilters }) => {
           if (values?.experience) params.set("experience", values.experience);
           if (values?.level) params.set("level", values.level);
           if (values?.category) params.set("category", values.category);
-          if (values?.employment_type) params.set("employment_type", values.employment_type);
+          if (values?.employment_type)
+            params.set("employment_type", values.employment_type);
           if (searchParams.toString() !== params.toString()) {
             setSearchParams(params);
           }
-        }, [values.salary, values?.experience, values?.level, values?.category, values?.employment_type]);
+        }, [
+          values.salary,
+          values?.experience,
+          values?.level,
+          values?.category,
+          values?.employment_type,
+        ]);
 
         return (
-          <Form className="flex flex-col gap-4 sticky top-0">
+          <Form className="flex flex-col gap-4 sticky top-header">
             <Box className="flex flex-col relative">
               <Box className="flex justify-between items-center border-b py-4">
                 <Typography className="flex items-center gap-1 !text-xl !text-primary !font-semibold">
@@ -96,7 +109,9 @@ const JobFilter = ({ setFilters }) => {
                 }}
               >
                 <Box className="border-b py-4 border-dashed">
-                  <Typography fontSize={"14px"} fontWeight={600}>Kinh nghiệm</Typography>
+                  <Typography fontSize={"14px"} fontWeight={600}>
+                    Kinh nghiệm
+                  </Typography>
                   <FormikField
                     row
                     classNameLabel="text-neutrals-100 font-medium text-sm"
@@ -106,19 +121,27 @@ const JobFilter = ({ setFilters }) => {
                   />
                 </Box>
                 <Box className="border-b py-4 border-dashed">
-                  <Typography fontSize={"14px"} fontWeight={600}>Cấp bậc</Typography>
+                  <Typography fontSize={"14px"} fontWeight={600}>
+                    Cấp bậc
+                  </Typography>
                   <RadioLevelField />
                 </Box>
                 <Box className="border-b py-4 border-dashed">
-                  <Typography fontSize={"14px"} fontWeight={600}>Mức lương</Typography>
+                  <Typography fontSize={"14px"} fontWeight={600}>
+                    Mức lương
+                  </Typography>
                   <RadioSalaryField />
                 </Box>
                 <Box className="border-b py-4 border-dashed">
-                  <Typography fontSize={"14px"} fontWeight={600}>Lĩnh vực công việc</Typography>
+                  <Typography fontSize={"14px"} fontWeight={600}>
+                    Lĩnh vực công việc
+                  </Typography>
                   <RadioCategoryField />
                 </Box>
                 <Box className="border-b py-4 border-dashed">
-                  <Typography fontSize={"14px"} fontWeight={600}>Hình thức việc làm</Typography>
+                  <Typography fontSize={"14px"} fontWeight={600}>
+                    Hình thức việc làm
+                  </Typography>
                   <RadioEmploymentTypeField />
                 </Box>
               </Box>

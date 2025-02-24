@@ -11,6 +11,7 @@ const packageSchema = new mongoose.Schema({
   is_featured: { type: Boolean, default: false },
   active: { type: Boolean, default: false },
   features: [{ type: String }],
+  icon: { type: String },
   image_description: { type: String },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },

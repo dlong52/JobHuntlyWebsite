@@ -18,6 +18,7 @@ import {
 import { useNotifications } from "../utils/notifications";
 import helpers from "../utils/helpers";
 import { apiURL } from "../constants/api";
+import { RouteBase } from "../constants/routeUrl";
 const AuthenticationContext = createContext({
   token: "",
   isLogged: false,
@@ -36,7 +37,7 @@ export const useAuthentication = () => useContext(AuthenticationContext);
 const AuthProvider = ({ children }) => {
   const tokenLocalStorage = HttpService.getTokenSession();
   const servicesLocalStorage = HttpService.getServiceStorage();
-  
+
   //! State
   const [isLogged, setIsLogged] = useState(tokenLocalStorage ? true : false);
   const [isLoggingOut, setLoggingOut] = useState(false);
@@ -113,7 +114,7 @@ const AuthProvider = ({ children }) => {
         HttpService.clearTokenStorage();
         HttpService.clearServiceStorage();
         sessionStorage.removeItem("path");
-        window.location.reload();
+        window.location.href = RouteBase.SignIn;
         resolve();
       } catch (error) {
         showError(error.toString());

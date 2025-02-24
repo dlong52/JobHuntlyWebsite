@@ -1,18 +1,24 @@
-import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
+import React from "react";
+import { Link } from "react-router-dom";
+import { companyLogoDefault } from "../../assets/images";
 
 const CompanyItem = ({ data }) => {
   return (
     <div className="flex gap-4 p-4 items-center bg-white rounded-md border">
       <img
         className="w-16 h-16 object-cover rounded-md"
-        src={data?.logo}
+        src={data?.logo ? data.logo : companyLogoDefault}
         alt={data?.name}
       />
       <div className="flex flex-col">
         <div className="flex items-center gap-6 mb-2">
-          <Link to={'/admin/company'} className="text-sm font-semibold text-gray-900">{data?.name}</Link>
+          <Link
+            to={"/admin/company"}
+            className="text-sm font-semibold text-gray-900"
+          >
+            {data?.name}
+          </Link>
           <div className="text-sm text-gray-500 flex items-center gap-1">
             <span className="size-2 rounded-full bg-neutrals-100 "></span>
             <span>Đang tuyển {data?.jobQuantity} vị trí</span>
@@ -20,7 +26,7 @@ const CompanyItem = ({ data }) => {
         </div>
 
         <span className="text-sm text-gray-600 flex items-center gap-1">
-          <PlaceOutlinedIcon className='w-4' />
+          <PlaceOutlinedIcon className="w-4" />
           {data?.location}
         </span>
       </div>

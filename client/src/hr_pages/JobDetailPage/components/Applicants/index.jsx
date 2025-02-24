@@ -1,7 +1,7 @@
 import { Box, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { RouteBase } from "../../../../constants/routeUrl";
-import { CommonIcon } from "../../../../ui";
+import { Button, CommonAvatar, CommonIcon } from "../../../../ui";
 import { useGetAllApplicants } from "../../../../hooks/modules/application/userGetApplicants";
 import CustomTable from "../../../../ui/Table";
 import useFilters from "../../../../hooks/useFilters";
@@ -14,12 +14,14 @@ import ApplicantDetail from "./components/AplicantDetail";
 import { NotificationService } from "../../../../services/NotificationServices";
 import { useSelector } from "react-redux";
 import { SendEmailServices } from "../../../../services/SendEmailServices";
+import { useNotifications } from "../../../../utils/notifications";
+import BreadcrumbMui from "../../../../ui/BreadcrumbMui";
+import TooltipMui from "../../../../ui/TooltipMui";
+import ChipMui from "../../../../ui/Chip";
 
 const Applicants = ({ jobId }) => {
-  console.log({ jobId });
-
   const [applicantId, setApplicantId] = useState(null);
-  const user = useSelector((state) => state.user);
+  const { showError } = useNotifications();
   const { shouldRender, open, toggle } = useToggleDialog();
   const {
     filters,
@@ -42,30 +44,25 @@ const Applicants = ({ jobId }) => {
       setApplicantId(null);
     }
   }, [open]);
-  const handelUpdateViewState = async (candidate) => {
-    toggle();
-    try {
-      // await NotificationService.sendToUser({
-      //   userId: candidate?._id,
-      //   title: "Nhà tuyển dụng vừa xem CV ứng tuyển của bạn",
-      //   body: `${user?.company_name}, vừa xem CV của bạn`,
-      // });
-      // await SendEmailServices.cvViewed({
-      //   recruiterName: user?.company_name,
-      //   applicantEmail: candidate?.email,
-      // });
-    } catch (error) {
-      console.log({ error });
-    }
-  };
+  
   const columns = [
     {
       field: "candidate",
       headerName: "Ứng viên",
       renderCell: (value) => {
         return (
-          <Box>
-            <Typography>{value?.profile?.name}</Typography>
+          <Box className="flex gap-2">
+            <CommonAvatar
+              char={!value?.avatar_url ? value?.profile?.name?.charAt(0) : null}
+              className={"border-2 border-accent-blue !bg-primary"}
+              src={value?.avatar_url}
+            />
+            <Box>
+              <Typography>{value?.profile?.name}</Typography>
+              <Typography fontSize={"14px"} className="text-neutrals-40">
+                {value?.email}
+              </Typography>
+            </Box>
           </Box>
         );
       },
@@ -81,26 +78,49 @@ const Applicants = ({ jobId }) => {
       renderCell: (value) => <Status status={value} />,
     },
     {
+      field: "isViewed",
+      headerName: "Trạng thái xem",
+      renderCell: (value) => <ChipMui label={value? "Đã xem" : "Chưa xem"} variant={"outlined"} color={value ? "info" : "warning"} />,
+    },
+    {
       field: "_id",
       headerName: "Chi tiết",
       renderCell: (value) => {
         return (
-          <IconButton
+          <Button
+            className={"!border !border-primary !text-primary"}
+            sx={{ textTransform: "none", border: "1px solid var(--primary)" }}
             onClick={() => {
               setApplicantId(value);
-              handelUpdateViewState(value);
+              toggle();
             }}
           >
-            <CommonIcon.RemoveRedEyeTwoTone />
-          </IconButton>
+            Xem hồ sơ ứng viên
+          </Button>
         );
       },
     },
   ];
+  const breadcrumbs = [
+    <Link
+      key={1}
+      to={RouteBase.AdminOverview}
+      className="hover:underline text-sm font-[500]"
+    >
+      Trang chủ
+    </Link>,
+    <Typography key={2} fontWeight={500} className="text-neutrals-100 !text-sm">
+      Ứng viên
+    </Typography>,
+  ];
   // Render
   return (
     <div>
-      <Box className="bg-white rounded-md">
+      <BreadcrumbMui
+        title={`Tổng số ứng viên: ${data?.data?.pagination?.total}`}
+        breadcrumbs={breadcrumbs}
+      />
+      <Box className="bg-white rounded-md mt-5">
         <CustomTable
           columns={columns}
           rows={data?.data?.data || []}
@@ -128,6 +148,7 @@ const Applicants = ({ jobId }) => {
         <DialogMUI
           open={open}
           toggle={toggle}
+          isPadding={false}
           title={"Đánh giá CV ứng viên"}
           body={<ApplicantDetail id={applicantId} />}
         />
