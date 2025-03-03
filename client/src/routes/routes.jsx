@@ -42,6 +42,7 @@ import {
   CategoryManagementPage,
   CompanyManagementPage,
   CreateUserPage,
+  CvThemePage,
   NotifyManagementPage,
   OverViewAdminPage,
   PackageManagementPage,
@@ -306,6 +307,12 @@ const Routes = [
   {
     path: RouteBase.AdminProfile,
     component: ProfileAdminPage,
+    permissionAllow: [ROLE.ADMIN],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminCvTheme,
+    component: CvThemePage,
     permissionAllow: [ROLE.ADMIN],
     layout: AdminLayout,
   },

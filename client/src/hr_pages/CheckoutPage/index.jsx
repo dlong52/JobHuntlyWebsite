@@ -98,7 +98,7 @@ const CheckoutPage = () => {
         const paymentRes = await PaymentService.createPayment({
           user_id: user?.user_id,
           subscription_id: subscriptionRes?.data?.data?._id,
-          amount: price,
+          amount: Number(transactionInfo?.vnp_Amount) / 100,
           payment_method: "VNPay",
           transaction_id: transactionInfo?.vnp_TransactionNo,
           status: "success",
@@ -120,10 +120,9 @@ const CheckoutPage = () => {
     ) {
       createOrder();
       localStorage.setItem(`order_${transactionInfo?.vnp_TxnRef}`, true);
-      return
+      return;
     }
   }, [transactionInfo]);
- 
 
   return (
     <>

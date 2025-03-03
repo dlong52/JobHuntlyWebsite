@@ -5,7 +5,6 @@ import { Box, IconButton, Typography } from "@mui/material";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
 import { useGetAllCategories } from "../../hooks/modules/category/useGetAllCategories";
 import useFilters from "../../hooks/useFilters";
-import useConvertData from "../../hooks/useConvertData";
 import { CommonIcon } from "../../ui";
 import CustomTable from "../../ui/Table";
 import useGetAllLevels from "../../hooks/modules/level/useGetAllLevels";
@@ -257,7 +256,7 @@ const CategoryManagementPage = () => {
         <DialogMUI
           open={openLevel}
           toggle={toggleLevel}
-          title={levelId ? "Cập nhật cấp bậc" : "Tạo danh mục mới"}
+          title={levelId ? "Cập nhật cấp bậc" : "Tạo cấp bậc mới"}
           body={<CreateEditLevel id={levelId} />}
         />
       )}

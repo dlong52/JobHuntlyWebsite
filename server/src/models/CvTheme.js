@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const CvThemeSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
+  theme_code: { type: String, required: true, unique: true },
   description: { type: String },
   active: { type: Boolean, default: true },
   preview_image: { type: String, required: true },

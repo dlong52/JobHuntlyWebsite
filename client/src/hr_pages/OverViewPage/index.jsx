@@ -6,6 +6,7 @@ import { useGetOverviewHr } from "../../hooks/modules/overview/useGetOverviewHr"
 import { useSelector } from "react-redux";
 import { useConvertData } from "../../hooks";
 import { BorderLinearProgress } from "../ProfileHrPage/components/Account";
+import BarChartSkeleton from "../../ui/BarChartSkeleton";
 
 const OverViewPage = () => {
   const user = useSelector((state) => state.user);
@@ -13,8 +14,6 @@ const OverViewPage = () => {
     enabled: !!user?.company_id,
   });
   const { dataConvert } = useConvertData(data);
-  console.log(dataConvert);
-
   return (
     <Box className="flex flex-col gap-y-5">
       <div className="flex gap-5">
@@ -57,7 +56,11 @@ const OverViewPage = () => {
       </div>
       <Grid2 container spacing={3}>
         <Grid2 size={8} className="bg-white rounded-md p-5">
-          <EmploymentGrowthChart data={dataConvert?.applications_per_day} />
+          {isLoading ? (
+            <BarChartSkeleton />
+          ) : (
+            <EmploymentGrowthChart data={dataConvert?.applications_per_day} />
+          )}
         </Grid2>
         <Grid2 size={4} className="bg-white rounded-md overflow-hidden">
           {/* <Box className="w-full bg-gradient-to-br from-blue-50  to-white p-4 flex items-center">

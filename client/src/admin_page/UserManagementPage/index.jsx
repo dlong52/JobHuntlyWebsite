@@ -1,6 +1,6 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { CommonAvatar, CommonIcon } from "../../ui";
+import { Button, CommonAvatar, CommonIcon } from "../../ui";
 import CustomTable from "../../ui/Table";
 import { useGetAllUsers } from "../../hooks/modules/user/useGetAllUsers";
 import useFilters from "../../hooks/useFilters";
@@ -15,6 +15,8 @@ import DialogMUI from "../../components/Dialogs";
 import CreateUserForm from "./components/CreateUserForm";
 import DrawerMui from "../../ui/DrawerMui";
 import UserInfo from "./components/UserInfo";
+import { FormikField, InputField } from "../../components/CustomFieldsFormik";
+import { Form, Formik } from "formik";
 
 const UserManagementPage = () => {
   const [userId, setUserId] = useState(null);
@@ -26,12 +28,12 @@ const UserManagementPage = () => {
     shouldRender: shouldRenderUpdateStatus,
   } = useToggleDialog();
   const { open: openInfo, toggle: toggleInfo } = useToggleDialog();
-  const { filters, handleChangePage } = useFilters({
+  const { filters, handleChangePage, setFilters } = useFilters({
     page: 1,
     limit: 10,
-    sort: "desc",
+    // sort: "desc",
   });
-  const { data, isLoading } = useGetAllUsers();
+  const { data, isLoading } = useGetAllUsers(filters);
   const columns = [
     {
       field: "profile",
@@ -149,7 +151,15 @@ const UserManagementPage = () => {
       setUserId(null);
     }
   }, [openInfo]);
-
+  const handleSubmit = (values) => {
+    const search = {
+      searchName: values.searchName,
+      // role: values.role,
+    };
+    setFilters((prev) => {
+      return { ...prev, ...search };
+    });
+  };
   // Render
   return (
     <Box>
@@ -164,7 +174,43 @@ const UserManagementPage = () => {
           page={filters.page}
           rowsPerPage={filters.limit || 20}
           onPageChange={handleChangePage}
-          toolbarTitle="Danh sách người dùng"
+          toolbarTitle={
+            <Formik
+              initialValues={{}}
+              onSubmit={handleSubmit}
+              enableReinitialize
+            >
+              {() => {
+                return (
+                  <Form className="flex gap-4">
+                    <FormikField
+                      classNameContainer="max-w-[300px]"
+                      className="bg-[#fff] "
+                      sx={{
+                        fieldset: {
+                          borderRadius: "9999px",
+                        },
+                      }}
+                      classNameLabel="font-medium text-neutrals-100"
+                      name="searchName"
+                      component={InputField}
+                      size="small"
+                      required
+                      placeholder="Tìm theo tên, email người dùng"
+                    />
+                    <Button
+                      type={"submit"}
+                      className={
+                        "col-span-12 !bg-primary !text-white !rounded-full"
+                      }
+                    >
+                      <CommonIcon.Search />
+                    </Button>
+                  </Form>
+                );
+              }}
+            </Formik>
+          }
           toolbarActions={toolbarActions}
         />
       </Box>

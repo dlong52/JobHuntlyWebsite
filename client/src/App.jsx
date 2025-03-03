@@ -1,5 +1,5 @@
 import { Fragment, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
 import routes from "./routes/routes";
@@ -12,11 +12,13 @@ import httpServices from "./services/httpServices";
 import withPermission from "./HOCs/withPermission";
 import { onMessageListener } from "../firebaseConfig";
 import { useNotifications } from "./utils/notifications";
-import ScrollToTop from "./components/ScrollToTop";
 import { useLoadingUser } from "./providers/LoadingUserProvider";
+import { ROLE } from "./constants/enum";
+import CrispChat from "./components/CrispChat";
 
 function App() {
   const { setIsLoading } = useLoadingUser();
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { showInfo } = useNotifications();
   if ("serviceWorker" in navigator) {
@@ -54,10 +56,9 @@ function App() {
     dispatch(updateUser({ ...res?.data, access_token: token }));
     setIsLoading(false);
   };
-
   return (
     <>
-      {/* <ScrollToTop /> */}
+      {[ROLE.EMPLOYER, ROLE.CANDIDATE].includes(user?.role) && <CrispChat />}
       <Routes>
         {routes.map((route, index) => {
           const Page = route.component;

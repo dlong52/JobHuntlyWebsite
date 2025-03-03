@@ -79,5 +79,10 @@ const sidebarAdminRoutes = [
     name: "Quản lí danh mục",
     icon: CommonIcon.Category,
   },
+  {
+    path: RouteBase.AdminCvTheme,
+    name: "Chủ đề CV",
+    icon: CommonIcon.ColorLens,
+  },
 ];
 export { sidebarHrRoutes, sidebarAdminRoutes };

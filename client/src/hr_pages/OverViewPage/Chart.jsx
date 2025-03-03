@@ -12,14 +12,12 @@ import {
 import { CommonIcon } from "../../ui";
 
 const CVChart = ({ data }) => {
-  // Format dữ liệu
   const formattedData = data?.map((item) => ({
     ...item,
-    _id: moment(item._id).format("DD/MM"), // Định dạng ngày/tháng
-    count: Math.round(item.count), // Làm tròn số lượng
+    _id: moment(item._id).format("DD/MM"),
+    count: Math.round(item.count),
   }));
 
-  // State để kiểm soát tooltip
   const [activeTooltip, setActiveTooltip] = useState(null);
 
   return (

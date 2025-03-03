@@ -176,6 +176,7 @@ const signInWithGoogle = async (token, role) => {
         email: email,
         role: roleM._id,
         firebaseUid: uid,
+        is_verified: true,
         account_type: "google",
         profile: {
           name: name,

@@ -44,7 +44,7 @@ const UploadIcon = ({
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setFieldValue(name, url); // Cập nhật giá trị vào Formik
+          setFieldValue(name, url); 
           setLoading(false);
         });
       }

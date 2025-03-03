@@ -78,12 +78,18 @@ const AccountPopover = ({ user }) => {
             onClick={() => navigate(route)}
           >
             {icon}
-            <Typography fontSize={"14px"} >{text}</Typography>
+            <Typography fontSize={"14px"}>{text}</Typography>
           </MenuItem>
         ))}
-        <MenuItem onClick={logout}>
+        <MenuItem
+          onClick={() => {
+            logout(user?.user_id);
+          }}
+        >
           <CommonIcon.LogoutOutlined className="text-primary" />
-          <Typography fontSize={"14px"} className="text-red-600" >Đăng xuất</Typography>
+          <Typography fontSize={"14px"} className="text-red-600">
+            Đăng xuất
+          </Typography>
         </MenuItem>
       </MenuList>
     </Box>

@@ -4,6 +4,16 @@ import httpServices from "./httpServices";
 const getAllPayments = async (params) => {
   return httpServices.get(apiURL.PAYMENT, { params: params.queryKey[1] });
 };
+const getAllPaymentSummary = async (params) => {
+  return httpServices.get(apiURL.PAYMENT_SUMMARY, {
+    params: params.queryKey[1],
+  });
+};
+const getRevenueByPackage = async (params) => {
+  return httpServices.get(apiURL.REVENUE_BY_PACKAGE, {
+    params: params.queryKey[1],
+  });
+};
 const getPayment = async (params) => {
   return httpServices.get(`${apiURL.PAYMENT}/${params.queryKey[1]}`);
 };
@@ -19,6 +29,8 @@ const deletePayment = (id) => {
 };
 
 export const PaymentService = {
+  getRevenueByPackage,
+  getAllPaymentSummary,
   getAllPayments,
   createPayment,
   getPayment,

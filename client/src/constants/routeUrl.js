@@ -47,4 +47,5 @@ export const RouteBase = {
   AdminRevenueManagement: "/admin/revenue-management",
   AdminProfile: "/admin/profile",
   AdminCategory: "/admin/category",
+  AdminCvTheme: "/admin/cv-theme",
 };

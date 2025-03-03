@@ -67,7 +67,11 @@ const MenuAccount = ({ user }) => {
             Đổi mật khẩu
           </Link>
         </MenuItem>
-        <MenuItem onClick={logout}>
+        <MenuItem
+          onClick={() => {
+            logout(user?.user_id);
+          }}
+        >
           <CommonIcon.LogoutOutlined className="text-primary" />
           <span className="text-[14px] font-medium">Đăng xuất</span>
         </MenuItem>

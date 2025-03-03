@@ -11,33 +11,36 @@ import SelectWardField from "../../components/SelectField/SelectWardField";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
-import { CommonIcon } from "../../ui";
+import { createUser } from "../../services/UserServices";
+import { useNotifications } from "../../utils/notifications";
 
 const CreateUserPage = () => {
-  const handleSubmit = async () => {};
+  const { showError, showSuccess } = useNotifications();
+  const handleSubmit = async (values) => {
+    const payload = {};
+    try {
+      await createUser(payload);
+      showSuccess("Thêm người dùng mới thành công!");
+    } catch (error) {
+      console.log(error);
+      showError("Đã xảy ra lỗi khi tạo người dùng mới!");
+    }
+  };
   const breadcrumbs = [
     <Link
-      key="1"
-      color="inherit"
       to={RouteBase.AdminOverview}
-      className="text-primary"
+      className="hover:underline text-sm font-[500]"
     >
-      <CommonIcon.Home fontSize="small" />
+      Trang chủ
     </Link>,
     <Link
-      key="1"
-      color="text.primary"
-      to={RouteBase.AdminUserManagement}
-      sx={{ fontWeight: 500, fontSize: "14px", color: "text.primary" }}
+      to={RouteBase.AdminOverview}
+      className="hover:underline text-sm font-[500]"
     >
       Quản lí người dùng
     </Link>,
-    <Typography
-      key="3"
-      color="inherit"
-      sx={{ fontWeight: 500, fontSize: "14px" }}
-    >
-      Tuyển dụng
+    <Typography fontWeight={500} className="text-neutrals-1d00 !text-sm">
+      Thêm người dùng mới
     </Typography>,
   ];
   return (
@@ -79,7 +82,11 @@ const CreateUserPage = () => {
                 type="password"
                 placeholder="Nhập mật khẩu"
               />
-              <SelectRoleField classNameContainer="col-span-4" labelTop={"Vai trò"} className="bg-[#f8fafc]" />
+              <SelectRoleField
+                classNameContainer="col-span-4"
+                labelTop={"Vai trò"}
+                className="bg-[#f8fafc]"
+              />
               <FormikField
                 classNameContainer="col-span-4"
                 className="bg-[#f8fafc]"

@@ -28,6 +28,8 @@ const CustomTable = ({
   toolbarActions,
   loading,
   isHeader = true,
+  classNameTitle,
+  isButton = true,
 }) => {
   const useStyles = makeStyles((theme) => ({
     Pagination: {
@@ -93,7 +95,7 @@ const CustomTable = ({
     }
 
     return (
-      <TableContainer>
+      <TableContainer className="!text-neutrals-100">
         <Table>
           {isHeader && (
             <TableHead>
@@ -137,13 +139,14 @@ const CustomTable = ({
       <Toolbar className="border-b" style={{ padding: "20px 16px" }}>
         <Typography
           variant="h6"
-          className="!text-neutrals-100"
+          className={twMerge("!text-neutrals-100", classNameTitle)}
           component="div"
           style={{ flexGrow: 1 }}
         >
-          {toolbarTitle || "Table Title"}
+          {toolbarTitle || "Tiêu đề"}
         </Typography>
         {toolbarActions &&
+          isButton &&
           toolbarActions.map((action, index) => (
             <Button
               key={index}
@@ -156,6 +159,20 @@ const CustomTable = ({
               {action.label}
             </Button>
           ))}
+        {toolbarActions &&
+          !isButton &&
+          toolbarActions.map((action, index) => (
+            <Box
+              key={index}
+              className={action.className}
+              onClick={action.onClick}
+              variant={action.variant || "contained"}
+              color={action.color || "primary"}
+              style={action.style || {}}
+            >
+              {action.label}
+            </Box>
+          ))}
       </Toolbar>
 
       {/* Content */}
@@ -163,7 +180,7 @@ const CustomTable = ({
 
       {/* Pagination */}
       {!loading && rows?.length > 0 && (
-        <Box className="w-full flex justify-end p-4">
+        <Box className="w-full flex justify-end px-4">
           <Pagination
             className={classes.Pagination}
             color="secondary"

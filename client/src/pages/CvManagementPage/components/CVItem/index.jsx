@@ -3,65 +3,96 @@ import {
   DriveFileMoveOutlined,
   RemoveRedEyeOutlined,
 } from "@mui/icons-material";
-import React from "react";
+import React, { useState } from "react";
 import { useToggleDialog } from "../../../../hooks";
 import CVModel1 from "../../../../components/CVModel/CVModel1";
-import { Box } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 import DialogCustom from "../../../../components/Dialogs";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RouteBase } from "../../../../constants/routeUrl";
+import { Button } from "../../../../ui";
+import CVTemplate from "../../../CreateCVPage/components/CvTemplate";
+
 const CVItem = ({ data }) => {
+  const [loading, setLoading] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const { open, toggle, shouldRender } = useToggleDialog();
+
+  const toggleDialog = () => {
+    toggle();
+    if (!open) {
+      setIsHovered(true);
+    } else {
+      setTimeout(() => {
+        setIsHovered(false);
+      }, 300);
+    }
+  };
+
   const Content = () => {
     return (
       <Box className="grid grid-cols-12 gap-6 bg-white">
         <Box className="col-span-9 p-5 overflow-auto h-[500px]">
-          <CVModel1 />
+          <CVTemplate code={data?.theme_code} />
         </Box>
         <Box className="col-span-3 flex flex-col gap-10 h-fit">
-          <h1 className="font-bold text-xl text-primary">
-            Mẫu CV chuyên nghiệp
-          </h1>
+          <h1 className="font-bold text-xl text-primary">Mẫu CV {data?.name}</h1>
           <Box className="flex flex-col gap-5">
-            <Link
-              to={`${RouteBase.CVTemplate}/1`}
-              className="py-2 px-4 w-full bg-primary text-center text-white rounded-sm"
+            <Button
+              onClick={() => {
+                navigate(`${RouteBase.CVTemplate}/${data?._id}`);
+              }}
+              startIcon={<BorderColorOutlined />}
+              className="!py-2 !px-4 w-full !bg-primary text-center !text-white"
             >
-              <BorderColorOutlined /> Dùng mẫu này
-            </Link>
-            <button
-              onClick={toggle}
-              className="py-2 w-full border border-neutrals-80 text-neutrals-60 rounded-sm"
+              Dùng mẫu này
+            </Button>
+            <Button
+              onClick={toggleDialog}
+              variant="outlined"
+              className="!py-1 w-full border !border-primary !text-primary rounded-sm"
             >
               Đóng lại
-            </button>
+            </Button>
           </Box>
         </Box>
       </Box>
     );
   };
+
   return (
     <>
-      <Box className="w-full bg-white rounded-lg border-2 hover:border-primary transition-all duration-300 hover:shadow-xl overflow-hidden">
-        <Box
-          className="size-[300px] flex flex-col justify-end relative overflow-hidden group bg-center bg-contain"
-          style={{
-            backgroundImage:
-              "url(https://www.topcv.vn/images/cv/screenshots/thumbs/cv-template-thumbnails-v1.2/experts.png?v=1.0.6)",
-          }}
-        >
-          <Box className="absolute w-full bg-gradient-to-t from-black/70 to-transparent flex flex-col items-center justify-center gap-4 py-6 translate-y-full group-hover:translate-y-0 transition-all duration-500 ease-in-out font-semibold">
+      <Box
+        className="w-full bg-white rounded-lg border hover:border-primary transition-all duration-300 hover:shadow-xl overflow-hidden p-5"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => !open && setIsHovered(false)}
+      >
+        <Box className="w-full flex flex-col justify-end relative overflow-hidden">
+          {loading && (
+            <Skeleton variant="rectangular" height="460px" width="100%" />
+          )}
+          <img
+            src={data?.preview_image}
+            alt=""
+            className={`w-full shadow-md ${loading ? "hidden" : "block"}`}
+            onLoad={() => setLoading(false)}
+          />
+          <Box
+            className={`absolute w-full bg-gradient-to-t from-black/70 to-transparent flex flex-col items-center justify-center gap-4 py-6 transition-all duration-500 ease-in-out font-semibold ${
+              isHovered ? "translate-y-0" : "translate-y-full"
+            }`}
+          >
             <button
               className="text-white flex items-center gap-2 px-4 py-1 border border-white w-fit rounded-full text-xs hover:bg-white hover:text-neutrals-100 transition-colors duration-300"
-              onClick={toggle}
+              onClick={toggleDialog}
             >
               <RemoveRedEyeOutlined />
               Xem trước
             </button>
             <button
               onClick={() => {
-                navigate(`${RouteBase.CVTemplate}/1`);
+                navigate(`${RouteBase.CVTemplate}/${data?._id}`);
               }}
               className="text-white flex items-center gap-2 px-4 py-1 bg-primary w-fit rounded-full text-xs hover:bg-primary-dark transition-colors duration-300"
             >
@@ -71,11 +102,11 @@ const CVItem = ({ data }) => {
           </Box>
         </Box>
         <Box className="p-4">
-          <h1 className="font-bold">Chuyên nghiệp</h1>
+          <h1 className="font-bold">{data?.name}</h1>
         </Box>
       </Box>
       {shouldRender && (
-        <DialogCustom open={open} toggle={toggle} body={Content} size={"lg"} />
+        <DialogCustom open={open} toggle={toggleDialog} body={Content} size="lg" />
       )}
     </>
   );

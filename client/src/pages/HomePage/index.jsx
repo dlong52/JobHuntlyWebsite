@@ -29,7 +29,7 @@ const HomePage = () => {
     return [];
   }, [data]);
   return (
-    <Box className="">
+    <>
       <Box
         sx={{
           backgroundImage: `url(${banner})`,
@@ -66,7 +66,7 @@ const HomePage = () => {
               );
             }}
           >
-            {({ errors, touched }) => (
+            {({}) => (
               <Form className="flex items-center bg-white rounded-sm shadow-lg w-fit p-4 gap-6">
                 <Box className="flex items-center min-w-[300px] gap-2">
                   <img src={Search} alt="" />
@@ -108,12 +108,12 @@ const HomePage = () => {
         </Box>
         {!isLoading ? (
           <Box className="grid grid-cols-12 gap-6">
-            {categories?.map((category, index) => {
+            {categories?.map((category) => {
               return (
                 <Link
                   key={categories?._id}
                   to={`${RouteBase.Job}?category=${category._id}`}
-                  className="col-span-3 border rounded-sm overflow-hidden"
+                  className="col-span-12 md:col-span-6  lg:col-span-3 border rounded-sm overflow-hidden"
                 >
                   <CategoryItem loading={isLoading} data={category} />
                 </Link>
@@ -151,9 +151,9 @@ const HomePage = () => {
           </Link>
         </Box>
         <Box className="grid grid-cols-12 gap-6">
-          {categories?.map((category, index) => (
+          {categories?.map((category) => (
             <Link
-              key={index}
+              key={category?._id}
               to={"/"}
               className="col-span-3 border rounded-sm hover:shadow-lg hover:border-primary transition-all duration-200 overflow-hidden"
             >
@@ -174,7 +174,7 @@ const HomePage = () => {
           ))}
         </Box>
       </Container>
-    </Box>
+    </>
   );
 };
 

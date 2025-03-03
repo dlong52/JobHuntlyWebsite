@@ -13,10 +13,10 @@ const ComponentWrapper = ({ children, permissionAllow = [] }) => {
   if (permissionAllow.includes(ROLE.ALL) || permissionAllow.includes(role)) {
     return <Fragment>{children}</Fragment>;
   }
-console.log(!isLogged &&
-  (permissionAllow.includes(ROLE.EMPLOYER) ||
-    permissionAllow.includes(ROLE.ADMIN)));
-console.log(isLogged);
+// console.log(!isLogged &&
+//   (permissionAllow.includes(ROLE.EMPLOYER) ||
+//     permissionAllow.includes(ROLE.ADMIN)));
+// console.log(isLogged);
 
   // if (
   //   !isLogged &&

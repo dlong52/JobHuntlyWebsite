@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
 dotenv.config();
 
-
 const createUser = async (data) => {
   const {
     email,
@@ -93,9 +92,18 @@ const getAllUsers = async (filters = {}, options = {}) => {
     limit = 10,
     sortBy = "created_at",
     order = "desc",
+    searchName,
   } = options;
+
   const sort = { [sortBy]: order === "desc" ? -1 : 1 };
   const skip = (page - 1) * limit;
+
+  if (searchName && searchName.trim() !== "") {
+    filters.$or = [
+      { email: new RegExp(searchName, "i") },
+      { "profile.name": new RegExp(searchName, "i") },
+    ];
+  }
 
   const users = await User.find(filters)
     .sort(sort)
@@ -103,10 +111,11 @@ const getAllUsers = async (filters = {}, options = {}) => {
     .limit(parseInt(limit))
     .populate("role", "name")
     .select("-password");
-
   const total = await User.countDocuments(filters);
+
   return { users, total, page, limit };
 };
+
 const getUserDetails = async (token) => {
   try {
     // Verify the token and extract user ID

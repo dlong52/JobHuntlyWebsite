@@ -19,6 +19,7 @@ import { useNotifications } from "../utils/notifications";
 import helpers from "../utils/helpers";
 import { apiURL } from "../constants/api";
 import { RouteBase } from "../constants/routeUrl";
+import { updateUser } from "../services/UserServices";
 const AuthenticationContext = createContext({
   token: "",
   isLogged: false,
@@ -105,15 +106,19 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const logout = useCallback((email) => {
+  const logout = useCallback(async (id) => {
     return new Promise(async (resolve, reject) => {
       try {
         setLoggingOut(true);
-        setIsLogged(false); // Đặt trước khi reload để đảm bảo cập nhật UI
+        setIsLogged(false);
         HttpService.clearUserInfoStorage();
         HttpService.clearTokenStorage();
         HttpService.clearServiceStorage();
         sessionStorage.removeItem("path");
+        await updateUser({
+          id: id,
+          fcmToken: null,
+        });
         window.location.href = RouteBase.SignIn;
         resolve();
       } catch (error) {

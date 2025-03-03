@@ -26,6 +26,8 @@ export const apiURL = {
   CV: BASE_URL + "/cv",
   CV_THEME: BASE_URL + "/cv-theme",
   PAYMENT: BASE_URL + "/payment",
+  PAYMENT_SUMMARY: BASE_URL + "/payment/summary",
+  REVENUE_BY_PACKAGE: BASE_URL + "/payment/revenue-by-package",
   SUBSCRIPTION: BASE_URL + "/subscription",
   OVERVIEW: BASE_URL + "/overview",
   VN_PAY: BASE_URL + "/vnpay",

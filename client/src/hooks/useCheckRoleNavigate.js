@@ -1,13 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import { RouteBase } from "../constants/routeUrl";
 import { ROLE } from "../constants/enum";
 
 const useCheckRoleNavigate = () => {
-  const navigate = useNavigate();
   const checkRoleNavigate = (role) => {
-    if (role === ROLE.CANDIDATE) navigate(RouteBase.Home);
-    if (role === ROLE.EMPLOYER) navigate(RouteBase.HROverview);
-    if (role === ROLE.ADMIN) navigate(RouteBase.AdminOverview);
+    if (role === ROLE.CANDIDATE) window.location.href = RouteBase.Home;
+    if (role === ROLE.EMPLOYER) window.location.href = RouteBase.HROverview;
+    if (role === ROLE.ADMIN) window.location.href = RouteBase.AdminOverview;
   };
   return { checkRoleNavigate };
 };
