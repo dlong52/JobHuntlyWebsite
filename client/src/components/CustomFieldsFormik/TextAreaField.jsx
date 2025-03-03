@@ -22,7 +22,7 @@ const TextAreaField = ({
   leftIcon,
   ...props
 }) => {
-  console.log({variant});
+  console.log({ variant });
 
   const { name } = field;
   const { touched, errors } = form;
@@ -57,9 +57,9 @@ const TextAreaField = ({
           rows={rows}
           maxRows={maxRows}
           readOnly={readOnly}
-          className={`resize-none outline-dashed outline-1 outline-gray-300 w-full p-[2px] ${leftIcon ? "pl-8" : ""} ${
-            showError ? "border-red-500" : "border-gray-300"
-          } rounded`}
+          className={`resize-none border min-h-40 p-3 focus:outline-2 outline-blue-500 w-full ${
+            leftIcon ? "pl-8" : ""
+          } ${showError ? "border-red-500" : "border-gray-300"} rounded`}
           style={{ fontSize: "inherit" }}
         />
       </div>

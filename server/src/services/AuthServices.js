@@ -6,6 +6,29 @@ const dotenv = require("dotenv");
 const Role = require("../models/Role");
 const Company = require("../models/Company");
 dotenv.config();
+const changePassword = async (userId, oldPassword, newPassword) => {
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return { status: "error", message: "Người dùng không tồn tại!" };
+    }
+    // Kiểm tra mật khẩu cũ
+    const isMatch = bcrypt.compareSync(oldPassword, user.password);
+    if (!isMatch) {
+      return { status: "error", message: "Mật khẩu cũ không chính xác!" };
+    }
+
+    // Hash mật khẩu mới
+    const hashPassword = bcrypt.hashSync(newPassword, 10);
+    user.password = hashPassword;
+    await user.save();
+
+    return { status: "success", message: "Đổi mật khẩu thành công!" };
+  } catch (error) {
+    console.error("Lỗi đổi mật khẩu:", error);
+    return { status: "error", message: error.message };
+  }
+};
 
 const signUp = async (newUser) => {
   const {
@@ -134,34 +157,40 @@ const signInWithGoogle = async (token, role) => {
     const uid = decodedToken.uid;
     const email = decodedToken.email;
     const name = decodedToken.name;
+
     let user = await UserModel.findOne({ firebaseUid: uid }).populate("role");
     const roleM = await Role.findOne({ name: role });
+
+    // Kiểm tra nếu user chưa có firebaseUid nhưng đã tồn tại với email
     if (!user) {
+      const existingUser = await UserModel.findOne({ email });
+      if (existingUser) {
+        return { 
+          status: "error", 
+          message: "Tài khoản này đã được đăng kí bằng phương thức mặc định, vui lòng nhập email và mật khẩu để đăng nhập!" 
+        };
+      }
+
+      // Nếu không tìm thấy user, tạo mới
       user = new UserModel({
         email: email,
         role: roleM._id,
         firebaseUid: uid,
+        is_verified: true,
         account_type: "google",
         profile: {
           name: name,
         },
       });
-      await UserModel.create({
-        email: email,
-        role: roleM._id,
-        firebaseUid: uid,
-        account_type: "google",
-        profile: {
-          name: name,
-        },
-      });
-    }else {
-      const checkRole = user?.role.name !== role 
+      await user.save();
+    } else {
+      const checkRole = user?.role.name !== role;
       if (checkRole) {
-        return { status: "error", message: "Tài khoản này đã được đăng kí với vai trò khác!" }
+        return { status: "error", message: "Tài khoản này đã được đăng kí với vai trò khác!" };
       }
     }
 
+    // Tạo token đăng nhập
     const access_token = await JwtServices.generateAccessToken({
       id: user._id,
       role: user.role.name,
@@ -170,6 +199,7 @@ const signInWithGoogle = async (token, role) => {
       id: user._id,
       role: user.role.name,
     });
+
     return {
       status: "success",
       message: "Đăng nhập với Google thành công!",
@@ -177,7 +207,7 @@ const signInWithGoogle = async (token, role) => {
       refresh_token,
       data: {
         access_token,
-        role: user.role.name
+        role: user.role.name,
       },
     };
   } catch (error) {
@@ -185,8 +215,10 @@ const signInWithGoogle = async (token, role) => {
     return { status: "error", message: error.message };
   }
 };
+
 module.exports = {
   signUp,
   signIn,
   signInWithGoogle,
+  changePassword
 };

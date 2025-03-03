@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useState, useCallback } from "react";
 import { companyLogoDefault } from "../../../../assets/images";
 import { Box, Typography } from "@mui/material";
 import { Button, CommonIcon } from "../../../../ui";
@@ -13,6 +13,8 @@ import { WishListService } from "../../../../services/WishListServices";
 import { useNotifications } from "../../../../utils/notifications";
 import { useSelector } from "react-redux";
 import ChipMui from "../../../../ui/Chip";
+import { ROLE } from "../../../../constants/enum";
+
 const JobListItem = ({
   id,
   logo = companyLogoDefault,
@@ -25,27 +27,44 @@ const JobListItem = ({
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const { open, shouldRender, toggle } = useToggleDialog();
-  const { showError, showSuccess } = useNotifications();
-
+  const { showError, showSuccess, showInfo } = useNotifications();
   const { status } = useStatusWishlist(id);
 
-  const handleAddToWishlist = async () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAddToWishlist = useCallback(async () => {
+    if (!user?.user_id || user.role !== ROLE.CANDIDATE) {
+      showInfo("Bạn cần đăng nhập để thực hiện hành động này!");
+      return;
+    }
+    setIsLoading(true);
     try {
       const payload = { userId: user?.user_id, jobId: id };
       await WishListService.addToWishList(payload);
       showSuccess("Lưu tin thành công!");
     } catch (error) {
       showError("Đã xảy ra lỗi khi lưu tin");
+    } finally {
+      setIsLoading(false);
     }
-  };
-  const handleRemoveToWishlist = async () => {
+  }, [id, user, showInfo, showError, showSuccess]);
+
+  const handleRemoveToWishlist = useCallback(async () => {
+    if (!user?.user_id || user.role !== ROLE.CANDIDATE) {
+      showInfo("Bạn cần đăng nhập để thực hiện hành động này!");
+      return;
+    }
+    setIsLoading(true);
     try {
       await WishListService.removeFromWishList(user?.user_id, id);
       showSuccess("Bỏ lưu tin thành công!");
     } catch (error) {
       showError("Đã xảy ra lỗi khi bỏ lưu tin");
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [id, user, showInfo, showError, showSuccess]);
+
   return (
     <Box className="border p-6 rounded-lg shadow">
       <Box className="flex items-start gap-3 w-full">
@@ -58,7 +77,7 @@ const JobListItem = ({
           <img
             className="size-[98px] hover:scale-105 transition-all duration-300 object-cover object-center"
             src={logo}
-            alt=""
+            alt="Logo"
           />
         </Box>
         <Box className="flex flex-col gap-5 w-full">
@@ -97,21 +116,23 @@ const JobListItem = ({
             </Button>
             {status ? (
               <Button
-                onClick={() => {
-                  handleRemoveToWishlist();
-                }}
+                key={id}
+                isLoading={isLoading}
+                onClick={handleRemoveToWishlist}
                 className="!bg-primary-light !text-primary"
+                disabled={isLoading}
               >
-                <CommonIcon.Favorite />
+                {isLoading ? "Đang xử lý..." : <CommonIcon.Favorite />}
               </Button>
             ) : (
               <Button
-                onClick={() => {
-                  handleAddToWishlist();
-                }}
+                key={id}
+                isLoading={isLoading}
+                onClick={handleAddToWishlist}
                 className="!bg-primary-light !text-primary"
+                disabled={isLoading}
               >
-                <CommonIcon.FavoriteBorder />
+                {isLoading ? "Đang xử lý..." : <CommonIcon.FavoriteBorder />}
               </Button>
             )}
           </Box>
@@ -142,4 +163,4 @@ const JobListItem = ({
   );
 };
 
-export default JobListItem;
+export default memo(JobListItem);

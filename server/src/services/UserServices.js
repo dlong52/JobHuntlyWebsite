@@ -1,7 +1,44 @@
 const User = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
 dotenv.config();
+
+const createUser = async (data) => {
+  const {
+    email,
+    password,
+    account_type = "default",
+    role,
+    company,
+    profile,
+  } = data;
+
+  // Kiểm tra email đã tồn tại chưa
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new Error("Email already exists");
+  }
+
+  // Nếu tài khoản mặc định -> Hash password
+  let hashedPassword = undefined;
+  if (account_type === "default" && password) {
+    hashedPassword = await bcrypt.hashSync(password, 10);
+  }
+
+  // Tạo user mới
+  const user = await User.create({
+    email,
+    password: hashedPassword,
+    account_type,
+    firebaseUid,
+    role,
+    company,
+    profile,
+  });
+
+  return user;
+};
 
 const getUserById = async (id) => {
   return await User.findById(id).populate("role").populate("company");
@@ -55,9 +92,18 @@ const getAllUsers = async (filters = {}, options = {}) => {
     limit = 10,
     sortBy = "created_at",
     order = "desc",
+    searchName,
   } = options;
+
   const sort = { [sortBy]: order === "desc" ? -1 : 1 };
   const skip = (page - 1) * limit;
+
+  if (searchName && searchName.trim() !== "") {
+    filters.$or = [
+      { email: new RegExp(searchName, "i") },
+      { "profile.name": new RegExp(searchName, "i") },
+    ];
+  }
 
   const users = await User.find(filters)
     .sort(sort)
@@ -65,10 +111,11 @@ const getAllUsers = async (filters = {}, options = {}) => {
     .limit(parseInt(limit))
     .populate("role", "name")
     .select("-password");
-
   const total = await User.countDocuments(filters);
+
   return { users, total, page, limit };
 };
+
 const getUserDetails = async (token) => {
   try {
     // Verify the token and extract user ID
@@ -109,6 +156,7 @@ const updateFCMToken = async (email, fcmToken) => {
   }
 };
 module.exports = {
+  createUser,
   updateUser,
   deleteUser,
   getAllUsers,

@@ -3,6 +3,11 @@ export const EmploymentType = {
   PART_TIME: "part-time",
   INTERN: "intern",
 };
+export const cvTheme = {
+  "MODERN-THEME": "MODERN-THEME",
+  "POLITE-THEME": "POLITE-THEME",
+  "DELICATE-THEME": "DELICATE-THEME",
+};
 export const employmentTypeOptions = [
   {
     label: "Toàn thời gian",

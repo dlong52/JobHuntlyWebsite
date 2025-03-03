@@ -6,10 +6,10 @@ const createPaymentUrl = (payload) => {
 };
 
 const paymentReturn = async (params) => {
-  return httpServices.get(`${apiURL.VN_PAY}/return?${params.queryKey[1]}`);
+  return httpServices.get(`${apiURL.VN_PAY}/return?${params}`);
 };
 
-export const WishListService = {
+export const VnPayServices = {
   createPaymentUrl,
   paymentReturn,
 };

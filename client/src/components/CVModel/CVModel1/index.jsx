@@ -1,195 +1,195 @@
-import React from "react";
-
-const cvModel = {
-  profile: {
-    name: "Đức Long Nguyễn",
-    email: "duong.work23@gmail.com",
-    phone_number: "0123.456.789",
-    address: "Quận A, thành phố Hà Nội",
-  },
-  objective: "Phấn đấu trở thành chuyên gia trong lĩnh vực lập trình và phát triển phần mềm, không ngừng học hỏi và nâng cao kỹ năng, đóng góp cho sự phát triển của công ty.",
-  work_experiences: [
-    {
-      company: "Công ty TNHH Công Nghệ ABC",
-      from_date: "01/2020",
-      to_date: "12/2022",
-      position: "Lập trình viên Fullstack",
-      experience_des: "Tham gia phát triển và bảo trì hệ thống quản lý nội bộ, cải thiện hiệu suất của ứng dụng và tối ưu hóa giao diện người dùng.",
-    },
-  ],
-  projects: [
-    {
-      project_name: "Hệ thống quản lý tài liệu",
-      from_date: "03/2021",
-      to_date: "11/2021",
-      customer_name: "Công ty XYZ",
-      team_size: "5",
-      position_project: "Backend Developer",
-      tecnology_des: "Sử dụng Node.js, Express.js, MongoDB và Docker trong quá trình phát triển backend cho hệ thống quản lý tài liệu.",
-    },
-  ],
-  education: [
-    {
-      school_name: "Đại học Bách Khoa Hà Nội",
-      from_date: "09/2016",
-      to_date: "06/2020",
-      courses: "Kỹ thuật phần mềm",
-      education_des: "Hoàn thành chương trình cử nhân với chuyên ngành kỹ thuật phần mềm, tham gia nhiều dự án nhóm và đạt thành tích xuất sắc.",
-    },
-  ],
-  skills: [
-    {
-      skill_name: "Lập trình Fullstack",
-      skill_des: "Thành thạo JavaScript, Node.js, Express.js, React, và MongoDB.",
-    },
-  ],
-  interests: "Thích đọc sách công nghệ, chơi cờ vua, và tham gia các câu lạc bộ lập trình.",
-  references: [
-    {
-      references_des: "Nguyễn Văn A - Quản lý dự án tại Công ty TNHH Công Nghệ ABC - 0123.456.789",
-    },
-  ],
-  activities: [
-    {
-      organization_name: "Câu lạc bộ lập trình Đại học Bách Khoa",
-      from_date: "09/2017",
-      to_date: "06/2020",
-      position: "Trưởng nhóm kỹ thuật",
-      activity_des: "Tổ chức các buổi chia sẻ kiến thức, giám sát và hỗ trợ các dự án của câu lạc bộ.",
-    },
-  ],
-  certifications: [
-    {
-      time: "03/2020",
-      certification_name: "Chứng chỉ Lập trình viên Quốc tế",
-    },
-  ],
-  honors_awards: [
-    {
-      time: "05/2020",
-      award_name: "Giải nhất cuộc thi lập trình cấp trường",
-    },
-  ],
-  additional_information: [
-    "Có thể làm việc dưới áp lực cao, kỹ năng giao tiếp tốt, và luôn chủ động học hỏi kiến thức mới."
-  ],
-};
-
-const CVModel1 = () => {
+import { CommonIcon } from "../../../ui";
+import React, { forwardRef } from "react";
+const CVModel1 = forwardRef(({ values, show = true }, ref) => {
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Profile Section */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-blue-800">{cvModel.profile.name}</h1>
-          <p className="text-gray-700 font-semibold">Vị trí ứng tuyển</p>
+    <div
+      ref={ref}
+      className={`${
+        show ? "" : "absolute left-[-999999999999999px]"
+      } flex flex-col md:flex-row max-w-6xl mx-auto bg-white shadow-lg`}
+    >
+      {/* Left Sidebar */}
+      <div className="w-full md:w-1/3 bg-[#e6f7fa] p-6">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-[#00b8d4]">Nguyễn Mai Anh</h1>
+          <p className="text-gray-700">Quản Lý Phòng Hành Chính</p>
+
+          <div className="mt-4 flex justify-center">
+            <div className="w-40 h-40 rounded-full border-4 border-[#00b8d4] overflow-hidden">
+              <img
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/modern_6_v2-zmd6EEoc3DVIqg5c2XPTYafNsqzacH.webp"
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col items-start text-gray-600 gap-y-1 border-l-4 border-blue-800 px-4">
-          <span>{cvModel.profile.phone_number}</span>
-          <span>{cvModel.profile.email}</span>
-          <span>{cvModel.profile.address}</span>
-        </div>  
+
+        <div className="mt-8">
+          <h2 className="text-xl font-bold text-[#00b8d4] mb-4">
+            Thông tin cá nhân
+          </h2>
+          <ul className="space-y-3">
+            <li className="flex items-center gap-2">
+              <CommonIcon.CalendarMonth className="w-5 h-5 text-[#00b8d4]" />
+              <span>13/06/1997</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <CommonIcon.Person className="w-5 h-5 text-[#00b8d4]" />
+              <span>Nữ</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <CommonIcon.Phone className="w-5 h-5 text-[#00b8d4]" />
+              <span>(024) 6680 5588</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <CommonIcon.Email className="w-5 h-5 text-[#00b8d4]" />
+              <span>hotro@topcv.vn</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <CommonIcon.East className="w-5 h-5 text-[#00b8d4]" />
+              <span>be.net/trungus</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <CommonIcon.Map className="w-5 h-5 text-[#00b8d4]" />
+              <span>Quận A, Hà Nội</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-xl font-bold text-[#00b8d4] mb-4">Các kỹ năng</h2>
+          <ul className="space-y-2">
+            <li className="py-1.5 px-1 hover:bg-[#d0f0f7] transition-colors">
+              Điều hành và phân công nhiệm vụ
+            </li>
+            <li className="py-1.5 px-1 hover:bg-[#d0f0f7] transition-colors">
+              Kiểm soát chi phí hành chính
+            </li>
+            <li className="py-1.5 px-1 hover:bg-[#d0f0f7] transition-colors">
+              Mua sắm trang thiết bị đúng yêu cầu
+            </li>
+            <li className="py-1.5 px-1 hover:bg-[#d0f0f7] transition-colors">
+              Làm việc với nhiều nhà cung cấp
+            </li>
+            <li className="py-1.5 px-1 hover:bg-[#d0f0f7] transition-colors">
+              Làm việc với cơ quan ban ngành nhà nước
+            </li>
+          </ul>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-xl font-bold text-[#00b8d4] mb-4">Sở thích</h2>
+          <p className="text-gray-700">
+            Teambuilding, tham gia các câu lạc bộ, ca hát, văn nghệ, chơi thể
+            thao
+          </p>
+        </div>
       </div>
 
-      {/* Objective */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-blue-800">Mục tiêu nghề nghiệp</h2>
-        <hr className="border-t-2 border-blue-800 my-2" />
-        <p className="text-gray-700">{cvModel.objective}</p>
-      </section>
+      {/* Main Content */}
+      <div className="w-full md:w-2/3 p-6">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-[#00b8d4] mb-3">
+            Mục tiêu nghề nghiệp
+          </h2>
+          <div className="border-b-2 border-[#00b8d4] mb-4"></div>
+          <p className="text-gray-700">
+            8 năm thực hiện các công việc hỗ trợ khách hàng và các phòng ban
+            trong công ty tại Công ty A và công ty B. Là người có thế mạnh về
+            nghiệp vụ hành chính, xây dựng mối quan hệ tốt với nhà cung cấp và
+            các cơ quan ban ngày, có năng lực lãnh đạo và quản lý đội nhóm tốt.
+            Mong muốn ứng tuyển vị trí Quản lý phòng hành chính để nâng cao chất
+            lượng hoạt động nội bộ của công ty.
+          </p>
+        </div>
 
-      {/* Work Experiences */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-blue-800">Kinh nghiệm làm việc</h2>
-        <hr className="border-t-2 border-blue-800 my-2" />
-        {cvModel.work_experiences.map((exp, index) => (
-          <div key={index} className="border p-4 rounded-md shadow-sm mb-4 bg-white">
-            <p className="font-semibold text-blue-700">{exp.company}</p>
-            <p className="text-gray-600">
-              {exp.from_date} - {exp.to_date}
-            </p>
-            <p className="text-gray-700">{exp.position}</p>
-            <p>{exp.experience_des}</p>
-          </div>
-        ))}
-      </section>
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-[#00b8d4] mb-3">Học vấn</h2>
+          <div className="border-b-2 border-[#00b8d4] mb-4"></div>
 
-      {/* Projects */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-blue-800">Dự án</h2>
-        <hr className="border-t-2 border-blue-800 my-2" />
-        {cvModel.projects.map((project, index) => (
-          <div key={index} className="border-2 border-blue-200 p-4 rounded-md shadow-sm mb-4">
-            <p className="font-semibold text-blue-700">{project.project_name}</p>
-            <p className="text-gray-600">
-              {project.from_date} - {project.to_date}
-            </p>
-            <p>Khách hàng: {project.customer_name}</p>
-            <p>Số lượng người tham gia: {project.team_size}</p>
-            <p>Vị trí: {project.position_project}</p>
-            <p className="italic text-gray-700">Công nghệ: {project.tecnology_des}</p>
+          <div className="mb-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold">Gitiho</h3>
+              <span className="text-gray-500">2021 - 2021</span>
+            </div>
+            <p>Khoá học Kỹ năng hành chính nhân sự</p>
           </div>
-        ))}
-      </section>
 
-      {/* Education */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-blue-800">Học vấn</h2>
-        <hr className="border-t-2 border-blue-800 my-2" />
-        {cvModel.education.map((edu, index) => (
-          <div key={index} className="bg-white p-4 shadow-sm mb-4 rounded-md">
-            <p className="font-semibold text-blue-700">{edu.school_name}</p>
-            <p>{edu.from_date} - {edu.to_date}</p>
-            <p>{edu.courses}</p>
-            <p>{edu.education_des}</p>
+          <div>
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold">Đại học TopCV</h3>
+              <span className="text-gray-500">2010 - 2013</span>
+            </div>
+            <p>Chuyên ngành Quản trị Kinh Doanh</p>
+            <p>Tốt nghiệp loại Giỏi</p>
           </div>
-        ))}
-      </section>
+        </div>
 
-      {/* Skills */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-blue-800">Các kỹ năng</h2>
-        <hr className="border-t-2 border-blue-800 my-2" />
-        {cvModel.skills.map((skill, index) => (
-          <div key={index} className="mb-2">
-            <p className="font-semibold">{skill.skill_name}</p>
-            <p>{skill.skill_des}</p>
-          </div>
-        ))}
-      </section>
+        <div>
+          <h2 className="text-2xl font-bold text-[#00b8d4] mb-3">
+            Kinh nghiệm làm việc
+          </h2>
+          <div className="border-b-2 border-[#00b8d4] mb-4"></div>
 
-      {/* Honors & Awards */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-blue-800">Danh hiệu và giải thưởng</h2>
-        <hr className="border-t-2 border-blue-800 my-2" />
-        {cvModel.honors_awards.map((award, index) => (
-          <div key={index} className="mb-2">
-            <p>{award.time}</p>
-            <p>{award.award_name}</p>
+          <div className="mb-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold">
+                Trưởng Nhóm Chăm Sóc Khách Hàng
+              </h3>
+              <span className="text-gray-500">08/2016 - 08/2022</span>
+            </div>
+            <p className="text-gray-600 mb-2">Công ty ABC</p>
+            <ul className="list-disc pl-5 space-y-1 text-gray-700">
+              <li>
+                Quản trị và tối ưu chu trình trải nghiệm của khách hàng (từ đầu
+                đến cuối chu trình)
+              </li>
+              <li>
+                Tiếp nhận sự cố về các lỗi vận hành từ khách hàng và nội bộ
+              </li>
+              <li>Đảm bảo các bộ phận cải thiện sự cố</li>
+              <li>
+                Lan tỏa và lôi cuốn các bộ phận nội bộ tối ưu trải nghiệm khách
+                hàng
+              </li>
+            </ul>
           </div>
-        ))}
-      </section>
 
-      {/* Certifications */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-blue-800">Chứng chỉ</h2>
-        <hr className="border-t-2 border-blue-800 my-2" />
-        {cvModel.certifications.map((cert, index) => (
-          <div key={index} className="mb-2">
-            <p>{cert.time}</p>
-            <p>{cert.certification_name}</p>
+          <div>
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold">
+                Trợ Lý Giám Sát Nhận Hàng
+              </h3>
+              <span className="text-gray-500">08/2014 - 07/2016</span>
+            </div>
+            <p className="text-gray-600 mb-2">Công ty BCD</p>
+            <ul className="list-disc pl-5 space-y-1 text-gray-700">
+              <li>
+                Hỗ trợ cho Giám Sát Bộ Phận điều hành toàn bộ hoạt động nhận
+                hàng và chịu trách nhiệm về tính chính xác của số lượng lẫn chất
+                lượng hàng nhận đúng theo mục tiêu kinh doanh
+              </li>
+              <li>Triển khai và đảm bảo việc nhận hàng theo đúng qui trình.</li>
+              <li>
+                Quản lý kho hàng đủ và đúng số lượng, chất lượng lẫn sự sắp xếp
+                hợp lý.
+              </li>
+              <li>Sắp xếp và điều động nhân sự một cách hiệu quả.</li>
+              <li>
+                Đào tạo và phát triển nhân sự đáp ứng theo yêu cầu công việc.
+              </li>
+              <li>
+                Hỗ trợ các ngành hàng và các bộ phận khác trong việc quản lý và
+                luân chuyển hàng hóa.
+              </li>
+              <li>Chuyển và nhận hàng nội bộ giữa các kho đúng qui định.</li>
+            </ul>
           </div>
-        ))}
-      </section>
-      
-      {/* Interests */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-blue-800">Sở thích</h2>
-        <hr className="border-t-2 border-blue-800 my-2" />
-        <p>{cvModel.interests}</p>
-      </section>
+        </div>
+      </div>
     </div>
   );
-};
+});
 
 export default CVModel1;

@@ -9,5 +9,6 @@ userRouter.get("", userController.getAllUsers);
 userRouter.get("/details", userController.getUserDetails);
 userRouter.get("/:id", userController.getUserById);
 userRouter.post("/push-fcm-token", userController.updateFCMToken);
+userRouter.post("", userController.createUser);
 
 module.exports = userRouter;

@@ -38,7 +38,14 @@ const FindJobPage = () => {
     sort: "desc",
   });
   const { data, isLoading } = useGetAllPosts(filters);
-  const { dataConvert: jobData } = useConvertData(data);
+  const { dataConvert } = useConvertData(data);
+  const jobData = useMemo(() => {
+    if (dataConvert) {
+      const newJobData = dataConvert;
+      return newJobData;
+    }
+    return [];
+  }, [dataConvert]);
   useEffect(() => {
     const defaultFilters = {
       page: 1,
@@ -70,7 +77,7 @@ const FindJobPage = () => {
             </Box>
           </Box>
           <Formik
-            initialValues={{ title: "", province: "" }}
+            initialValues={{ title: query?.title, province: query?.location }}
             onSubmit={(values) => {
               const params = new URLSearchParams();
               if (values?.title) params.set("title", values?.title);
@@ -121,7 +128,7 @@ const FindJobPage = () => {
           </Box>
           <Box className="col-span-9">
             {isLoading ? (
-              <Box>
+              <Box className="flex flex-col gap-5">
                 {Array(3)
                   .fill(null)
                   .map((_, index) => {

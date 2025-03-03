@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import { updateUser } from "@/redux/userSlice";
 import * as UserServices from "@/services/UserServices";
 import { ROLE } from "../../constants/enum";
+import httpServices from "../../services/httpServices";
 const SignUpHrPage = () => {
   const { showSuccess, showError } = useNotifications();
   const dispatch = useDispatch();
@@ -34,6 +35,8 @@ const SignUpHrPage = () => {
         checkRoleNavigate(res?.data.role);
         if (res?.data.access_token) {
           handleGetUserDetails(res?.data.access_token);
+          httpServices.saveTokenStorage(res?.data?.access_token);
+          httpServices.attachTokenToHeader(res?.data?.access_token);
         }
         return;
       }
@@ -43,9 +46,9 @@ const SignUpHrPage = () => {
     }
   }, []);
   const handleGetUserDetails = async (token) => {
-      const res = await UserServices.getDetailUser(token);
-      dispatch(updateUser({ ...res?.data, accessToken: token }));
-    };
+    const res = await UserServices.getDetailUser(token);
+    dispatch(updateUser({ ...res?.data, accessToken: token }));
+  };
   // Render
   return (
     <Box className="w-full max-h-screen relative grid grid-cols-12 bg-primary-dark">

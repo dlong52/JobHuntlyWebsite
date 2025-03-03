@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../../../constants/routeUrl";
+import { companyLogoDefault } from "../../../../assets/images";
 
 const CompanyCardItem = ({ id, avatar, cover, name, description }) => {
   return (
@@ -12,7 +13,7 @@ const CompanyCardItem = ({ id, avatar, cover, name, description }) => {
         <Box className="bg-slate-200 h-[150px]" />
       )}
       <img
-        src={avatar}
+        src={avatar ? avatar : companyLogoDefault}
         alt=""
         className="size-16 rounded-md border translate-x-5 -translate-y-1/2"
       />

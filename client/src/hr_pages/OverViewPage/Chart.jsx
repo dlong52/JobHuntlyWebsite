@@ -1,52 +1,80 @@
-import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React, { useState } from "react";
+import moment from "moment";
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
+import { CommonIcon } from "../../ui";
 
-const EmploymentGrowthChart = ({ data }) => {
+const CVChart = ({ data }) => {
+  const formattedData = data?.map((item) => ({
+    ...item,
+    _id: moment(item._id).format("DD/MM"),
+    count: Math.round(item.count),
+  }));
+
+  const [activeTooltip, setActiveTooltip] = useState(null);
+
   return (
-    <div className="">
-      <h2 className=" text-primary font-bold mb-4">Kết quả CV tiếp nhận 28 ngày qua</h2>
-      <ResponsiveContainer width="100%" height={250}>
-        <LineChart
-          data={data}
+    <div className="w-full bg-white rounded-lg">
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart
+          data={formattedData}
+          barCategoryGap="40%"
+          onMouseLeave={() => setActiveTooltip(null)}
         >
-          <defs>
-            <linearGradient id="colorLine" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#4a90e2" stopOpacity={1} />
-              <stop offset="100%" stopColor="#4a90e2" stopOpacity={0.2} />
-            </linearGradient>
-          </defs>
-
-          <CartesianGrid strokeDasharray="10 3" stroke="#f0f8ff4f" />
-          
-          <XAxis 
-            dataKey="date" 
-            tick={{ fontSize: 12, fill: 'var(--primary)' }}
-            axisLine={{ stroke: '#ccc' }}
+          <CartesianGrid
+            strokeDasharray="3 3"
+            vertical={false}
+            strokeOpacity={0.3}
+          />
+          <XAxis
+            dataKey="_id"
+            tick={{ fontSize: 12, fill: "#666" }}
             tickLine={false}
+            axisLine={false}
           />
-          
-          <YAxis 
-            tick={{ fontSize: 12, fill: 'var(--primary)' }}
-            axisLine={{ stroke: '#ccc' }}
+          <YAxis
+            allowDecimals={false}
+            tick={{ fontSize: 12, fill: "#666" }}
             tickLine={false}
+            axisLine={false}
           />
-          
-          <Tooltip 
-            contentStyle={{ backgroundColor: '#1a1a1a', borderRadius: 10, borderColor: '#ccc', color: 'var(--primary)' }}
-            labelStyle={{ color: '#888' }}
-          />   
-          <Line 
-            type="monotone" 
-            dataKey="jobs" 
-            stroke="url(#colorLine)" 
-            strokeWidth={3} 
-            dot={{ r: 5, fill: '#4a90e2', strokeWidth: 2, stroke: 'var(--primary)' }} 
-            activeDot={{ r: 8 }} 
+          {/* Tooltip chỉ hiển thị khi hover */}
+          <Tooltip
+            cursor={{ fill: "transparent" }}
+            contentStyle={{
+              backgroundColor: "#fff",
+              borderRadius: "4px",
+              border: "none",
+              boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
+            }}
+            formatter={(value) => [`${value}`, "CV tiếp nhận phỏng vấn"]}
+            itemStyle={{ color: "var(--primary)", fontWeight: "bold" }}
+            active={activeTooltip !== null}
           />
-        </LineChart>
+          <Bar
+            dataKey="count"
+            fill="var(--primary)"
+            barSize={20}
+            radius={[5, 5, 0, 0]}
+            onMouseEnter={(data, index) => setActiveTooltip(index)}
+          />
+        </BarChart>
       </ResponsiveContainer>
+
+      {/* Chú thích */}
+      <div className="flex items-center justify-center text-gray-600 mt-2 text-sm">
+        <CommonIcon.BarChart className="text-gray-500 mr-2" />
+        Kết quả CV tiếp nhận 28 ngày qua
+      </div>
     </div>
   );
 };
 
-export default EmploymentGrowthChart;
+export default CVChart;

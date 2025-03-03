@@ -8,6 +8,7 @@ const applicationSchema = new mongoose.Schema({
     required: true,
   },
   job: { type: mongoose.Schema.Types.ObjectId, ref: "Job", required: true },
+  company: { type: mongoose.Schema.Types.ObjectId, ref: "Company", required: true },
   CV: { type: mongoose.Schema.Types.ObjectId, ref: "CV" },
   cv_url: { type: String },
   cover_letter: { type: String },

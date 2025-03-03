@@ -5,11 +5,13 @@ import { store } from "./redux/store.js";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
-import { SnackbarProvider } from "./providers/SnackbarProvider";
-import AuthProvider from "./providers/AuthenticationProvider";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { QueryClient, QueryClientProvider } from "react-query";
+// Providers
+import AuthProvider from "./providers/AuthenticationProvider";
+import { SnackbarProvider } from "./providers/SnackbarProvider";
+import { LoadingUserProvider } from "./providers/LoadingUserProvider.jsx";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -19,7 +21,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Provider store={store}>
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <QueryClientProvider client={queryClient}>
-              <App />
+              <LoadingUserProvider>
+                <App />
+              </LoadingUserProvider>
             </QueryClientProvider>
           </LocalizationProvider>
         </Provider>

@@ -25,3 +25,4 @@ config/firebase/serviceAccount.json
 *.njsproj
 *.sln
 *.sw?
+.vercel

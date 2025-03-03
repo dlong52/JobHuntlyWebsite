@@ -18,6 +18,8 @@ import {
 import { useNotifications } from "../utils/notifications";
 import helpers from "../utils/helpers";
 import { apiURL } from "../constants/api";
+import { RouteBase } from "../constants/routeUrl";
+import { updateUser } from "../services/UserServices";
 const AuthenticationContext = createContext({
   token: "",
   isLogged: false,
@@ -36,7 +38,7 @@ export const useAuthentication = () => useContext(AuthenticationContext);
 const AuthProvider = ({ children }) => {
   const tokenLocalStorage = HttpService.getTokenSession();
   const servicesLocalStorage = HttpService.getServiceStorage();
-  
+
   //! State
   const [isLogged, setIsLogged] = useState(tokenLocalStorage ? true : false);
   const [isLoggingOut, setLoggingOut] = useState(false);
@@ -104,16 +106,20 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const logout = useCallback((email) => {
+  const logout = useCallback(async (id) => {
     return new Promise(async (resolve, reject) => {
       try {
         setLoggingOut(true);
-        setIsLogged(false); // Đặt trước khi reload để đảm bảo cập nhật UI
+        setIsLogged(false);
         HttpService.clearUserInfoStorage();
         HttpService.clearTokenStorage();
         HttpService.clearServiceStorage();
         sessionStorage.removeItem("path");
-        window.location.reload();
+        await updateUser({
+          id: id,
+          fcmToken: null,
+        });
+        window.location.href = RouteBase.SignIn;
         resolve();
       } catch (error) {
         showError(error.toString());

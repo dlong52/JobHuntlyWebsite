@@ -6,7 +6,7 @@ const {
 
 const vnPayRouter = express.Router();
 
-vnPayRouter.post("/create_payment", createPayment);
+vnPayRouter.post("/create-payment", createPayment);
 vnPayRouter.get("/return", vnPayReturn);
 
 module.exports = vnPayRouter;

@@ -11,6 +11,8 @@ const InputField = ({
   label,
   labelTop,
   disabled,
+  multiline = false,
+  rows,
   classNameContainer = "",
   classNameLabel = "",
   className,
@@ -43,6 +45,8 @@ const InputField = ({
         disabled={disabled}
         label={label}
         size={size}
+        multiline={multiline}
+        rows={rows}
         {...field}
         {...props}
         type={type}

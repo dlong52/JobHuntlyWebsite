@@ -99,7 +99,8 @@ const getJobById = async (id) => {
     })
     .populate("applications")
     .populate("categories")
-    .populate("level");
+    .populate("level")
+    .populate("company");
 };
 
 const updateJob = async (id, jobData) => {

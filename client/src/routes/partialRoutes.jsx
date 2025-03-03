@@ -13,17 +13,17 @@ const sidebarHrRoutes = [
     icon: CommonIcon.NewspaperOutlined,
   },
   {
-    path: "/hr1",
+    path: RouteBase.HRRecruitmentReport,
     name: "Báo cáo tuyển dụng",
     icon: CommonIcon.FeedOutlined,
   },
   {
-    path: "/hr1",
+    path: RouteBase.HRCvManagement,
     name: "Quản lí CV",
     icon: CommonIcon.AccountCircleOutlined,
   },
   {
-    path: "/hr1",
+    path: RouteBase.HRMyCompany,
     name: "Doanh nghiệp",
     icon: CommonIcon.Business,
   },
@@ -78,6 +78,11 @@ const sidebarAdminRoutes = [
     path: RouteBase.AdminCategory,
     name: "Quản lí danh mục",
     icon: CommonIcon.Category,
+  },
+  {
+    path: RouteBase.AdminCvTheme,
+    name: "Chủ đề CV",
+    icon: CommonIcon.ColorLens,
   },
 ];
 export { sidebarHrRoutes, sidebarAdminRoutes };

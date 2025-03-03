@@ -19,23 +19,30 @@ import {
   WishListPage,
   ViewedResumePage,
   ChangePasswordPage,
+  VerifyAccountPage,
+  ForgotPasswordPage,
 } from "../pages";
 import {
   ChatPage,
   CheckoutPage,
+  CvManagementHrPage,
   JobDetailPage,
+  MyCompanyPage,
   MyPackagePage,
   OverViewPage,
   PackageDetailPage,
   PackagePage,
   PostJobPage,
   ProfileHrPage,
+  RecruitmentReportPage,
   ReturnPaymentPage,
+  VerifyPage,
 } from "../hr_pages";
 import {
   CategoryManagementPage,
   CompanyManagementPage,
   CreateUserPage,
+  CvThemePage,
   NotifyManagementPage,
   OverViewAdminPage,
   PackageManagementPage,
@@ -67,6 +74,12 @@ const Routes = [
   {
     path: RouteBase.SignUpHr,
     component: SignUpHrPage,
+    permissionAllow: [ROLE.ALL],
+    layout: null,
+  },
+  {
+    path: RouteBase.ForgotPassword,
+    component: ForgotPasswordPage,
     permissionAllow: [ROLE.ALL],
     layout: null,
   },
@@ -129,6 +142,11 @@ const Routes = [
   {
     path: RouteBase.ViewedResume,
     component: ViewedResumePage,
+    permissionAllow: [ROLE.ALL],
+  },
+  {
+    path: RouteBase.VerifyAccount,
+    component: VerifyAccountPage,
     permissionAllow: [ROLE.ALL],
   },
   {
@@ -200,6 +218,31 @@ const Routes = [
     layout: HRLayout,
   },
 
+  {
+    path: RouteBase.HRRecruitmentReport,
+    component: RecruitmentReportPage,
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
+  {
+    path: RouteBase.HRVerify,
+    component: VerifyPage,
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
+  {
+    path: RouteBase.HRMyCompany,
+    component: MyCompanyPage,
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
+  {
+    path: RouteBase.HRCvManagement,
+    component: CvManagementHrPage,
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
+
   // ADMIN Routes
   {
     path: RouteBase.AdminOverview,
@@ -264,6 +307,12 @@ const Routes = [
   {
     path: RouteBase.AdminProfile,
     component: ProfileAdminPage,
+    permissionAllow: [ROLE.ADMIN],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminCvTheme,
+    component: CvThemePage,
     permissionAllow: [ROLE.ADMIN],
     layout: AdminLayout,
   },

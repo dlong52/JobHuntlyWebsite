@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Button, CommonIcon, CommonTable } from "../../ui";
+import { Button, CommonIcon } from "../../ui";
 import { Box, Container, Typography } from "@mui/material";
 import CompanyCardItem from "./components/CompanyCardItem";
 import useFilters from "../../hooks/useFilters";

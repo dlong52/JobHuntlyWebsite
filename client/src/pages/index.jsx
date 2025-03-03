@@ -13,9 +13,11 @@ export { default as ConnectPage } from "./ConnectPage";
 export { default as WishListPage } from "./WishListPage";
 export { default as ViewedResumePage } from "./ViewedResumePage";
 export { default as ChangePasswordPage } from "./ChangePasswordPage";
+export { default as VerifyAccountPage } from "./VerifyAccountPage";
 // Auth
 export { default as SignInPage } from "./SignInPage";
 export { default as SignUpPage } from "./SignUpPage";
 export { default as SignUpHrPage } from "./SignUpHrPage";
+export { default as ForgotPasswordPage } from "./ForgotPasswordPage";
 
 export { default as NotFoundPage } from "./NotFoundPage";

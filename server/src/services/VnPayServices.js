@@ -27,7 +27,7 @@ const createPaymentUrl = (
     vnp_OrderType: orderType || "other",
     vnp_Locale: locale,
     vnp_ExpireDate: vnp_ExpireDate,
-    vnp_ReturnUrl: "https://www.facebook.com/",
+    vnp_ReturnUrl: vnPayConfig.returnUrl,
     vnp_IpAddr: clientIp,
     vnp_CreateDate: vnp_CreateDate,
   };
@@ -46,12 +46,6 @@ const createPaymentUrl = (
   const paymentUrl = `${vnPayConfig.url}?${qs.stringify(vnp_Params, {
     encode: false,
   })}`;
-  console.log(paymentUrl);
-
-  console.log("Chữ ký tạo ra:", signed);
-  console.log("Chữ ký gửi đi:", vnp_Params.vnp_SecureHash);
-  console.log("check: ", signed === vnp_Params.vnp_SecureHash);
-
   return paymentUrl;
 };
 

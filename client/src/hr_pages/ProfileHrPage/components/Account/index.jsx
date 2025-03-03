@@ -14,31 +14,31 @@ import {
   InputField,
 } from "../../../../components/CustomFieldsFormik";
 import { useSelector } from "react-redux";
-
+export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  height: 10,
+  borderRadius: 5,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor: theme.palette.grey[200],
+    ...theme.applyStyles("dark", {
+      backgroundColor: theme.palette.grey[800],
+    }),
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 5,
+    backgroundColor: "var(--accent-green)",
+    ...theme.applyStyles("dark", {
+      backgroundColor: "#308fe8",
+    }),
+  },
+}));
 const Account = () => {
   const user = useSelector((state) => state.user);
-  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 10,
-    borderRadius: 5,
-    [`&.${linearProgressClasses.colorPrimary}`]: {
-      backgroundColor: theme.palette.grey[200],
-      ...theme.applyStyles("dark", {
-        backgroundColor: theme.palette.grey[800],
-      }),
-    },
-    [`& .${linearProgressClasses.bar}`]: {
-      borderRadius: 5,
-      backgroundColor: "var(--accent-green)",
-      ...theme.applyStyles("dark", {
-        backgroundColor: "#308fe8",
-      }),
-    },
-  }));
+
   const initialValues = {
     name: user?.username,
     phone_number: user?.phone_number,
-    email: user?.email
-  }
+    email: user?.email,
+  };
   return (
     <Box className="grid grid-cols-6 gap-5">
       <Box className="col-span-2 border shadow-inner rounded-md">

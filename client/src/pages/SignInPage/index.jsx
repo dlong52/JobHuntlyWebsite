@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { Box, Divider, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { auth, provider, signInWithPopup } from "@/../firebaseConfig";
 
@@ -18,14 +18,19 @@ import { useNotifications } from "@/utils/notifications";
 import { updateUser } from "@/redux/userSlice";
 import { validationSchema } from "./validate";
 import { useToggleDialog } from "../../hooks";
-import CommonIcon from "../../ui/CommonIcon";
 import { useAuthentication } from "../../providers/AuthenticationProvider";
-import { bgLogin } from "../../assets/images";
+import { bgLogin, Google } from "../../assets/images";
 import { signInWithGoogle } from "../../services/AuthServices";
 import useCheckRoleNavigate from "../../hooks/useCheckRoleNavigate";
 import { ROLE } from "../../constants/enum";
+import httpServices from "../../services/httpServices";
+import { useLoadingUser } from "../../providers/LoadingUserProvider";
+import Loading from "../../components/Loading";
+import { Link } from "react-router-dom";
+import { RouteBase } from "../../constants/routeUrl";
 
 const SignInPage = () => {
+  const { isLoading, setIsLoading } = useLoadingUser();
   const dispatch = useDispatch();
   const { showSuccess, showError } = useNotifications();
   const { open, toggle, shouldRender } = useToggleDialog();
@@ -40,24 +45,29 @@ const SignInPage = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       const token = await user.getIdToken();
+      setIsLoading(true);
       const res = await signInWithGoogle(token, "google", ROLE.CANDIDATE);
       if (res?.status === "success") {
         showSuccess(res?.message);
         checkRoleNavigate(res?.data.role);
-        if (res?.data.access_token) {
-          console.log(res?.data.access_token);
+        if (res?.data?.access_token) {
           handleGetUserDetails(res?.data.access_token);
+          httpServices.saveTokenStorage(res?.data?.access_token);
+          httpServices.attachTokenToHeader(res?.data?.access_token);
         }
         return;
       }
       showError(res.message);
     } catch (error) {
       console.error("Error during Google login: ", error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
   const handleSubmit = async (values) => {
     try {
+      setIsLoading(true);
       const res = await signIn(values);
       if (res?.status === "success") {
         showSuccess(res?.message);
@@ -70,11 +80,15 @@ const SignInPage = () => {
       showError(res.message);
     } catch (error) {
       showError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleGetUserDetails = async (token) => {
+    setIsLoading(true);
     const res = await UserServices.getDetailUser(token);
     dispatch(updateUser({ ...res?.data, accessToken: token }));
+    setIsLoading(false);
   };
   // Render
   return (
@@ -88,11 +102,12 @@ const SignInPage = () => {
                 Chào mừng bạn đã quay trở lại
               </h2>
             </Box>
+
             <Button
               onClick={signInGoogle}
               size="large"
-              className="!bg-slate-50 !text-gray-800"
-              startIcon={<CommonIcon.Google />}
+              className="!bg-white shadow  !text-gray-800"
+              startIcon={<img src={Google} alt="" />}
             >
               Đăng nhập với Google
             </Button>
@@ -119,15 +134,20 @@ const SignInPage = () => {
                       labelTop="Email"
                       placeholder="Nhập email của bạn"
                     />
-                    <FormikField
-                      classNameLabel="font-medium text-neutrals-100"
-                      name="password"
-                      component={InputField}
-                      size="small"
-                      type="password"
-                      labelTop="Mật khẩu"
-                      placeholder="Nhập mật khẩu của bạn"
-                    />
+                    <Box className="text-end">
+                      <FormikField
+                        classNameLabel="font-medium text-neutrals-100"
+                        name="password"
+                        component={InputField}
+                        size="small"
+                        type="password"
+                        labelTop="Mật khẩu"
+                        placeholder="Nhập mật khẩu của bạn"
+                      />
+                      <Link to={RouteBase.ForgotPassword} className="text-end text-sm text-neutrals-80 !mt-2">
+                        Quên mật khẩu?
+                      </Link>
+                    </Box>
                     <Button
                       className="!bg-primary !text-white"
                       size="large"
@@ -157,6 +177,7 @@ const SignInPage = () => {
       <Box className="col-span-6 h-full flex justify-center items-center">
         <img className="h-3/4 " src={bgLogin} alt="" />
       </Box>
+      {isLoading && <Loading />}
       {shouldRender && (
         <DialogCustom toggle={toggle} open={open} body={ConfirmSignUpRole} />
       )}
