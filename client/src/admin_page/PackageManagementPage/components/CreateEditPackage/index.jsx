@@ -202,7 +202,7 @@ const CreateEditPackage = ({ id, toggle, refetch }) => {
                     size="large"
                     type="submit"
                   >
-                    {id ? "Cập nhật bài đăng" : "Thêm mới gói dịch vụ"}
+                    {id ? "Cập nhật gói dịch vụ" : "Thêm mới gói dịch vụ"}
                   </Button>
                 </Box>
               </Form>

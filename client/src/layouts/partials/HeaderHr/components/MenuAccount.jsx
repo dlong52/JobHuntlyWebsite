@@ -55,13 +55,19 @@ const MenuAccount = ({ user }) => {
           <CommonIcon.EditOutlined className="text-primary" />
           <span className="text-[14px] font-medium">Cài đặt tài khoản</span>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+        onClick={() => {
+          navigate(`${RouteBase.HRProfile}?type=1`);
+        }}
+        >
           <CommonIcon.VisibilityOutlined className="text-primary" />
-          <Link to={"/"} className="text-[14px] font-medium">
+          <span className="text-[14px] font-medium">
             Hồ sơ doanh nghiệp
-          </Link>
+          </span>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => {
+          navigate(`${RouteBase.HRProfile}?type=2`);
+        }}>
           <CommonIcon.KeyOutlined className="text-primary" />
           <Link to={"/"} className="text-[14px] font-medium">
             Đổi mật khẩu

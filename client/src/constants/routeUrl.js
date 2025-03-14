@@ -19,6 +19,9 @@ export const RouteBase = {
   WishList: "/wishlist",
   ViewedResume: "/viewed-resume",
   VerifyAccount: "/verify-account",
+  VerifyResult: "/verify-result",
+  MyCv: "/my-cv",
+  ResetPassword: "/reset-password",
 
   // HR
   HROverview: "/hr",
@@ -48,4 +51,5 @@ export const RouteBase = {
   AdminProfile: "/admin/profile",
   AdminCategory: "/admin/category",
   AdminCvTheme: "/admin/cv-theme",
+  AdminReport: "/admin/report",
 };

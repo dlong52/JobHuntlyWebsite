@@ -29,6 +29,9 @@ const getAllJobs = async (filters = {}, options = {}) => {
   if (filters.employment_type) {
     query.employment_type = filters.employment_type;
   }
+  if (filters.status) {
+    query.status = filters.status;
+  }
   if (filters.level) {
     query.level = filters.level;
   }

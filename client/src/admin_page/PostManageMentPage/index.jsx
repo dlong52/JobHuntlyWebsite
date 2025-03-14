@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { CommonIcon } from "../../ui";
-import { Box, Breadcrumbs, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import useToggleDialog from "../../hooks/useToggleDialog";
 import DialogMUI from "../../components/Dialogs";
-import CustomTable from "../../ui/Table";
 import useFilters from "../../hooks/useFilters";
 import { useGetAllPosts } from "../../hooks/modules/post/useGetAllPosts";
 import { useDeletePost } from "../../hooks/modules/post/useDeletePost";
@@ -17,9 +16,9 @@ import ChipMui from "../../ui/Chip";
 import TooltipMui from "../../ui/TooltipMui";
 import PostDetail from "./components/PostDetail";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
+import TableMui from "../../ui/TableMui";
 
 const PostManageMentPage = () => {
-  const user = useSelector((state) => state.user);
   const [idJob, setIdJob] = useState(null);
   const [idDelete, setIdDelete] = useState(null);
   const { open, toggle, shouldRender } = useToggleDialog();
@@ -58,15 +57,21 @@ const PostManageMentPage = () => {
   };
 
   const columns = [
-    { field: "title", headerName: "Tiêu đề" },
+    {
+      field: "title",
+      headerName: "Tiêu đề",
+      renderCell: (value) => {
+        return value?.title;
+      },
+    },
     {
       field: "status",
       headerName: "Trạng thái",
       renderCell: (value) => (
         <ChipMui
           variant={"outlined"}
-          color={value ? "success" : "warning"}
-          label={value ? "Đã duyệt" : "Đang chờ"}
+          color={value?.status ? "success" : "warning"}
+          label={value?.status ? "Đã duyệt" : "Đang chờ"}
         />
       ),
     },
@@ -77,21 +82,22 @@ const PostManageMentPage = () => {
         <Link
           className="hover:underline"
           target="_blank"
-          to={`${RouteBase.Company}/${value?._id}`}
+          to={`${RouteBase.Company}/${value?.company?._id}`}
         >
-          {value?.name}
+          {value?.company?.name}
         </Link>
       ),
     },
     {
       field: "location",
       headerName: "Địa chỉ",
-      renderCell: (value) => `${value.district.name}, ${value.province.name}`,
+      renderCell: (value) =>
+        `${value?.location.district.name}, ${value?.location.province.name}`,
     },
     {
       field: "end_date",
       headerName: "Ngày hết hạn",
-      renderCell: (value) => moment(value).format("DD/MM/YYYY"),
+      renderCell: (value) => moment(value?.end_date).format("DD/MM/YYYY"),
     },
     {
       field: "_id",
@@ -101,17 +107,19 @@ const PostManageMentPage = () => {
           <Box className="flex gap-2 items-center">
             <TooltipMui content={"Duyệt bài đăng"}>
               <IconButton
+                disabled={value?.status}
                 onClick={() => {
-                  handleSetId(value);
+                  handleSetId(value?._id);
                 }}
+                className={`${value?.status ? "opacity-45" : ""}`}
               >
-                <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
+                <CommonIcon.EditAttributes className="text-primary" />
               </IconButton>
             </TooltipMui>
             <TooltipMui content={"Xóa bài đăng"}>
               <IconButton
                 onClick={() => {
-                  toggleDelete(), setIdDelete(value);
+                  toggleDelete(), setIdDelete(value?._id);
                 }}
               >
                 <CommonIcon.DeleteSweep className="text-red-700" />
@@ -154,7 +162,7 @@ const PostManageMentPage = () => {
     <Box className="flex flex-col gap-y-5">
       <BreadcrumbMui title={"Tuyển dụng"} breadcrumbs={breadcrumbs} />
       <Box className="bg-white rounded-md">
-        <CustomTable
+        <TableMui
           columns={columns}
           rows={rows}
           total={data?.data?.pagination.totalPages}
@@ -186,6 +194,7 @@ const PostManageMentPage = () => {
           className="w-fit"
           title={"Duyệt bài đăng"}
           open={open}
+          isPadding={false}
           toggle={toggle}
           body={<PostDetail id={idJob} />}
         />

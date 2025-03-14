@@ -23,12 +23,14 @@ const JobListItem = ({
   posted_by,
   employment_type,
   company,
+  end_date,
+  status,
 }) => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const { open, shouldRender, toggle } = useToggleDialog();
   const { showError, showSuccess, showInfo } = useNotifications();
-  const { status } = useStatusWishlist(id);
+  // const { status } = useStatusWishlist(id);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -66,21 +68,21 @@ const JobListItem = ({
   }, [id, user, showInfo, showError, showSuccess]);
 
   return (
-    <Box className="border p-6 rounded-lg shadow">
+    <Box className="border p-6 rounded-lg shadow transition-all duration-500 hover:shadow-lg hover:shadow-primary-light">
       <Box className="flex items-start gap-3 w-full">
         <Box
-          className="size-[98px] overflow-hidden rounded-md"
+          className="w-[98px] aspect-square shadow overflow-hidden rounded-md"
           onClick={() => {
             navigate(`${RouteBase.Job}/${id}`);
           }}
         >
           <img
-            className="size-[98px] hover:scale-105 transition-all duration-300 object-cover object-center"
+            className="size-full hover:scale-105 transition-all duration-300 object-cover object-center"
             src={logo}
             alt="Logo"
           />
         </Box>
-        <Box className="flex flex-col gap-5 w-full">
+        <Box className="flex flex-col w-full">
           <Box className="flex justify-between">
             <div className="flex flex-col gap-2">
               <div className="">
@@ -103,17 +105,26 @@ const JobListItem = ({
                 label={helpers.convertEpmT(employment_type)}
               />
             </div>
-            <Typography className="!text-primary" fontWeight={500}>
+            <Typography className="!text-primary text-nowrap" fontWeight={500}>
               {helpers.convertSalary(salary?.min, salary?.max)}
             </Typography>
           </Box>
           <Box className="w-full flex justify-end gap-2">
-            <Button
-              onClick={toggle}
-              className="!bg-primary !text-white !capitalize !text-xs !font-normal"
-            >
-              Ứng tuyển
-            </Button>
+            {helpers.isExpired(end_date) ? (
+              <Button
+                disabled
+                className="!bg-gray-600 !text-white !capitalize !text-xs !font-normal"
+              >
+                Đã hết hạn
+              </Button>
+            ) : (
+              <Button
+                onClick={toggle}
+                className="!bg-primary !text-white !capitalize !text-xs !font-normal"
+              >
+                Ứng tuyển
+              </Button>
+            )}
             {status ? (
               <Button
                 key={id}

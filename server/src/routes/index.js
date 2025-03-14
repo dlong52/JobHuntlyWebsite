@@ -21,11 +21,13 @@ const conversationRouter = require("./ConversationRouter");
 const messageRouter = require("./MessageRouter");
 const cvThemeRouter = require("./CvThemeRouter");
 const overviewRouter = require("./OverviewRouter");
+const reportRouter = require("./ReportRouter");
 
 const prefixApi = process.env.PREFIX_API;
 const routes = (app) => {
   app.use(`${prefixApi}/auth`, authRouter);
   app.use(`${prefixApi}/role`, roleRouter);
+  app.use(`${prefixApi}/report`, reportRouter);
   app.use(`${prefixApi}/user`, userRouter);
   app.use(`${prefixApi}/category`, categoryRouter);
   app.use(`${prefixApi}/job`, jobRouter);

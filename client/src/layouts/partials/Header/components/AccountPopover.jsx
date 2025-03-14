@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { RouteBase } from "../../../../constants/routeUrl";
 import { useAuthentication } from "../../../../providers/AuthenticationProvider";
 
-const AccountPopover = ({ user }) => {
+const AccountPopover = ({ user, onClose }) => {
   const { logout } = useAuthentication();
   const navigate = useNavigate();
 
@@ -31,6 +31,11 @@ const AccountPopover = ({ user }) => {
       icon: <CommonIcon.FavoriteBorder className="text-primary" />,
       text: "Danh sách tin đã lưu",
       route: RouteBase.WishList,
+    },
+    {
+      icon: <CommonIcon.AssignmentIndOutlined className="text-primary" />,
+      text: "Danh sách CV",
+      route: RouteBase.MyCv,
     },
     {
       icon: <CommonIcon.LockOutlined className="text-primary" />,
@@ -75,7 +80,10 @@ const AccountPopover = ({ user }) => {
           <MenuItem
             className="flex items-center"
             key={index}
-            onClick={() => navigate(route)}
+            onClick={() => {
+              navigate(route)
+              onClose()
+            }}
           >
             {icon}
             <Typography fontSize={"14px"}>{text}</Typography>
@@ -83,6 +91,7 @@ const AccountPopover = ({ user }) => {
         ))}
         <MenuItem
           onClick={() => {
+            onClose()
             logout(user?.user_id);
           }}
         >

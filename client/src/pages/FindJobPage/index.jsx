@@ -15,9 +15,19 @@ import useQueryParams from "../../hooks/useQueryParams";
 import helpers from "../../utils/helpers";
 import LoadingJob from "../../ui/LoadingJob";
 import { useSearchParams } from "react-router-dom";
+import { useGetAllWishlistByUser } from "../../hooks/modules/wishlist/useGetWishlistByUser";
+import { useSelector } from "react-redux";
 const FindJobPage = () => {
+  const { user_id } = useSelector((state) => state.user);
   const query = useQueryParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { data: wishlistData } = useGetAllWishlistByUser(user_id);
+  const { dataConvert: wishlist } = useConvertData(wishlistData);
+  const wishlistJob = useMemo(() => {
+    if (wishlist) {
+      return wishlist?.jobs;
+    }
+  }, []);
   const filterData = useMemo(() => {
     if (searchParams.size === 0) return {};
     return {
@@ -36,6 +46,7 @@ const FindJobPage = () => {
     page: 1,
     limit: 10,
     sort: "desc",
+    status: true,
   });
   const { data, isLoading } = useGetAllPosts(filters);
   const { dataConvert } = useConvertData(data);
@@ -51,6 +62,7 @@ const FindJobPage = () => {
       page: 1,
       limit: 10,
       sort: "desc",
+      status: true,
     };
     const newFilters =
       searchParams.size === 0
@@ -160,18 +172,25 @@ const FindJobPage = () => {
               </Box>
             ) : (
               <Box className="flex flex-col gap-6">
-                {jobData?.map((job) => (
-                  <JobListItem
-                    key={job._id}
-                    id={job._id}
-                    title={job?.title}
-                    salary={job?.salary}
-                    company={job?.company}
-                    logo={job?.company?.logo}
-                    posted_by={job?.posted_by}
-                    employment_type={job?.employment_type}
-                  />
-                ))}
+                {jobData?.map((job) => {
+                  const checkWishlist = wishlistJob?.some(
+                    (item) => item._id === job._id
+                  );
+                  return (
+                    <JobListItem
+                      key={job._id}
+                      end_date={job.end_date}
+                      id={job._id}
+                      title={job?.title}
+                      salary={job?.salary}
+                      company={job?.company}
+                      logo={job?.company?.logo}
+                      posted_by={job?.posted_by}
+                      status={checkWishlist}
+                      employment_type={job?.employment_type}
+                    />
+                  );
+                })}
               </Box>
             )}
             {!!jobData?.length && (

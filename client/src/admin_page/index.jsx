@@ -10,3 +10,4 @@ export { default as CreateUserPage } from "./CreateUserPage";
 export { default as CompanyManagementPage } from "./CompanyManagementPage";
 export { default as CategoryManagementPage } from "./CategoryManagementPage";
 export { default as CvThemePage } from "./CvThemePage";
+export { default as ReportManagementPage } from "./ReportManagementPage";

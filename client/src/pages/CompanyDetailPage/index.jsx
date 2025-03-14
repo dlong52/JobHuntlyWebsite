@@ -13,7 +13,11 @@ import JobListItem from "../FindJobPage/components/JobListItem";
 import PaginationMui from "../../ui/Pagination";
 import MascotEmpty from "../../components/MascotEmpty";
 import useConvertData from "../../hooks/useConvertData";
-import { company, companyLogoDefault } from "../../assets/images";
+import {
+  company,
+  companyCoverDefault,
+  companyLogoDefault,
+} from "../../assets/images";
 
 const CompanyDetailPage = () => {
   const { id } = useParams();
@@ -64,14 +68,11 @@ const CompanyDetailPage = () => {
   return (
     <Container className="py-5">
       <Box className="rounded-md overflow-hidden relative">
-        {detailData?.cover && (
-          <img
-            src={detailData?.cover}
-            alt=""
-            className="w-full h-[225px] object-cover object-center"
-          />
-        )}
-        {!detailData?.cover && <Box className="bg-slate-200 h-[225px]" />}
+        <img
+          src={detailData?.cover ? detailData.cover : companyCoverDefault}
+          alt=""
+          className="w-full h-[225px] object-cover object-center"
+        />
         <Box className="relative">
           <img
             src={detailData?.logo ? detailData?.logo : companyLogoDefault}
@@ -124,6 +125,7 @@ const CompanyDetailPage = () => {
                     company={job?.company}
                     logo={job?.company?.logo}
                     employment_type={job?.employment_type}
+                    end_date={job?.end_date}
                   />
                 ))}
               </div>

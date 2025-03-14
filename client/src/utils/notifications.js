@@ -1,51 +1,39 @@
-// utils/notifications.js
 import { upperFirst } from "lodash";
 import { useSnackbar } from "../providers/SnackbarProvider";
 
 export const useNotifications = () => {
   const { showSnackbar } = useSnackbar();
 
-  const showSuccess = (msg, title) => {
-    if (typeof msg === "string") {
-      showSnackbar(msg, "success", title);
-    } else {
-      showSnackbar("Operation successful", "success");
-    }
-  };
-  const showInfo = (msg, title) => {
-    if (typeof msg === "string") {
-      showSnackbar(msg, "info", title);
-    } else {
-      showSnackbar("Operation successful", "info");
-    }
+  const showSuccess = (msg, title, anchor) => {
+    showSnackbar(msg || "Operation successful", "success", title, anchor);
   };
 
-  const showError = (error, title) => {
+  const showInfo = (msg, title, anchor) => {
+    showSnackbar(msg || "Operation successful", "info", title, anchor);
+  };
+
+  const showError = (error, title, anchor) => {
     if (error && error.response) {
       const { data } = error.response;
       if (data.errors) {
-        showSnackbar(JSON.stringify(data.errors), "error");
+        showSnackbar(JSON.stringify(data.errors), "error", title, anchor);
         return;
       }
       if (data.title) {
-        showSnackbar(JSON.stringify(data.title), "error");
+        showSnackbar(JSON.stringify(data.title), "error", title, anchor);
         return;
       }
       if (data.messages && data.messages[0]) {
-        showSnackbar(data.messages[0], "error");
+        showSnackbar(data.messages[0], "error", title, anchor);
         return;
       }
       if (data.messages) {
-        showSnackbar(upperFirst(data.messages.toString()), "error");
+        showSnackbar(upperFirst(data.messages.toString()), "error", title, anchor);
         return;
       }
     }
 
-    if (typeof error === "string" || error.toString) {
-      showSnackbar(error.toString(), "error");
-    } else {
-      showSnackbar("An error occurred", "error");
-    }
+    showSnackbar(error?.toString() || "An error occurred", "error", title, anchor);
   };
 
   return { showSuccess, showError, showInfo };

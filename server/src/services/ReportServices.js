@@ -2,12 +2,25 @@ const Report = require("../models/Report");
 
 const createReport = async (data) => {
   try {
+    const existingReport = await Report.findOne({
+      reported_by: data.reported_by,
+      report_type: data.report_type,
+      ...(data.report_type === "company"
+        ? { report_company_target_id: data.report_company_target_id }
+        : { report_job_target_id: data.report_job_target_id }),
+    });
+
+    if (existingReport) {
+      throw new Error("Báo cáo của bạn đã được ghi nhận rồi");
+    }
+
     const report = new Report(data);
     return await report.save();
   } catch (error) {
     throw new Error(error.message);
   }
 };
+
 
 const getReports = async (filters = {}, options = {}) => {
   try {
@@ -23,9 +36,13 @@ const getReports = async (filters = {}, options = {}) => {
       .sort(sort)
       .skip(skip)
       .limit(parseInt(limit))
-      .populate("reported_by", "name email")
+      .populate("reported_by", "profile email")
       .populate("report_company_target_id", "name")
-      .populate("report_job_target_id", "title");
+      .populate({
+        path: "report_job_target_id",
+        select: "title",
+        populate: { path: "company", select: "name _id" }, // Lấy cả name và _id của company trong Job
+      });
 
     const total = await Report.countDocuments(query);
     return { reports, total, page, limit };

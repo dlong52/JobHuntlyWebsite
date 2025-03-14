@@ -26,6 +26,14 @@
     --accent-red: #d84315;
     --accent-blue: #26A4FF;
     --accent-purple: #7B61FF;
+
+    --primary-cv-3: #2c69a5;
+    --primary-cv-3-200: #e6f1fd;
+    --primary-cv-3-100: #fafafa;
+
+    --primary-cv-1: #06afd4;
+    --primary-cv-1-200: #d9f4f8;
+    --primary-cv-1-100: #fafafa;
   }
 }
 * {
@@ -40,9 +48,14 @@
 }
 ul{
   list-style: disc;
+  padding: auto;
+  margin: auto;
 }
 ol{
   list-style: decimal;
+  padding: auto !important;
+  padding-left: 16px;
+  margin: auto;
 }
 .ck-editor-field ul {
   list-style-type: disc; 
@@ -65,6 +78,11 @@ ol{
 
 ::-webkit-scrollbar-thumb:hover {
   background: #4e4d4d; /* Màu khi hover */
+}
+@media print {
+  .page-break {
+    page-break-before: always;
+  }
 }
 
 @font-face {

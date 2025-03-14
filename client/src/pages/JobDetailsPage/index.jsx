@@ -18,6 +18,8 @@ import { useGetStatusWishlist } from "../../hooks/modules/wishlist/useGetStatusW
 import Address from "../../components/Address";
 import JobDetailLoading from "../../ui/JobDetailLoading";
 import moment from "moment";
+import ReportForm from "./components/ReportForm";
+import { companyLogoDefault } from "../../assets/images";
 
 const JobDetailsPage = () => {
   const user = useSelector((state) => state.user);
@@ -38,6 +40,11 @@ const JobDetailsPage = () => {
     showError("Bài đăng không tồn tại!");
   }
   const { open, toggle, shouldRender } = useToggleDialog();
+  const {
+    open: openReport,
+    toggle: toggleReport,
+    shouldRender: shouldRenderReport,
+  } = useToggleDialog();
   const currentDate = moment().format("DD/MM/YYYY");
   const endDate = moment(detailData?.end_date).format("DD/MM/YYYY");
   const checkDate = moment(endDate, "DD/MM/YYYY").isBefore(
@@ -184,7 +191,7 @@ const JobDetailsPage = () => {
                   {detailData?.description && (
                     <Box className="flex flex-col gap-2">
                       <Typography fontWeight={500}>Mô tả công việc</Typography>
-                      <Box className="pl-7">
+                      <Box className="pl-5">
                         <HtmlContent string={detailData?.description} />
                       </Box>
                     </Box>
@@ -192,7 +199,7 @@ const JobDetailsPage = () => {
                   {detailData?.requirements && (
                     <Box className="flex flex-col gap-5">
                       <Typography fontWeight={500}>Yêu cầu ứng viên</Typography>
-                      <Box className="pl-7">
+                      <Box className="pl-5">
                         <HtmlContent string={detailData?.requirements} />
                       </Box>
                     </Box>
@@ -200,7 +207,7 @@ const JobDetailsPage = () => {
                   {detailData?.job_benefit && (
                     <Box className="flex flex-col gap-5">
                       <Typography fontWeight={500}>Quyền lợi</Typography>
-                      <Box className="pl-7">
+                      <Box className="pl-5">
                         <HtmlContent string={detailData?.job_benefit} />
                       </Box>
                     </Box>
@@ -210,7 +217,7 @@ const JobDetailsPage = () => {
                       <Typography fontWeight={500}>
                         Thời gian làm việc
                       </Typography>
-                      <Box className="pl-7">
+                      <Box className="pl-5">
                         <HtmlContent string={detailData?.work_time} />
                       </Box>
                     </Box>
@@ -220,7 +227,7 @@ const JobDetailsPage = () => {
                       <Typography fontWeight={500}>
                         Địa điểm làm việc
                       </Typography>
-                      <Box className="pl-7">
+                      <Box className="pl-5">
                         <ul>
                           <li>{`${detailData?.location?.additional_info}, ${detailData?.location?.ward.name}, ${detailData?.location?.district.name}, ${detailData?.location?.province.name}`}</li>
                         </ul>
@@ -253,18 +260,44 @@ const JobDetailsPage = () => {
                             ? "Đã quá hạn ứng tuyển"
                             : "Ứng tuyển ngay"}
                         </Button>
-                        <Button
-                          size="large"
-                          loading={loading}
-                          disabled={loading}
-                          variant="outlined"
-                          className="!text-primary !capitalize !border-primary"
-                          onClick={handleAddToWishlist}
-                        >
-                          Lưu tin
-                        </Button>
+                        {status ? (
+                          <Button
+                            size="large"
+                            loading={loading}
+                            disabled={loading}
+                            variant="outlined"
+                            className="!text-primary !capitalize !border-primary"
+                            onClick={handleRemoveToWishlist}
+                          >
+                            Đã lưu
+                          </Button>
+                        ) : (
+                          <Button
+                            size="large"
+                            loading={loading}
+                            disabled={loading}
+                            variant="outlined"
+                            className="!text-primary !capitalize !border-primary"
+                            onClick={handleAddToWishlist}
+                          >
+                            Lưu tin
+                          </Button>
+                        )}
                       </Box>
                     </Box>
+                  </Box>
+                  <Box className="flex bg-neutrals-20 p-4 gap-2 rounded-md">
+                    <CommonIcon.Info className="text-primary" />
+                    <Typography fontSize={"14px"}>
+                      Báo cáo tin tuyển dụng: Nếu bạn thấy rằng tin tuyển dụng
+                      này không đúng hoặc có dấu hiệu lừa đảo,{" "}
+                      <span
+                        onClick={toggleReport}
+                        className="text-primary font-medium cursor-pointer"
+                      >
+                        hãy phản ánh với chúng tôi.
+                      </span>
+                    </Typography>
                   </Box>
                 </Box>
               </Box>
@@ -272,7 +305,11 @@ const JobDetailsPage = () => {
                 <Box className="bg-white p-5 rounded-md flex flex-col gap-5">
                   <Box className="flex gap-5">
                     <img
-                      src={detailData?.posted_by?.company?.logo}
+                      src={
+                        detailData?.company?.logo
+                          ? detailData?.company?.logo
+                          : companyLogoDefault
+                      }
                       alt=""
                       className="rounded-md size-20 border"
                     />
@@ -281,26 +318,29 @@ const JobDetailsPage = () => {
                     </Typography>
                   </Box>
                   <Box className="flex flex-col gap-y-3">
-                    <Box className="flex gap-2 items-start">
-                      <Typography
-                        className="flex items-center gap-1 !text-gray-500 text-nowrap w-24"
-                        fontSize={"14px"}
-                      >
-                        <CommonIcon.PeopleAltOutlined />
-                        Quy mô:{" "}
-                      </Typography>
-                      <Typography
-                        className="text-wrap flex-1"
-                        fontWeight={500}
-                        fontSize={"15px"}
-                      >
-                        {helpers.convertStaffQuantity(
-                          detailData?.posted_by?.company?.staff_quantity?.min,
-                          detailData?.posted_by?.company?.staff_quantity?.max
-                        )}{" "}
-                        nhân viên
-                      </Typography>
-                    </Box>
+                    {(!!detailData?.company?.staff_quantity?.min ||
+                      !!detailData?.company?.staff_quantity?.max) && (
+                      <Box className="flex gap-2 items-start">
+                        <Typography
+                          className="flex items-center gap-1 !text-gray-500 text-nowrap w-24"
+                          fontSize={"14px"}
+                        >
+                          <CommonIcon.PeopleAltOutlined />
+                          Quy mô:{" "}
+                        </Typography>
+                        <Typography
+                          className="text-wrap flex-1"
+                          fontWeight={500}
+                          fontSize={"15px"}
+                        >
+                          {helpers.convertStaffQuantity(
+                            detailData?.company?.staff_quantity?.min,
+                            detailData?.company?.staff_quantity?.max
+                          )}{" "}
+                          nhân viên
+                        </Typography>
+                      </Box>
+                    )}
                     <Box className="flex gap-2 items-start">
                       <Typography
                         className="flex items-center gap-1 !text-gray-500 text-nowrap w-24"
@@ -442,10 +482,25 @@ const JobDetailsPage = () => {
               }
             />
           )}
+          {shouldRenderReport && (
+            <DialogMUI
+              // disableScrollLock={false}
+              // isPadding={false}
+              open={openReport}
+              title={
+                <Typography fontSize={"22px"} fontWeight={600}>
+                  Báo cáo{" "}
+                  <span className="text-primary">{detailData?.title}</span>
+                </Typography>
+              }
+              toggle={toggleReport}
+              body={<ReportForm job={detailData} />}
+            />
+          )}
         </Box>
       ) : (
-        <Box >
-          <JobDetailLoading  />
+        <Box>
+          <JobDetailLoading />
         </Box>
       )}
     </>

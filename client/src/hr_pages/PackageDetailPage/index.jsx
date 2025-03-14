@@ -4,15 +4,14 @@ import { Button, CommonIcon } from "../../ui";
 import { package_detail_banner } from "../../assets/images";
 import { useParams } from "react-router-dom";
 import { useGetPackage } from "../../hooks/modules/package/useGetPackage";
+import { useConvertData } from "../../hooks";
+import HtmlContent from "../../ui/HtmlContent";
 
 const PackageDetailPage = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetPackage(id, { enable: !!id });
-  const detailData = useMemo(() => {
-    if (data) {
-      return data?.data?.data;
-    }
-  }, [data]);
+  const { dataConvert: detailData } = useConvertData(data);
+
   return (
     <Box className="w-full rounded-md overflow-hidden bg-white relative">
       <Box className="bg-gradient-to-tr max-h-60 text-neutrals-100 overflow-hidden from-[#b7a2fb42] via-white to-white p-5  w-full flex items-center justify-between">
@@ -60,6 +59,9 @@ const PackageDetailPage = () => {
               <span className="text-neutrals-100">1 tuần</span>
             </Typography>
           </Box>
+          <div className="">
+            <HtmlContent string={detailData?.description} />
+          </div>
         </Grid2>
         <Grid2 size={4} position={"sticky"} top={0}>
           <Box className="border border-primary rounded-md p-5 shadow-border flex flex-col gap-5">
@@ -75,7 +77,7 @@ const PackageDetailPage = () => {
             <Typography variant="h5" fontWeight={600} color={"var(--primary)"}>
               9.000.000 VND
             </Typography>
-            <Box className="flex justify-between items-center">
+            {/* <Box className="flex justify-between items-center">
               <Typography>Số lượng</Typography>
               <Box className="flex items-center border size-fit rounded">
                 <Box className="p-4 border-r">
@@ -86,7 +88,7 @@ const PackageDetailPage = () => {
                   <CommonIcon.Add />
                 </Box>
               </Box>
-            </Box>
+            </Box> */}
             <Box className="flex flex-col gap-2">
               {/* <Button variant="outlined" size="large" className="w-full !border-primary !text-primary">Thêm vào giỏ hàng</Button> */}
               <Button size="large" className="w-full !bg-primary !text-white">

@@ -6,7 +6,6 @@ import { Box } from "@mui/material";
 import { useNotifications } from "../../../../utils/notifications";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../../../services/UserServices";
-import { updateUser as updateUserState } from "../../../../redux/userSlice";
 
 const UploadAvatar = () => {
   const dispatch = useDispatch();

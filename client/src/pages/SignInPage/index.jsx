@@ -92,7 +92,7 @@ const SignInPage = () => {
   };
   // Render
   return (
-    <Box className="w-full min-h-screen relative grid grid-cols-1 gap-10 md:grid-cols-12  bg-blue-950 p-10 bg-grid bg-no-repeat bg-contain bg-bottom">
+    <Box className="w-full min-h-screen relative grid grid-cols-1 gap-10 md:grid-cols-12 bg-blue-950 p-10 bg-grid bg-no-repeat bg-contain bg-bottom">
       <Box className="col-span-6 flex flex-col items-center justify-center gap-y-4 px-4 md:px-0">
         <Box className="size-full bg-white flex flex-col items-center justify-center gap-y-4 px-4 md:px-0 rounded-xl">
           <Logo />
@@ -134,7 +134,7 @@ const SignInPage = () => {
                       labelTop="Email"
                       placeholder="Nhập email của bạn"
                     />
-                    <Box className="text-end">
+                    <Box className="text-end flex flex-col gap-2">
                       <FormikField
                         classNameLabel="font-medium text-neutrals-100"
                         name="password"
@@ -144,7 +144,10 @@ const SignInPage = () => {
                         labelTop="Mật khẩu"
                         placeholder="Nhập mật khẩu của bạn"
                       />
-                      <Link to={RouteBase.ForgotPassword} className="text-end text-sm text-neutrals-80 !mt-2">
+                      <Link
+                        to={RouteBase.ForgotPassword}
+                        className="text-end text-sm text-neutrals-80 underline"
+                      >
                         Quên mật khẩu?
                       </Link>
                     </Box>

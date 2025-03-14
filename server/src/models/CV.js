@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const cvSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", require: true },
-  cv_name: { type: String },
+  cv_name: { type: String, require: true },
   theme: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "CvTheme",
@@ -10,18 +10,20 @@ const cvSchema = new mongoose.Schema({
   },
   profile: {
     avatar: { type: String },
+    birthday: { type: String },
     name: { type: String },
     email: { type: String },
     phone_number: { type: String },
     address: { type: String },
+    website: { type: String },
   },
   position: { type: String },
   objective: { type: String },
   work_experiences: [
     {
       company: { type: String },
-      from_date: { type: Date },
-      to_date: { type: Date },
+      from_date: { type: String },
+      to_date: { type: String },
       position: { type: String },
       experience_des: { type: String },
     },
@@ -29,8 +31,8 @@ const cvSchema = new mongoose.Schema({
   projects: [
     {
       project_name: { type: String },
-      from_date: { type: Date },
-      to_date: { type: Date },
+      from_date: { type: String },
+      to_date: { type: String },
       customer_name: { type: String },
       team_size: { type: Number },
       position_project: { type: String },
@@ -40,8 +42,8 @@ const cvSchema = new mongoose.Schema({
   education: [
     {
       school_name: { type: String },
-      from_date: { type: Date },
-      to_date: { type: Date },
+      from_date: { type: String },
+      to_date: { type: String },
       courses: { type: String },
       education_des: { type: String },
     },
@@ -55,18 +57,18 @@ const cvSchema = new mongoose.Schema({
   interests: { type: String },
   certifications: [
     {
-      time: { type: Date },
+      time: { type: String },
       certification_name: { type: String },
     },
   ],
   honors_awards: [
     {
-      time: { type: Date },
+      time: { type: String },
       award_name: { type: String },
     },
   ],
+  // created_at: { type: Date, default: Date.now },
+  // updated_at: { type: Date, default: Date.now },
 });
 
-const CV = mongoose.model("CV", cvSchema);
-
-module.exports = CV;
+module.exports = mongoose.model("CV", cvSchema);

@@ -8,9 +8,10 @@ const CategoryItem = ({ data, loading }) => {
   return (
     <div className="p-5 flex flex-col gap-6 group hover:bg-primary transition-all duration-500">
       <div className="">
-        <CommonIcon.DesignServicesOutlined
-          fontSize="large"
-          className="text-primary group-hover:text-white"
+        <img
+          src={data?.icon}
+          alt=""
+          className="size-[35px] group-hover:filter group-hover:brightness-0 group-hover:invert"
         />
       </div>
       <div className="flex flex-col gap-2">

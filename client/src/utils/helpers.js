@@ -3,6 +3,7 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { saveAs } from "file-saver";
+import moment from "moment";
 const helpers = {
   isJsonString: (data) => {
     try {
@@ -116,13 +117,16 @@ const helpers = {
     }
     return month;
   },
+  isExpired: (endDate) => {
+    return moment().isAfter(moment(endDate));
+  },
   exportPdf: async (contentRef, filename = "document.pdf") => {
-    if (!contentRef?.current) return;
-
+    if (!contentRef?.current) {
+      return;
+    }
     const content = contentRef.current;
-
     try {
-      const canvas = await html2canvas(content);
+      const canvas = await html2canvas(content, { useCORS: true });
       const imgData = canvas.toDataURL("image/png");
 
       const pdf = new jsPDF("p", "mm", "a4");

@@ -8,18 +8,22 @@ export default function CommonPopover({
   anchorOrigin = { vertical: "bottom", horizontal: "right" },
   transformOrigin = { vertical: "top", horizontal: "right" },
   onClick,
+  onClose, 
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     if (onClick) {
-      onClick(event); 
+      onClick(event);
     }
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    if (onClose) {
+      onClose();
+    }
   };
 
   const open = Boolean(anchorEl);
@@ -38,7 +42,7 @@ export default function CommonPopover({
         transformOrigin={transformOrigin}
         disableScrollLock
       >
-        {body}
+        {React.cloneElement(body, { onClose: handleClose })}
       </Popover>
     </>
   );

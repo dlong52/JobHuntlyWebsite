@@ -50,6 +50,7 @@ const Header = () => {
 
   // Function to check if current route matches
   const isActive = (path) => location.pathname.includes(path);
+  const onClose = ()=>{}
   return (
     <Fragment>
       <Box
@@ -145,13 +146,14 @@ const Header = () => {
                     </Link>
                   </Badge>
                   <CommonPopover
-                    body={<AccountPopover user={user} />}
+                    body={<AccountPopover user={user} onClose={() => onClose?.()} />}
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     transformOrigin={{ vertical: "top", horizontal: "right" }}
                     zIndex={1300}
+                    onClose={onClose}
                   >
                     <Box className="cursor-pointer" variant="contained">
-                      <CommonAvatar />
+                      <CommonAvatar src={user?.avatar_url} />
                     </Box>
                   </CommonPopover>
                 </Box>

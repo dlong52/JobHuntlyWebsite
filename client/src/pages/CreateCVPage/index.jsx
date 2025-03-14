@@ -1,11 +1,12 @@
 import { Box, Container, Skeleton } from "@mui/material";
-import React, { useRef, useState } from "react";
+import * as Yup from "yup";
+import React, { useMemo, useRef, useState } from "react";
 import FormikField from "../../components/CustomFieldsFormik/FormikField";
 import InputField from "../../components/CustomFieldsFormik/InputField";
 import { Form, Formik } from "formik";
 import { Button, CommonIcon } from "../../ui";
 import useToggleDialog from "../../hooks/useToggleDialog";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetCvTheme } from "../../hooks/modules/cv_theme/userGetCvTheme";
 import { useConvertData } from "../../hooks";
 import DialogMUI from "../../components/Dialogs";
@@ -14,10 +15,13 @@ import CreateCvForm from "./components/CreateCvForm";
 import { useSelector } from "react-redux";
 import { useNotifications } from "../../utils/notifications";
 import { CVService } from "../../services/CvServices";
+import { usePDF } from "react-to-pdf";
 import helpers from "../../utils/helpers";
-import CVModel1 from "../../components/CVModel/CVModel1";
+import { RouteBase } from "../../constants/routeUrl";
 const CreateCVPage = () => {
-  const contentRef = useRef();
+  const navigate = useNavigate();
+  const targetRef = useRef();
+
   const user = useSelector((state) => state.user);
   const { showError, showInfo, showSuccess } = useNotifications();
   const { id } = useParams();
@@ -28,6 +32,37 @@ const CreateCVPage = () => {
 
   const onChange = (values) => {
     setCvData(values);
+  };
+  const componentRef = useMemo(() => {
+    if (targetRef?.current) {
+      return targetRef;
+    }
+  }, [targetRef.current]);
+  const handleSave = async (values) => {
+    const payload = {
+      cv_name: values?.cv_name,
+      user: user?.user_id,
+      theme: id,
+      profile: cvData?.profile,
+      objective: cvData?.objective,
+      work_experiences: cvData?.work_experiences,
+      projects: cvData?.projects,
+      education: cvData?.education,
+      skills: cvData?.skills,
+      interests: cvData?.interests,
+      certifications: cvData?.certifications,
+      honors_awards: cvData?.honors_awards,
+    };
+    try {
+      if (!user?.user_id) {
+        showInfo("Bạn cần đăng nhập để sử dụng chức năng này!");
+        return;
+      }
+      await CVService.createCV(payload);
+      showSuccess("CV của bạn đã được lưu");
+    } catch (error) {
+      showError(error);
+    }
   };
   const handleSubmit = async (values) => {
     const payload = {
@@ -49,18 +84,17 @@ const CreateCVPage = () => {
         showInfo("Bạn cần đăng nhập để sử dụng chức năng này!");
         return;
       }
-      // await CVService.createCV(payload);
-      // if (contentRef.current?.getContent()) {
-      // console.log("vsdjvk");
-
-      // exportToPDF(contentRef.current.getContent(), "bao-cao.pdf");
-      helpers.exportPdf(contentRef);
-      // }
-      // showSuccess("CV của bạn đã được lưu");
+      await CVService.createCV(payload);
+      if (componentRef) {
+        helpers.exportPdf(componentRef);
+      }
+      navigate(RouteBase.MyCv);
+      showSuccess("CV của bạn đã được lưu");
     } catch (error) {
       showError(error);
     }
   };
+
   return (
     <Box>
       <Box className="flex flex-col gap-5">
@@ -68,9 +102,12 @@ const CreateCVPage = () => {
           initialValues={{
             cv_name: "",
           }}
+          validationSchema={Yup.object().shape({
+            cv_name: Yup.string().required("Tên CV không được để trống"),
+          })}
           onSubmit={handleSubmit}
         >
-          {() => {
+          {({ values }) => {
             return (
               <>
                 <Box className="bg-white border-t sticky top-header z-10 shadow-sm">
@@ -97,6 +134,15 @@ const CreateCVPage = () => {
                         Xem trước
                       </Button>
                       <Button
+                        type={"button"}
+                        onClick={() => {
+                          if (!values.cv_name) {
+                            showError("Tên CV không được để trống!");
+                            return;
+                          } else {
+                            handleSubmit(cvData);
+                          }
+                        }}
                         startIcon={<CommonIcon.VerticalAlignBottomRounded />}
                         className="text-nowrap h-fit"
                         sx={{
@@ -110,8 +156,15 @@ const CreateCVPage = () => {
                         Lưu và tải xuống
                       </Button>
                       <Button
+                        type={"button"}
                         startIcon={<CommonIcon.Save />}
-                        type={"submit"}
+                        onClick={() => {
+                          if (!values.cv_name) {
+                            showError("Tên CV không được để trống!");
+                            return;
+                          }
+                          handleSave(cvData);
+                        }}
                         className="text-nowrap !text-white h-fit"
                         sx={{
                           backgroundColor: "var(--primary)",
@@ -154,16 +207,15 @@ const CreateCVPage = () => {
         <DialogMUI
           toggle={toggle}
           open={open}
-          body={
-            <CVTemplate
-              code={dataConvert?.theme_code}
-              values={cvData}
-              ref={contentRef}
-            />
-          }
+          body={<CVTemplate code={dataConvert?.theme_code} values={cvData} />}
         />
       )}
-      <CVModel1 show={false} ref={contentRef} /> 
+      <CVTemplate
+        show={false}
+        code={dataConvert?.theme_code}
+        values={cvData}
+        ref={targetRef}
+      />
     </Box>
   );
 };

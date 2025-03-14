@@ -46,7 +46,7 @@ function App() {
 
   const storageData = httpServices.getTokenStorage();
   useEffect(() => {
-    if (storageData) {
+    if (!!storageData) {
       handleGetUserDetails(storageData);
     }
   }, [storageData]);
@@ -58,7 +58,20 @@ function App() {
   };
   return (
     <>
-      {[ROLE.EMPLOYER, ROLE.CANDIDATE].includes(user?.role) && <CrispChat />}
+      {[ROLE.EMPLOYER, ROLE.CANDIDATE].includes(user?.role) && (
+        <CrispChat
+          email={
+            user?.role == ROLE.CANDIDATE || user?.role === ROLE.EMPLOYER
+              ? user?.email
+              : ""
+          }
+          name={
+            user?.role == ROLE.CANDIDATE || user?.role === ROLE.EMPLOYER
+              ? user?.username
+              : ""
+          }
+        />
+      )}
       <Routes>
         {routes.map((route, index) => {
           const Page = route.component;

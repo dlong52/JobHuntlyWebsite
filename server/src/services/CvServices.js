@@ -17,7 +17,7 @@ const getAllCVs = async (filters = {}, options = {}) => {
     const sort = { [sortBy]: order === 'desc' ? -1 : 1 };
     const skip = (page - 1) * limit;
 
-    const cvs = await CV.find(filters).sort(sort).skip(skip).limit(parseInt(limit));
+    const cvs = await CV.find(filters).sort(sort).skip(skip).limit(parseInt(limit)).populate("theme");
     const total = await CV.countDocuments(filters);
 
     return { cvs, total, page, limit };

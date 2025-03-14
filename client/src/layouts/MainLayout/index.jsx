@@ -12,7 +12,7 @@ const MainLayout = ({ children }) => {
     <Box className="">
       <Header />
       <Box
-        className={`bg-neutrals-0 text-neutrals-100 min-h-screen ${
+        className={`bg-neutrals-0 text-neutrals-100 pb-20 ${
           (location.pathname === RouteBase.Home || location.pathname === RouteBase.Job) ? "" : "mt-header"
         }`}
       >

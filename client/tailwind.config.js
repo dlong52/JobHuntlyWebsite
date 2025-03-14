@@ -35,6 +35,16 @@ export default {
         footer: "#202430",
 
         active: "#4640DE",
+
+        "cv-3": {
+          DEFAULT: "var(--primary-cv-3)",
+          light: "var(--primary-cv-3-200)",
+          100: "var(--primary-cv-3-100)",
+        },
+        "cv-1": {
+          DEFAULT: "var(--primary-cv-1)",
+          light: "var(--primary-cv-1-200)",
+        },
       },
 
       fontFamily: {
@@ -46,7 +56,7 @@ export default {
         roboto: ["Roboto", "sans-serif"],
       },
       spacing: {
-        "header": "75px",
+        header: "75px",
         "header-hr": "80px",
       },
       margin: {

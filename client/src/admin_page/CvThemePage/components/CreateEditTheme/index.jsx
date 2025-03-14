@@ -89,6 +89,7 @@ const CreateEditTheme = ({ id, refetch, onClose }) => {
                   className="bg-[#f8fafc]"
                   classNameLabel="font-medium text-neutrals-100"
                   name="theme_code"
+                  disabled={id ? true : false}
                   component={InputField}
                   labelTop="Mã chủ đề"
                   required
