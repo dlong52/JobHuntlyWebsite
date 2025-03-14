@@ -10,8 +10,8 @@ const CommonAvatar = (props) => {
       <Avatar
         variant={variant}
         sx={sx}
-        src={!char ? src : undefined}
-        className={`${className}`}
+        src={!char && !!src ? src : avatar}
+        className={`!object-cover ${className}`}
       >
         {char}
       </Avatar>

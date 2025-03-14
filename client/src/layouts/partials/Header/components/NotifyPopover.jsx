@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { CommonStyles } from "../../../../ui";
+import { CommonIcon, CommonStyles } from "../../../../ui";
 import { notification_empty } from "../../../../assets/images";
 import { NotificationService } from "../../../../services/NotificationServices";
 import { useSelector } from "react-redux";
@@ -33,8 +33,9 @@ const NotifyPopover = ({ isLoading, notifications, refetch }) => {
         {!!notifications?.length && (
           <span
             onClick={handleUpdateReadAll}
-            className="text-primary cursor-pointer hover:text-primary-dark"
+            className="text-primary text-sm font-medium cursor-pointer hover:text-primary-dark flex items-center gap-1"
           >
+            <CommonIcon.DoneAllOutlined className="!text-[18px]" />
             Đánh dấu là đã đọc
           </span>
         )}

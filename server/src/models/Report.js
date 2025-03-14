@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const reportSchema = new mongoose.Schema({
   reported_by: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "User", 
     required: true,
   },
   report_type: { type: String, enum: ["company", "job"], required: true },

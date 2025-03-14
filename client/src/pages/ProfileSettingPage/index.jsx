@@ -6,9 +6,9 @@ import { Button } from "@/ui";
 import * as Yup from "yup";
 import { Box, Container, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { CommonAvatar, CommonIcon } from "../../ui";
 import { updateUser } from "../../services/UserServices";
 import { useNotifications } from "../../utils/notifications";
+import UploadAvatar from "./components/UploadAvatar";
 
 const ProfileSettingPage = () => {
   const user = useSelector((state) => state.user);
@@ -44,9 +44,10 @@ const ProfileSettingPage = () => {
 
   return (
     <Box className="pt-5">
-      <Container className="my-10">
-        <Box className="grid grid-cols-12 gap-10">
-          <Box className="col-span-8 bg-white shadow-md rounded-md p-8">
+      <Container className="">
+        <Box className="grid grid-cols-12 gap-2">
+          <UploadAvatar />
+          <Box className="col-span-12 bg-white shadow-md rounded-md p-8">
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
@@ -54,16 +55,16 @@ const ProfileSettingPage = () => {
               enableReinitialize
             >
               {() => (
-                <Form className="flex flex-col gap-4 w-full text-neutrals-100">
-                  <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>
+                <Form className="grid grid-cols-12 gap-4 w-full text-neutrals-100">
+                  <Typography
+                    className="col-span-12"
+                    sx={{ fontSize: "20px", fontWeight: 600 }}
+                  >
                     Cài đặt thông tin cá nhân
-                  </Typography>
-                  <Typography sx={{ color: "gray" }}>
-                    <span className="text-red-500 font-medium">(*)</span> Các
-                    thông tin bắt buộc
                   </Typography>
                   <FormikField
                     classNameLabel="font-medium text-neutrals-100"
+                    classNameContainer="col-span-6"
                     className="w-full"
                     name="name"
                     component={InputField}
@@ -74,6 +75,7 @@ const ProfileSettingPage = () => {
                   />
                   <FormikField
                     classNameLabel="font-medium text-neutrals-100"
+                    classNameContainer="col-span-6"
                     className="w-full"
                     name="phone_number"
                     component={InputField}
@@ -83,6 +85,7 @@ const ProfileSettingPage = () => {
                   />
                   <FormikField
                     classNameLabel="font-medium text-neutrals-100"
+                    classNameContainer="col-span-12"
                     className="w-full"
                     name="email"
                     component={InputField}
@@ -92,30 +95,23 @@ const ProfileSettingPage = () => {
                     labelTop="Email"
                     placeholder="Nhập email của bạn"
                   />
-                  <Button
-                    size="large"
-                    type="submit"
-                    className="!font-medium !w-fit !text-sm !bg-primary !text-white"
-                  >
-                    Lưu
-                  </Button>
+                  <Box className="flex justify-between items-end col-span-12">
+                    <Button
+                      size="large"
+                      type="submit"
+                      className="!font-medium !w-fit !text-sm !bg-primary !text-white !normal-case !px-5"
+                    >
+                      Lưu lại
+                    </Button>
+                    <Typography className="col-span-12 !text-sm" sx={{ color: "gray" }}>
+                      Chú ý: (
+                      <span className="text-red-500 font-medium">*</span>) là
+                      các thông tin bắt buộc.
+                    </Typography>
+                  </Box>
                 </Form>
               )}
             </Formik>
-          </Box>
-          <Box className="col-span-4 h-fit bg-white shadow-md rounded-md p-8">
-            <Box className="flex gap-4 items-center">
-              <Box className="size-[80px] relative">
-                <CommonAvatar className="!size-full " />
-                <Box className="size-6 flex items-center justify-center bg-primary text-white absolute bottom-0 right-0 rounded-full aspect-square">
-                  <CommonIcon.PhotoCamera className="!size-4" />
-                </Box>
-              </Box>
-              <Box className="flex flex-col">
-                <span className="font-medium">Chào bạn trở lại,</span>
-                <span className="font-semibold text-xl">{user?.username}</span>
-              </Box>
-            </Box>
           </Box>
         </Box>
       </Container>

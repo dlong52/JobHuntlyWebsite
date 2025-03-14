@@ -1,5 +1,7 @@
 const helpers = require("../utils/helpers");
-
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
 // Import Services
 const AuthServices = require("../services/AuthServices");
 const JwtService = require("../services/JwtServices");
@@ -17,6 +19,17 @@ const changePassword = async (req, res, next) => {
       oldPassword,
       newPassword
     );
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ status: "error", message: error });
+  }
+};
+const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    console.log(req.body);
+    
+    const result = await AuthServices.resetPassword(token, newPassword);
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({ status: "error", message: error });
@@ -130,5 +143,6 @@ module.exports = {
   signUp,
   signOut,
   refreshToken,
-  changePassword
+  changePassword,
+  resetPassword,
 };

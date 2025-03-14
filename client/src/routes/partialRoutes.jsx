@@ -84,5 +84,10 @@ const sidebarAdminRoutes = [
     name: "Chủ đề CV",
     icon: CommonIcon.ColorLens,
   },
+  {
+    path: RouteBase.AdminReport,
+    name: "Báo cáo",
+    icon: CommonIcon.Report,
+  },
 ];
 export { sidebarHrRoutes, sidebarAdminRoutes };

@@ -92,26 +92,30 @@ const getAllUsers = async (filters = {}, options = {}) => {
     limit = 10,
     sortBy = "created_at",
     order = "desc",
-    searchName,
   } = options;
 
   const sort = { [sortBy]: order === "desc" ? -1 : 1 };
   const skip = (page - 1) * limit;
 
-  if (searchName && searchName.trim() !== "") {
-    filters.$or = [
-      { email: new RegExp(searchName, "i") },
-      { "profile.name": new RegExp(searchName, "i") },
+  // Tách searchName từ filters (nếu có)
+  const { searchName, ...restFilters } = filters;
+
+  // Tạo điều kiện tìm kiếm nếu searchName được cung cấp
+  if (searchName) {
+    restFilters.$or = [
+      { 'profile.name': { $regex: searchName, $options: 'i' } }, // Tìm kiếm theo name (không phân biệt hoa thường)
+      { email: { $regex: searchName, $options: 'i' } }, // Tìm kiếm theo email (không phân biệt hoa thường)
     ];
   }
 
-  const users = await User.find(filters)
+  const users = await User.find(restFilters)
     .sort(sort)
     .skip(skip)
     .limit(parseInt(limit))
     .populate("role", "name")
     .select("-password");
-  const total = await User.countDocuments(filters);
+
+  const total = await User.countDocuments(restFilters);
 
   return { users, total, page, limit };
 };

@@ -2,16 +2,19 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../../../constants/routeUrl";
-import { companyLogoDefault } from "../../../../assets/images";
+import {
+  companyCoverDefault,
+  companyLogoDefault,
+} from "../../../../assets/images";
 
 const CompanyCardItem = ({ id, avatar, cover, name, description }) => {
   return (
     <div className="bg-white w-full rounded-sm">
-      {cover ? (
-        <img src={cover} alt="" className="h-[150px] w-full object-cover" />
-      ) : (
-        <Box className="bg-slate-200 h-[150px]" />
-      )}
+      <img
+        src={cover ? cover : companyCoverDefault}
+        alt=""
+        className="h-[150px] w-full object-cover"
+      />
       <img
         src={avatar ? avatar : companyLogoDefault}
         alt=""

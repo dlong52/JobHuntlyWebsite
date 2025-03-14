@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography, Skeleton, Divider } from '@mui/material';
+import { Box, Container, Skeleton, Divider } from '@mui/material';
 
 const JobDetailLoading = () => {
   return (

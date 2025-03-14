@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const JwtServices = require("./JwtServices");
 const UserModel = require("../models/UserModel");
 const admin = require("../configs/firebase/firebaseAdmin");
@@ -98,7 +99,27 @@ const signUp = async (newUser) => {
     return { status: "error", message: error.message };
   }
 };
+const resetPassword = async (token, newPassword) => {
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
+    const user = await UserModel.findOne({ email: decoded.email });
+
+    if (!user)
+      return res.status(400).json({ error: "Người dùng không tồn tại!" });
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    return {
+      status: "success",
+      message: "Mật khẩu đã được cập nhật thành công!",
+    };
+  } catch (error) {
+    return { status: "error", message: error.message };
+  }
+};
 const signIn = async (user) => {
   const { email, password } = user;
   try {
@@ -165,9 +186,10 @@ const signInWithGoogle = async (token, role) => {
     if (!user) {
       const existingUser = await UserModel.findOne({ email });
       if (existingUser) {
-        return { 
-          status: "error", 
-          message: "Tài khoản này đã được đăng kí bằng phương thức mặc định, vui lòng nhập email và mật khẩu để đăng nhập!" 
+        return {
+          status: "error",
+          message:
+            "Tài khoản này đã được đăng kí bằng phương thức mặc định, vui lòng nhập email và mật khẩu để đăng nhập!",
         };
       }
 
@@ -186,7 +208,10 @@ const signInWithGoogle = async (token, role) => {
     } else {
       const checkRole = user?.role.name !== role;
       if (checkRole) {
-        return { status: "error", message: "Tài khoản này đã được đăng kí với vai trò khác!" };
+        return {
+          status: "error",
+          message: "Tài khoản này đã được đăng kí với vai trò khác!",
+        };
       }
     }
 
@@ -220,5 +245,6 @@ module.exports = {
   signUp,
   signIn,
   signInWithGoogle,
-  changePassword
+  changePassword,
+  resetPassword,
 };

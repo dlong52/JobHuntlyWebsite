@@ -20,7 +20,7 @@ const PackagePage = () => {
 
   const breadcrumbs = [
     <Link
-      to={RouteBase.AdminOverview}
+      to={RouteBase.HROverview}
       className="hover:underline text-sm font-[500]"
     >
       Trang chủ

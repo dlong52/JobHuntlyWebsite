@@ -14,6 +14,7 @@ import { RouteBase } from "../../constants/routeUrl";
 import useFilters from "../../hooks/useFilters";
 import CategoryLoading from "../../ui/CategoryLoading";
 import { banner, bannerChild } from "../../assets/images";
+import { useGetAllPosts } from "../../hooks/modules/post/useGetAllPosts";
 const HomePage = () => {
   const navigate = useNavigate();
   const { filters } = useFilters({
@@ -22,6 +23,7 @@ const HomePage = () => {
     sort: "desc",
   });
   const { data, isLoading } = useGetAllCategories(filters);
+  const { data: jobs, isLoading: jobLoading } = useGetAllPosts(filters);
   const categories = useMemo(() => {
     if (data) {
       return data?.data;
@@ -45,9 +47,9 @@ const HomePage = () => {
         >
           <Box className="">
             <h1 className="font-ClashDisplay font-semibold text-[72px] text-neutrals-100 leading-tight">
-              Discover
-              <br /> more than <br />
-              <span className="text-accent-blue">5000+ Jobs</span>
+            Khám phá
+              <br /> hơn <br />
+              <span className="text-accent-blue">5000+ Việc làm</span>
               <img src={lineBanner} alt="" />
             </h1>
           </Box>
@@ -55,8 +57,7 @@ const HomePage = () => {
             onClick={requestForToken}
             className="max-w-[521px] text-neutrals-60 font-Epilogue text-[16px] leading-7"
           >
-            Great platform for the job seeker that searching for new career
-            heights and passionate about startups.
+            Nền tảng tuyệt vời cho người tìm việc đang tìm kiếm những đỉnh cao mới trong sự nghiệp và đam mê khởi nghiệp.
           </span>
           <Formik
             initialValues={{ name: "" }}

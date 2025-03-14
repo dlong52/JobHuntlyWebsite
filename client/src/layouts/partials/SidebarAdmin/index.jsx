@@ -8,13 +8,13 @@ const SidebarAdmin = () => {
   const location = useLocation();
   return (
     <Box className="w-sidebar min-h-screen bg-white fixed left-0 top-0 bottom-0 z-10 font-serif">
-      <Box>
+      <Box className='h-full'>
         <Box className="pb-8">
           <Box className="px-6 h-header-hr flex items-center">
             <Logo />
           </Box>
         </Box>
-        <Box className="flex flex-col gap-y-3">
+        <Box className="flex flex-col gap-y-3 overflow-y-scroll h-[80%]">
           {sidebarAdminRoutes.map((route, index) => {
             const Icon = route.icon;
             return (

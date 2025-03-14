@@ -1,143 +1,207 @@
-import React from "react";
+import React, { forwardRef, useMemo } from "react";
 import { cvModel } from "../../../mocs/cvModel";
 import HtmlContent from "../../../ui/HtmlContent";
+import { CommonIcon } from "../../../ui";
 
-const CVModel2 = ({values}) => {
+const CVModel2 = forwardRef(({ values, show = true, isMock = false }, ref) => {
+  const data = useMemo(() => {
+    if (isMock) {
+      return cvModel;
+    }
+    return values;
+  });
+  
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Profile Section */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-red-800">
-            {values?.profile.name}
-          </h1>
-          <p className="text-gray-700 font-semibold">{values?.position}</p>
+    <div ref={ref} className={`w-fit ${show ? "" : "absolute left-[-99999999px]"}`}>
+      <div className="w-[794px] shadow p-5">
+        {/* Thông tin ứng viên */}
+        <div className="flex items-start gap-5">
+          {/* Avatar */}
+          <div className="">
+            {data?.profile?.avatar ? (
+              <div className="">
+                <img
+                  src={data?.profile?.avatar}
+                  className="w-[120px] h-[150px] object-cover object-center"
+                  alt=""
+                />
+              </div>
+            ) : (
+              <div className="w-[120px] h-[150px] bg-black text-white flex items-center justify-center">
+                <CommonIcon.Person className="text-2xl" />
+              </div>
+            )}
+          </div>
+          {/* Information */}
+          <div className="flex flex-col gap-2 flex-1">
+            <h1 className="text-2xl font-bold">{data?.profile?.name}</h1>
+            <span>{data?.position}</span>
+            <div className="flex items-center">
+              <span className="text-sm font-semibold min-w-[150px]">
+                Ngày sinh:{" "}
+              </span>
+              <span className="text-sm">{data?.profile?.birthday}</span>
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm font-semibold min-w-[150px]">
+                Email:{" "}
+              </span>
+              <span className="text-sm">{data?.profile?.email}</span>
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm font-semibold min-w-[150px]">
+                Số điện thoại:{" "}
+              </span>
+              <span className="text-sm">{data?.profile?.phone_number}</span>
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm font-semibold min-w-[150px]">
+                Địa chỉ:{" "}
+              </span>
+              <span className="text-sm">{data?.profile?.address}</span>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col items-start text-gray-600 gap-y-1 border-l-4 border-red-800 px-4">
-          <span>{values?.profile.phone_number}</span>
-          <span>{values?.profile.email}</span>
-          <span>{values?.profile.address}</span>
+        {/* Mục tiêu */}
+        <div className="mt-8">
+          <h1 className="font-bold text-[16px] border-b-2 border-black pb-2">
+            MỤC TIÊU NGHỀ NGHIỆP
+          </h1>
+          <p className="mt-5">{data?.objective}</p>
+        </div>
+        {/* Học vấn */}
+        <div className="mt-8">
+          <h1 className="font-bold text-[16px] border-b-2 border-black pb-2">
+            HỌC VẤN
+          </h1>
+          {data?.education?.map((item, index) => {
+            return (
+              <div key={index} className="mt-5">
+                <div className="flex">
+                  <div className="w-[150px]">
+                    {item?.from_date} - {item?.to_date}
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="font-semibold">{item?.school_name}</h2>
+                    <p>{item?.education_des}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="page-break"></div>
+        {/* Kinh nghiệm làm việc */}
+        <div className="mt-8">
+          <h1 className="font-bold text-[16px] border-b-2 border-black pb-2">
+            KINH NGHIỆM LÀM VIỆC
+          </h1>
+          {data?.work_experiences?.map((item, index) => {
+            return (
+              <div key={index} className="mt-5">
+                <div className="flex">
+                  <div className="w-[150px]">
+                    {item?.from_date} - {item?.to_date}
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="font-semibold">{item?.company}</h2>
+                    <h3>{item?.position}</h3>
+                    <div className="mt-2">{item?.experience_des}</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="page-break"></div>
+        {/* Dự án cá nhân */}
+        <div className="mt-8">
+          <h1 className="font-bold text-[16px] border-b-2 border-black pb-2">
+            DỰ ÁN
+          </h1>
+          {data?.projects?.map((item, index) => {
+            return (
+              <div key={index} className="mt-5">
+                <div className="flex">
+                  <div className="w-[150px]">
+                    {item?.from_date} - {item?.to_date}
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="font-semibold">{item?.project_name}</h2>
+                    <h3>{item?.position_project}</h3>
+                    <div className="mt-2">{item?.technology_des}</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="page-break"></div>
+        {/* Kĩ năng */}
+        <div className="mt-8">
+          <h1 className="font-bold text-[16px] border-b-2 border-black pb-2">
+            KĨ NĂNG
+          </h1>
+          {data?.skills?.map((item, index) => {
+            return (
+              <div className="mt-5" key={index}>
+                <div className="">
+                  <h2 className="font-semibold">{item?.skill_name}</h2>
+                  <div className="mt-1">{item?.skill_des}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="page-break"></div>
+        {/* Danh hiệu */}
+        <div className="mt-8">
+          <h1 className="font-bold text-[16px] border-b-2 border-black pb-2">
+            DANH HIỆU
+          </h1>
+          {data?.honors_awards?.map((item, index) => {
+            return (
+              <div key={index} className="mt-5">
+                <div className="flex">
+                  <div className="w-[150px]">{item?.time}</div>
+                  <h2 className="font-semibold flex-1">{item?.award_name}</h2>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="page-break"></div>
+        {/* Chứng chỉ */}
+        <div className="mt-8">
+          <h1 className="font-bold text-[16px] border-b-2 border-black pb-2">
+            CHỨNG CHỈ
+          </h1>
+          {data?.certifications?.map((item, index) => {
+            return (
+              <div className="mt-5" key={index}>
+                <div className="flex">
+                  <div className="w-[150px]">{item?.time}</div>
+                  <h2 className="font-semibold flex-1">
+                    {item?.certification_name}
+                  </h2>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="page-break"></div>
+        {/* Sở thích */}
+        <div className="mt-8">
+          <h1 className="font-bold text-[16px] border-b-2 border-black pb-2">
+            SỞ THÍCH
+          </h1>
+          <div className="mt-5">
+            <p>{data?.interests}</p>
+          </div>
         </div>
       </div>
-
-      {/* Objective */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-red-800">
-          Mục tiêu nghề nghiệp
-        </h2>
-        <hr className="border-t-2 border-red-800 my-2" />
-        <p className="text-gray-700">{values?.objective}</p>
-      </section>
-
-      {/* Work Experiences */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-red-800">
-          Kinh nghiệm làm việc
-        </h2>
-        <hr className="border-t-2 border-red-800 my-2" />
-        {values?.work_experiences.map((exp, index) => (
-          <div
-            key={index}
-            className="border p-4 rounded-md shadow-sm mb-4 bg-white"
-          >
-            <p className="font-semibold text-red-700">{exp.company}</p>
-            <p className="text-gray-600">
-              {exp.from_date} - {exp.to_date}
-            </p>
-            <p className="text-gray-700">{exp.position}</p>
-            <p>{exp.experience_des}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Projects */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-red-800">Dự án</h2>
-        <hr className="border-t-2 border-red-800 my-2" />
-        {values?.projects.map((project, index) => (
-          <div
-            key={index}
-            className="border-2 border-red-200 p-4 rounded-md shadow-sm mb-4"
-          >
-            <p className="font-semibold text-red-700">
-              {project.project_name}
-            </p>
-            <p className="text-gray-600">
-              {project.from_date} - {project.to_date}
-            </p>
-            <p>Khách hàng: {project.customer_name}</p>
-            <p>Số lượng người tham gia: {project.team_size}</p>
-            <p>Vị trí: {project.position_project}</p>
-            <p className="italic text-gray-700">
-              Công nghệ: {project.technology_des}
-            </p>
-          </div>
-        ))}
-      </section>
-
-      {/* Education */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-red-800">Học vấn</h2>
-        <hr className="border-t-2 border-red-800 my-2" />
-        {values?.education.map((edu, index) => (
-          <div key={index} className="bg-white p-4 shadow-sm mb-4 rounded-md">
-            <p className="font-semibold text-red-700">{edu.school_name}</p>
-            <p>
-              {edu.from_date} - {edu.to_date}
-            </p>
-            <p>{edu.courses}</p>
-            <p>{edu.education_des}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Skills */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-red-800">Các kỹ năng</h2>
-        <hr className="border-t-2 border-red-800 my-2" />
-        {values?.skills.map((skill, index) => (
-          <div key={index} className="mb-2">
-            <p className="font-semibold">{skill.skill_name}</p>
-            <p>{skill.skill_des}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Honors & Awards */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-red-800">
-          Danh hiệu và giải thưởng
-        </h2>
-        <hr className="border-t-2 border-red-800 my-2" />
-        {values?.honors_awards.map((award, index) => (
-          <div key={index} className="mb-2">
-            <p>{award.time}</p>
-            <p>{award.award_name}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Certifications */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-red-800">Chứng chỉ</h2>
-        <hr className="border-t-2 border-red-800 my-2" />
-        {values?.certifications.map((cert, index) => (
-          <div key={index} className="mb-2">
-            <p>{cert.time}</p>
-            <p>{cert.certification_name}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Interests */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-red-800">Sở thích</h2>
-        <hr className="border-t-2 border-red-800 my-2" />
-        <HtmlContent string={values?.interests}/>
-        {/* <p>{values?.interests}</p> */}
-      </section>
     </div>
   );
-};
+});
 
 export default CVModel2;

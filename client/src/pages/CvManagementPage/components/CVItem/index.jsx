@@ -34,7 +34,7 @@ const CVItem = ({ data }) => {
     return (
       <Box className="grid grid-cols-12 gap-6 bg-white">
         <Box className="col-span-9 p-5 overflow-auto h-[500px]">
-          <CVTemplate code={data?.theme_code} />
+          <CVTemplate isMock code={data?.theme_code} />
         </Box>
         <Box className="col-span-3 flex flex-col gap-10 h-fit">
           <h1 className="font-bold text-xl text-primary">Mẫu CV {data?.name}</h1>

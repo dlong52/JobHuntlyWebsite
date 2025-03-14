@@ -71,6 +71,8 @@ const WishListPage = () => {
         ) : (
           <>
             {jobs?.map((job) => {
+              console.log(job);
+              
               return (
                 <JobListItem
                   key={job._id}
@@ -81,6 +83,7 @@ const WishListPage = () => {
                   logo={job?.company?.logo}
                   posted_by={job?.posted_by}
                   employment_type={job?.employment_type}
+                  end_date={job.end_date}
                 />
               );
             })}

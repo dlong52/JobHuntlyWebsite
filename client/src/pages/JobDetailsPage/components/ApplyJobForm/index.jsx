@@ -1,21 +1,42 @@
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
+  CheckboxField,
   FormikField,
   InputField,
 } from "../../../../components/CustomFieldsFormik";
 import * as Yup from "yup";
 import { Button, CommonIcon } from "../../../../ui";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import UploadCV from "./components/UploadCv";
 import { useSelector } from "react-redux";
 import { useNotifications } from "../../../../utils/notifications";
 import { ROLE } from "../../../../constants/enum";
 import { NotificationService } from "../../../../services/NotificationServices";
 import { ApplicantService } from "../../../../services/ApplicationServices";
+import { useConvertData, useFilters } from "../../../../hooks";
+import { useGetAllCvs } from "../../../../hooks/modules/cv/useGetAllCv";
+import RadioCvField from "./components/RadioCvField";
 
 const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
   const user = useSelector((state) => state.user);
+  const { filters } = useFilters({ user: user.user_id });
+  const { data, isLoading } = useGetAllCvs(filters, {
+    enabled: !!user.user_id,
+  });
+  const { dataConvert } = useConvertData(data);
+  const cvOptions = useMemo(() => {
+    if (dataConvert) {
+      return dataConvert?.map((item) => {
+        return {
+          label: item?.cv_name,
+          values: item._id,
+        };
+      });
+    }
+  }, [dataConvert]);
+  console.log(cvOptions);
+  
   const [loading, setLoading] = useState(false);
 
   const { showSuccess, showError, showInfo } = useNotifications();
@@ -26,10 +47,7 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
       .max(1000, "Thư xin việc không được vượt quá 1000 ký tự.")
       .required("Thư xin việc là bắt buộc."),
 
-    cv_url: Yup.string()
-      .trim()
-      .url("CV phải là một URL hợp lệ.")
-      .required("Vui lòng cung cấp CV của bạn."),
+    cv_url: Yup.string().trim().url("CV phải là một URL hợp lệ."),
   });
 
   const handleSubmit = async (values) => {
@@ -69,6 +87,7 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
         initialValues={{
           cover_letter: "",
           cv_url: "",
+          isCvOnline: false,
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -86,7 +105,27 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
                   ứng tuyển:{" "}
                 </Typography>
 
-                <FormikField name="cv_url" required component={UploadCV} />
+                {!values.isCvOnline && (
+                  <FormikField name="cv_url" component={UploadCV} />
+                )}
+                {values.isCvOnline && (
+                  <Box className="p-4 rounded-md border border-primary">
+                    <FormikField
+                      name="isCvOnline"
+                      labelTop="Chọn CV online"
+                      classNameLabel="text-neutrals-100 font-medium"
+                      options={cvOptions}
+                      component={RadioCvField}
+                    />
+                  </Box>
+                )}
+                <FormikField
+                  name="isCvOnline"
+                  labelTop="Chọn CV online"
+                  classNameLabel="text-neutrals-100 font-medium"
+                  activeColor="var(--primary)"
+                  component={CheckboxField}
+                />
                 <FormikField
                   name="cover_letter"
                   component={InputField}

@@ -39,17 +39,18 @@ const DialogMUI = ({
       sx={{ "& .MuiDialog-paper": { width: "auto", maxWidth: "none" } }} // Set width to auto
     >
       {title && (
-        <Box className="shadow">
-          <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+        <Box className="shadow relative flex justify-between items-center pr-3">
+          <DialogTitle id="customized-dialog-title">
             {title}
           </DialogTitle>
           <IconButton
             aria-label="close"
             onClick={toggle}
             sx={(theme) => ({
-              position: "absolute",
-              right: 8,
-              top: 8,
+              // position: "absolute",
+              // right: 8,
+              // top: "50%",
+              // trasi
               color: theme.palette.grey[500],
             })}
           >

@@ -1,18 +1,21 @@
 export const cvModel = {
   profile: {
+    avatar: "",
     name: "Đức Long Nguyễn",
     email: "duong.work23@gmail.com",
     phone_number: "0123.456.789",
     address: "Quận A, thành phố Hà Nội",
-  }, 
+    birthday: "10/06/2003",
+    website: "https://github.com/jobhuntly",
+  },
   position: "Lập trình viên",
   objective:
     "Phấn đấu trở thành chuyên gia trong lĩnh vực lập trình và phát triển phần mềm, không ngừng học hỏi và nâng cao kỹ năng, đóng góp cho sự phát triển của công ty.",
   work_experiences: [
     {
       company: "Công ty TNHH Công Nghệ ABC",
-      from_date: "01/2020",
-      to_date: "12/2022",
+      from_date: "2020",
+      to_date: "2022",
       position: "Lập trình viên Fullstack",
       experience_des:
         "Tham gia phát triển và bảo trì hệ thống quản lý nội bộ, cải thiện hiệu suất của ứng dụng và tối ưu hóa giao diện người dùng.",
@@ -21,8 +24,8 @@ export const cvModel = {
   projects: [
     {
       project_name: "Hệ thống quản lý tài liệu",
-      from_date: "03/2021",
-      to_date: "11/2021",
+      from_date: "2021",
+      to_date: "2021",
       customer_name: "Công ty XYZ",
       team_size: "5",
       position_project: "Backend Developer",
@@ -32,9 +35,9 @@ export const cvModel = {
   ],
   education: [
     {
-      school_name: "Đại học Bách Khoa Hà Nội",
-      from_date: "09/2016",
-      to_date: "06/2020",
+      school_name: "Trường Đại học Thăng Long",
+      from_date: "2016",
+      to_date: "2020",
       courses: "Kỹ thuật phần mềm",
       education_des:
         "Hoàn thành chương trình cử nhân với chuyên ngành kỹ thuật phần mềm, tham gia nhiều dự án nhóm và đạt thành tích xuất sắc.",

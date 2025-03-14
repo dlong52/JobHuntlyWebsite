@@ -13,17 +13,16 @@ const CheckboxField = ({
   classNameContainer = "",
   classNameLabel = "",
   required = false,
+  activeColor,
   ...props
 }) => {
   const { name, value } = field;
   const { touched, errors, setFieldValue } = form;
   const showError = Boolean(touched[name] && errors[name]);
 
-  // Xử lý sự kiện thay đổi giá trị
   const handleChange = (event) => {
     setFieldValue(name, event.target.checked);
   };
-
   return (
     <FormControl
       className={`flex gap-1 ${classNameContainer}`}
@@ -42,6 +41,12 @@ const CheckboxField = ({
               disabled={disabled}
               checked={Boolean(value)}
               onChange={handleChange}
+              sx={{
+                color: "var(--neutrals-100)", // Màu khi chưa checked
+                "&.Mui-checked": {
+                  color: activeColor, // Màu khi checked
+                },
+              }}
               {...props}
             />
           }

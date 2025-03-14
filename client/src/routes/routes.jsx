@@ -21,6 +21,10 @@ import {
   ChangePasswordPage,
   VerifyAccountPage,
   ForgotPasswordPage,
+  MyCvPage,
+  EditCVPage,
+  VerifyResultPage,
+  ResetPasswordPage,
 } from "../pages";
 import {
   ChatPage,
@@ -48,6 +52,7 @@ import {
   PackageManagementPage,
   PostManageMentPage,
   ProfileAdminPage,
+  ReportManagementPage,
   RevenueManagementPage,
   UserDetailPage,
   UserManagementPage,
@@ -104,6 +109,16 @@ const Routes = [
     permissionAllow: [ROLE.ALL],
   },
   {
+    path: `${RouteBase.CVTemplate}/:id/edit/:cv_id`,
+    component: EditCVPage,
+    permissionAllow: [ROLE.ALL],
+  },
+  {
+    path: RouteBase.MyCv,
+    component: MyCvPage,
+    permissionAllow: [ROLE.CANDIDATE],
+  },
+  {
     path: RouteBase.Company,
     component: CompanyPage,
     permissionAllow: [ROLE.ALL],
@@ -135,6 +150,12 @@ const Routes = [
     permissionAllow: [ROLE.ALL],
   },
   {
+    path: RouteBase.ResetPassword,
+    component: ResetPasswordPage,
+    permissionAllow: [ROLE.ALL],
+    layout: null,
+  },
+  {
     path: RouteBase.WishList,
     component: WishListPage,
     permissionAllow: [ROLE.ALL],
@@ -147,7 +168,12 @@ const Routes = [
   {
     path: RouteBase.VerifyAccount,
     component: VerifyAccountPage,
-    permissionAllow: [ROLE.ALL],
+    permissionAllow: [ROLE.CANDIDATE],
+  },
+  {
+    path: RouteBase.VerifyResult,
+    component: VerifyResultPage,
+    permissionAllow: [ROLE.CANDIDATE],
   },
   {
     path: "*",
@@ -313,6 +339,12 @@ const Routes = [
   {
     path: RouteBase.AdminCvTheme,
     component: CvThemePage,
+    permissionAllow: [ROLE.ADMIN],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminReport,
+    component: ReportManagementPage,
     permissionAllow: [ROLE.ADMIN],
     layout: AdminLayout,
   },

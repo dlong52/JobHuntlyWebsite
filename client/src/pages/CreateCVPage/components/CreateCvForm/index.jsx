@@ -8,6 +8,7 @@ import {
 import { CommonIcon } from "../../../../ui";
 import { Box, Typography } from "@mui/material";
 import { initialValues } from "./form";
+import UploadAvatar from "./components/UploadAvatar";
 const validationSchema = Yup.object({
   profile: Yup.object({
     name: Yup.string().required("Tên không được để trống"),
@@ -38,7 +39,14 @@ const CreateCvForm = ({ handleSubmit, onChange }) => {
               >
                 Thông tin ứng viên
               </Typography>
-              <Box className=" grid grid-cols-12 gap-4">
+              <Box className="grid grid-cols-12 gap-4">
+                <FormikField
+                  size="small"
+                  name="profile.avatar"
+                  component={UploadAvatar}
+                  required
+                  classNameContainer="col-span-12"
+                />
                 <FormikField
                   size="small"
                   name="profile.name"
@@ -78,6 +86,22 @@ const CreateCvForm = ({ handleSubmit, onChange }) => {
                   label="Địa chỉ"
                   required
                   classNameContainer="col-span-12"
+                />
+                <FormikField
+                  size="small"
+                  name="profile.birthday"
+                  component={InputField}
+                  label="Ngày sinh"
+                  required
+                  classNameContainer="col-span-6"
+                />
+                <FormikField
+                  size="small"
+                  name="profile.website"
+                  component={InputField}
+                  label="Website"
+                  required
+                  classNameContainer="col-span-6"
                 />
               </Box>
             </Box>
@@ -137,14 +161,14 @@ const CreateCvForm = ({ handleSubmit, onChange }) => {
                           size="small"
                           name={`work_experiences.${index}.position`}
                           component={InputField}
-                          classNameContainer="col-span-4"
+                          classNameContainer="col-span-12"
                           label="Vị trí"
                         />
                         <FormikField
                           size="small"
                           name={`work_experiences.${index}.experience_des`}
-                          component={InputField}
-                          classNameContainer="col-span-8"
+                          component={CkEditerField}
+                          classNameContainer="col-span-12"
                           label="Mô tả"
                         />
                         <Box className=" hidden group-hover:flex items-center gap-2 absolute top-0 right-0 -translate-y-full p-2 rounded-t-md bg-white border">

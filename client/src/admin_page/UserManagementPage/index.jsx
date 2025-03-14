@@ -31,7 +31,8 @@ const UserManagementPage = () => {
   const { filters, handleChangePage, setFilters } = useFilters({
     page: 1,
     limit: 10,
-    // sort: "desc",
+    order: "desc",
+    searchName: "",
   });
   const { data, isLoading } = useGetAllUsers(filters);
   const columns = [
@@ -154,7 +155,6 @@ const UserManagementPage = () => {
   const handleSubmit = (values) => {
     const search = {
       searchName: values.searchName,
-      // role: values.role,
     };
     setFilters((prev) => {
       return { ...prev, ...search };

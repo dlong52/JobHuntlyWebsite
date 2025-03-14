@@ -65,6 +65,9 @@ const refreshToken = async () => {
 const changePassword = (payload) => {
   return httpServices.post(`${apiURL.CHANGE_PASSWORD}`, payload);
 };
+const resetPassword = (payload) => {
+  return httpServices.post(`${apiURL.RESET_PASSWORD}`, payload);
+};
 export {
   axiosJwt,
   signIn,
@@ -73,4 +76,5 @@ export {
   signOut,
   refreshToken,
   changePassword,
+  resetPassword
 };

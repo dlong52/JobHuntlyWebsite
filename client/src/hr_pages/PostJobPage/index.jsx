@@ -32,16 +32,7 @@ const PostJobPage = () => {
   const navigate = useNavigate();
   const { showSuccess, showError } = useNotifications();
   const { isLoading, mutateAsync: deletePost } = useDeletePost();
-  const {
-    filters,
-    handleRequestSort,
-    handleSearch,
-    handleSelect,
-    handleSelectAll,
-    handleChangePage,
-    rowsSelected,
-    setFilters,
-  } = useFilters({
+  const { filters, handleChangePage, setFilters } = useFilters({
     page: 1,
     limit: 10,
     sort: "desc",
@@ -140,7 +131,7 @@ const PostJobPage = () => {
   ];
   const toolbarActions = [
     {
-      label: <CommonIcon.Add />,
+      label: <TooltipMui content={"Đăng tin tuyển dụng mới"}><CommonIcon.PostAdd /></TooltipMui>,
       className: "!bg-primary !shadow-none",
       onClick: toggle,
     },
@@ -158,7 +149,7 @@ const PostJobPage = () => {
   const breadcrumbs = [
     <Link
       key={1}
-      to={RouteBase.AdminOverview}
+      to={RouteBase.HROverview}
       className="hover:underline text-sm font-[500]"
     >
       Trang chủ

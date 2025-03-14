@@ -45,7 +45,7 @@ const getWishListByUser = async (userId) => {
     const wishList = await WishList.findOne({ user: userId })
       .populate({
         path: "jobs",
-        select: "title location employment_type",
+        select: "title location employment_type end_date",
         populate: {
           path: "company",
           select: "name logo",

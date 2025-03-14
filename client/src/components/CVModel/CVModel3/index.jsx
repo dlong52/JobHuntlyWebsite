@@ -1,143 +1,208 @@
-import React from "react";
+import React, { forwardRef, useMemo } from "react";
 import { cvModel } from "../../../mocs/cvModel";
 import HtmlContent from "../../../ui/HtmlContent";
+import { CommonIcon } from "../../../ui";
 
-const CVModel3 = ({values}) => {
+const CVModel3 = forwardRef(({ values, show = true, isMock = false }, ref) => {
+  const data = useMemo(() => {
+    if (isMock) {
+      return cvModel;
+    }
+    return values;
+  });
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Profile Section */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-green-800">
-            {values?.profile.name}
+    <div ref={ref} className={`${show ? "" : "absolute left-[-99999999px]"}`}>
+      <div className="w-[794px] grid grid-cols-12 text-cv-3 gap-5 p-5 shadow">
+        <div className="col-span-4">
+          {/* Avatar */}
+          {values?.profile?.avatar ? (
+            <img src={values?.profile?.avatar} className="w-4/5 aspect-square rounded-md object-cover" alt="" />
+          ) : (
+            <div className="w-4/5 aspect-square rounded-md bg-cv-3"></div>
+          )}
+          <div className="flex gap-2 mt-2">
+            <div className="p-1 rounded-full aspect-square size-fit bg-cv-3 text-white">
+              <CommonIcon.KeyboardArrowRightRounded className="" />
+            </div>
+            <div className="bg-cv-3-light px-4 rounded-full text-cv-3 flex items-center font-semibold text-sm justify-center">
+              {data?.position}
+            </div>
+          </div>
+          <h1 className="font-bold text-xl text-cv-3 uppercase mt-4">
+            {data?.profile?.name}
           </h1>
-          <p className="text-gray-700 font-semibold">{values?.position}</p>
+          <div className="">
+            <h1 className="font-semibold text-lg text-cv-3 mt-4">
+              // Thông tin liên hệ
+            </h1>
+            <div className="flex flex-col gap-3 mt-4">
+              <div className="flex gap-2">
+                <div className="p-1 rounded aspect-square size-[25px] bg-cv-3 text-white flex items-center justify-center">
+                  <CommonIcon.Email fontSize="12px" />
+                </div>
+                <span className="text-sm text-">{data?.profile?.email}</span>
+              </div>
+              <div className="flex gap-2">
+                <div className="p-1 rounded aspect-square size-[25px] bg-cv-3 text-white flex items-center justify-center">
+                  <CommonIcon.Smartphone fontSize="12px" />
+                </div>
+                <span className="text-sm text-">
+                  {data?.profile?.phone_number}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <div className="p-1 rounded aspect-square size-[25px] bg-cv-3 text-white flex items-center justify-center">
+                  <CommonIcon.CalendarMonth fontSize="12px" />
+                </div>
+                <span className="text-sm text-">{data?.profile?.birthday}</span>
+              </div>
+              <div className="flex gap-2">
+                <div className="p-1 rounded aspect-square size-[25px] bg-cv-3 text-white flex items-center justify-center">
+                  <CommonIcon.LocationOnRounded fontSize="12px" />
+                </div>
+                <span className="text-sm text-">{data?.profile?.address}</span>
+              </div>
+              <div className="flex gap-2">
+                <div className="p-1 rounded aspect-square size-[25px] bg-cv-3 text-white flex items-center justify-center">
+                  <CommonIcon.Language fontSize="12px" />
+                </div>
+                <span className="text-sm text-">{data?.profile?.website}</span>
+              </div>
+            </div>
+          </div>
+          {/* Kĩ năng */}
+          <div className="">
+            <h1 className="font-semibold text-lg text-cv-3 mt-4">
+              // Các kĩ năng
+            </h1>
+            <div className="bg-cv-3-100 p-4 rounded-md mt-4">
+              {data?.skills?.map((item, index) => {
+                return (
+                  <div className="" key={index}>
+                    <h3 className="font-semibold text-sm">
+                      {item?.skill_name}
+                    </h3>
+                    <HtmlContent string={item?.skill_des} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col items-start text-gray-600 gap-y-1 border-l-4 border-green-800 px-4">
-          <span>{values?.profile.phone_number}</span>
-          <span>{values?.profile.email}</span>
-          <span>{values?.profile.address}</span>
+        <div className="col-span-8 flex flex-col gap-4">
+          {/* Mục tiêu */}
+          <div className="">
+            <h1 className="font-semibold text-lg text-cv-3">
+              // Mục tiêu nghề nghiệp
+            </h1>
+            <div className="bg-cv-3-100 p-4 rounded-md mt-4 text-sm leading-5">
+              {data?.objective}
+            </div>
+          </div>
+          {/* Học vấn */}
+          <div className="">
+            <h1 className="font-semibold text-lg text-cv-3">// Học vấn</h1>
+            <div className="bg-cv-3-100 p-4 rounded-md mt-4">
+              {data?.education?.map((item, index) => {
+                return (
+                  <div className="flex" key={index}>
+                    <div className="w-[150px]">
+                      {item?.from_date} - {item?.to_date}
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="font-semibold">{item?.school_name}</h2>
+                      <HtmlContent string={item?.education_des} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Kinh nghiệm */}
+          <div className="">
+            <h1 className="font-semibold text-lg text-cv-3">// Kinh nghiệm</h1>
+            <div className="bg-cv-3-100 p-5 rounded-md mt-4">
+              {data?.work_experiences?.map((item, index) => {
+                return (
+                  <div className="flex" key={index}>
+                    <div className="w-[150px]">
+                      {item?.from_date} - {item?.to_date}
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="font-semibold">{item?.company}</h2>
+                      <h3>{item?.position}</h3>
+                      <div className="mt-2 text-sm">
+                        <HtmlContent string={item?.experience_des} />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Dự án */}
+          <div className="">
+            <h1 className="font-semibold text-lg text-cv-3">// Dự án</h1>
+            <div className="bg-cv-3-100 p-5 rounded-md mt-4">
+              {data?.projects?.map((item, index) => {
+                return (
+                  <div className="flex" key={index}>
+                    <div className="w-[150px]">
+                      {item?.from_date} - {item?.to_date}
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="font-semibold">{item?.project_name}</h2>
+                      <h3>{item?.position_project}</h3>
+                      <div className="mt-2 text-sm">
+                        <HtmlContent string={item?.technology_des} />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Danh hiệu */}
+          <div className="">
+            <h1 className="font-semibold text-lg text-cv-3">// Danh hiệu</h1>
+            <div className="bg-cv-3-100 p-5 rounded-md mt-4">
+              {data?.honors_awards?.map((item, index) => {
+                return (
+                  <div className="flex" key={index}>
+                    <div className="w-[150px]">{item?.time}</div>
+                    <h2 className="font-semibold flex-1">{item?.award_name}</h2>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Chứng chỉ */}
+          <div className="">
+            <h1 className="font-semibold text-lg text-cv-3">// Chứng chỉ</h1>
+            <div className="bg-cv-3-100 p-5 rounded-md mt-4">
+              {data?.certifications?.map((item, index) => {
+                return (
+                  <div className="flex" key={index}>
+                    <div className="w-[150px]">{item?.time}</div>
+                    <h2 className="font-semibold flex-1">
+                      {item?.certification_name}
+                    </h2>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Sở thích */}
+          <div className="">
+            <h1 className="font-semibold text-lg text-cv-3">// Sở thích</h1>
+            <div className="bg-cv-3-100 p-5 rounded-md mt-4">
+              <p className="text-sm">{data?.interests}</p>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Objective */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-green-800">
-          Mục tiêu nghề nghiệp
-        </h2>
-        <hr className="border-t-2 border-green-800 my-2" />
-        <p className="text-gray-700">{values?.objective}</p>
-      </section>
-
-      {/* Work Experiences */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-green-800">
-          Kinh nghiệm làm việc
-        </h2>
-        <hr className="border-t-2 border-green-800 my-2" />
-        {values?.work_experiences.map((exp, index) => (
-          <div
-            key={index}
-            className="border p-4 rounded-md shadow-sm mb-4 bg-white"
-          >
-            <p className="font-semibold text-green-700">{exp.company}</p>
-            <p className="text-gray-600">
-              {exp.from_date} - {exp.to_date}
-            </p>
-            <p className="text-gray-700">{exp.position}</p>
-            <p>{exp.experience_des}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Projects */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-green-800">Dự án</h2>
-        <hr className="border-t-2 border-green-800 my-2" />
-        {values?.projects.map((project, index) => (
-          <div
-            key={index}
-            className="border-2 border-green-200 p-4 rounded-md shadow-sm mb-4"
-          >
-            <p className="font-semibold text-green-700">
-              {project.project_name}
-            </p>
-            <p className="text-gray-600">
-              {project.from_date} - {project.to_date}
-            </p>
-            <p>Khách hàng: {project.customer_name}</p>
-            <p>Số lượng người tham gia: {project.team_size}</p>
-            <p>Vị trí: {project.position_project}</p>
-            <p className="italic text-gray-700">
-              Công nghệ: {project.technology_des}
-            </p>
-          </div>
-        ))}
-      </section>
-
-      {/* Education */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-green-800">Học vấn</h2>
-        <hr className="border-t-2 border-green-800 my-2" />
-        {values?.education.map((edu, index) => (
-          <div key={index} className="bg-white p-4 shadow-sm mb-4 rounded-md">
-            <p className="font-semibold text-green-700">{edu.school_name}</p>
-            <p>
-              {edu.from_date} - {edu.to_date}
-            </p>
-            <p>{edu.courses}</p>
-            <p>{edu.education_des}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Skills */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-green-800">Các kỹ năng</h2>
-        <hr className="border-t-2 border-green-800 my-2" />
-        {values?.skills.map((skill, index) => (
-          <div key={index} className="mb-2">
-            <p className="font-semibold">{skill.skill_name}</p>
-            <p>{skill.skill_des}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Honors & Awards */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-green-800">
-          Danh hiệu và giải thưởng
-        </h2>
-        <hr className="border-t-2 border-green-800 my-2" />
-        {values?.honors_awards.map((award, index) => (
-          <div key={index} className="mb-2">
-            <p>{award.time}</p>
-            <p>{award.award_name}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Certifications */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-green-800">Chứng chỉ</h2>
-        <hr className="border-t-2 border-green-800 my-2" />
-        {values?.certifications.map((cert, index) => (
-          <div key={index} className="mb-2">
-            <p>{cert.time}</p>
-            <p>{cert.certification_name}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Interests */}
-      <section className="mb-8">
-        <h2 className="text-lg font-bold text-green-800">Sở thích</h2>
-        <hr className="border-t-2 border-green-800 my-2" />
-        <HtmlContent string={values?.interests}/>
-        {/* <p>{values?.interests}</p> */}
-      </section>
     </div>
   );
-};
+});
 
 export default CVModel3;
