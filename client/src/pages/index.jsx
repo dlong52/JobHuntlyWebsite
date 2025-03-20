@@ -18,6 +18,8 @@ export { default as ResetPasswordPage } from "./ResetPasswordPage";
 export { default as VerifyAccountPage } from "./VerifyAccountPage";
 export { default as VerifyResultPage } from "./VerifyResultPage";
 export { default as MyCvPage } from "./MyCvPage";
+export { default as ViewCvPage } from "./ViewCvPage";
+export { default as TopJobPage } from "./TopJobPage";
 // Auth
 export { default as SignInPage } from "./SignInPage";
 export { default as SignUpPage } from "./SignUpPage";

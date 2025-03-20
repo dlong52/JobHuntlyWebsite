@@ -25,18 +25,21 @@ const JobListItem = ({
   company,
   end_date,
   status,
+  isApplied,
 }) => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const { open, shouldRender, toggle } = useToggleDialog();
   const { showError, showSuccess, showInfo } = useNotifications();
-  // const { status } = useStatusWishlist(id);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddToWishlist = useCallback(async () => {
     if (!user?.user_id || user.role !== ROLE.CANDIDATE) {
-      showInfo("Bạn cần đăng nhập để thực hiện hành động này!");
+      showInfo("Bạn cần đăng nhập để thực hiện hành động này!", null, {
+        vertical: "top",
+        horizontal: "center",
+      });
       return;
     }
     setIsLoading(true);
@@ -53,7 +56,10 @@ const JobListItem = ({
 
   const handleRemoveToWishlist = useCallback(async () => {
     if (!user?.user_id || user.role !== ROLE.CANDIDATE) {
-      showInfo("Bạn cần đăng nhập để thực hiện hành động này!");
+      showInfo("Bạn cần đăng nhập để thực hiện hành động này!", null, {
+        vertical: "top",
+        horizontal: "center",
+      });
       return;
     }
     setIsLoading(true);
@@ -113,16 +119,28 @@ const JobListItem = ({
             {helpers.isExpired(end_date) ? (
               <Button
                 disabled
-                className="!bg-gray-600 !text-white !capitalize !text-xs !font-normal"
+                className="!bg-gray-600 !text-white !normal-case !text-xs !font-normal"
               >
                 Đã hết hạn
               </Button>
             ) : (
               <Button
-                onClick={toggle}
-                className="!bg-primary !text-white !capitalize !text-xs !font-normal"
+                onClick={() => {
+                  if (!user?.is_verified) {
+                    showInfo(
+                      "Tài khoản chưa xác thực không thể dùng tính năng này!",
+                      null,
+                      {
+                        vertical: "top",
+                        horizontal: "center",
+                      }
+                    );
+                  }
+                  toggle();
+                }}
+                className="!bg-primary !text-white !normal-case !text-xs !font-normal"
               >
-                Ứng tuyển
+                {isApplied ? "Ứng tuyển lại" : "Ứng tuyển"}
               </Button>
             )}
             {status ? (
@@ -155,7 +173,11 @@ const JobListItem = ({
           isPadding={false}
           open={open}
           title={
-            <Typography fontSize={"22px"} fontWeight={600}>
+            <Typography
+              className="!text-wrap !max-w-[600px]"
+              fontSize={"22px"}
+              fontWeight={600}
+            >
               Ứng tuyển <span className="text-primary">{title}</span>
             </Typography>
           }
@@ -165,6 +187,7 @@ const JobListItem = ({
               onClose={toggle}
               name={title}
               jobId={id}
+              companyId={company?._id}
               posted_by={posted_by}
             />
           }

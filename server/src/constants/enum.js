@@ -8,5 +8,12 @@ const STATUS_APPLICANT = {
   SUITABLE: "suitable",
   ACCEPT: "accept",
   REJECTED: "rejected",
+  INTERVIEW: "interview",
 };
-module.exports = { EmploymentType, STATUS_APPLICANT };
+const PACKAGE_CODE = {
+  ECO: "eco",
+  PRO: "pro",
+  MAX: "max",
+  MAX_PLUS: "max_plus",
+};
+module.exports = { EmploymentType, STATUS_APPLICANT, PACKAGE_CODE };

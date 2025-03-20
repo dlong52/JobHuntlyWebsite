@@ -14,6 +14,10 @@ import {
   InputField,
 } from "../../../../components/CustomFieldsFormik";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { RouteBase } from "../../../../constants/routeUrl";
+import { useNotifications } from "../../../../utils/notifications";
+import { updateUser as updateUserAcc } from "../../../../services/UserServices";
 export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
@@ -33,12 +37,37 @@ export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 const Account = () => {
   const user = useSelector((state) => state.user);
-
+  // const dispatch = useDispatch();
+  const { showError, showSuccess } = useNotifications();
   const initialValues = {
     name: user?.username,
     phone_number: user?.phone_number,
     email: user?.email,
   };
+  const handleSubmit = async (values) => {
+    try {
+      // Gọi API cập nhật dữ liệu trên server
+      await updateUserAcc({
+        id: user.user_id,
+        "profile.name": values.name,
+        "profile.phone_number": values.phone_number,
+      });
+
+      // // Sau khi API thành công, mới cập nhật Redux state
+      // dispatch(
+      //   updateUser({
+      //     ...user,
+      //     username: values.name,
+      //     phone_number: values.phone_number,
+      //   })
+      // );
+      window.location.reload();
+      showSuccess("Cập nhật tài khoản thành công!");
+    } catch (error) {
+      showError(error);
+    }
+  };
+
   return (
     <Box className="grid grid-cols-6 gap-5">
       <Box className="col-span-2 border shadow-inner rounded-md">
@@ -57,7 +86,7 @@ const Account = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={() => {}}
+            onSubmit={handleSubmit}
             enableReinitialize
           >
             {() => (
@@ -105,42 +134,72 @@ const Account = () => {
       </Box>
       <Box className="col-span-4 p-5 border rounded-md">
         <Box className="p-5">
-          <BorderLinearProgress variant="determinate" value={33.33} />
+          <BorderLinearProgress
+            variant="determinate"
+            value={
+              user?.is_verified
+                ? 66.66
+                : user?.is_verified_phone && user?.is_verified
+                ? 100
+                : 33.33
+            }
+          />
           <Box className="flex flex-col gap-6 mt-8">
             <Box className="flex justify-between">
               <Box className="flex items-center gap-4">
-                <Box className="size-6 rounded-full border flex items-center justify-center" />
+                <Box
+                  className={`size-6 rounded-full border flex items-center text-white justify-center ${
+                    user?.is_verified ? "bg-accent-green" : "bg-gray-400"
+                  }`}
+                >
+                  <CommonIcon.CheckRounded className="!text-[18px]" />
+                </Box>
                 <Typography fontSize={"15px"} fontWeight={500}>
                   Xác thực Email
                 </Typography>
               </Box>
-              <Box className="text-accent-green aspect-square size-8 flex items-center justify-center bg-neutrals-0 !rounded-full">
+              <Link
+                to={RouteBase.HRVerify}
+                className="text-accent-green aspect-square size-8 flex items-center justify-center bg-neutrals-0 !rounded-full"
+              >
                 <CommonIcon.EastRounded fontSize="small" />
-              </Box>
+              </Link>
             </Box>
             <Box className="flex justify-between">
               <Box className="flex items-center gap-4">
-                <Box className="size-6 rounded-full border flex items-center justify-center" />
+                <Box
+                  className={`size-6 rounded-full border flex items-center text-white justify-center ${
+                    user?.is_verified_phone ? "bg-accent-green" : "bg-gray-400"
+                  }`}
+                >
+                  <CommonIcon.CheckRounded className="!text-[18px]" />
+                </Box>
                 <Typography fontSize={"15px"} fontWeight={500}>
                   Xác thực số điện thoại
                 </Typography>
               </Box>
-              <Box className="text-accent-green aspect-square size-8 flex items-center justify-center bg-neutrals-0 !rounded-full">
+              <Link
+                to={RouteBase.HRVerify}
+                className="text-accent-green aspect-square size-8 flex items-center justify-center bg-neutrals-0 !rounded-full"
+              >
                 <CommonIcon.EastRounded fontSize="small" />
-              </Box>
+              </Link>
             </Box>
             <Box className="flex justify-between">
               <Box className="flex items-center gap-4">
                 <Box className="size-6 rounded-full border flex items-center justify-center bg-accent-green text-white">
-                  <CommonIcon.CheckRounded fontSize="small" />
+                  <CommonIcon.CheckRounded className="!text-[18px]" />
                 </Box>
                 <Typography fontSize={"15px"} fontWeight={500}>
                   Cập nhật thông tin công ty
                 </Typography>
               </Box>
-              <Box className="text-accent-green aspect-square size-8 flex items-center justify-center bg-neutrals-0 !rounded-full">
+              <Link
+                to={`${RouteBase.HRProfile}?type=1`}
+                className="text-accent-green aspect-square size-8 flex items-center justify-center bg-neutrals-0 !rounded-full"
+              >
                 <CommonIcon.EastRounded fontSize="small" />
-              </Box>
+              </Link>
             </Box>
           </Box>
         </Box>

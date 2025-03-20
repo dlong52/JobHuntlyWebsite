@@ -1,5 +1,5 @@
 const Subscription = require("../models/Subscription");
-
+const moment = require("moment");
 // Create a new subscription
 const createSubscription = async (subscriptionData) => {
   try {
@@ -22,25 +22,48 @@ const getAllSubscriptions = async (filters = {}, options = {}) => {
     const sort = { [sortBy]: order === "desc" ? -1 : 1 };
     const skip = (page - 1) * limit;
 
-    const subscriptions = await Subscription.find(filters)
-      .populate("employer_id")
-      .populate("package_id")
+    let query = { ...filters };
+
+    // Chỉ lọc subscription còn hạn và job_post_remaining > 0 nếu activeOnly = true
+    if (filters.activeOnly && JSON.parse(filters.activeOnly)) {
+      const now = new Date();
+      query.end_date = { $gt: now }; // Chắc chắn end_date là kiểu Date
+      query.job_post_remaining = { $gt: 0 };
+
+      console.log("Applying activeOnly filter:");
+      console.log("Current Date:", now);
+      console.log("Query before removing activeOnly:", JSON.stringify(query, null, 2));
+    }
+
+    // Xóa `activeOnly` khỏi query vì MongoDB không có cột này
+    delete query.activeOnly;
+
+    console.log("Final Query:", JSON.stringify(query, null, 2));
+
+    const subscriptions = await Subscription.find(query)
+      .populate("package_id") 
+      .populate({ path: "employer_id", select: "profile" }) // Chỉ lấy field profile
       .sort(sort)
       .skip(skip)
       .limit(parseInt(limit));
-    const total = await Subscription.countDocuments(filters);
+
+    const total = await Subscription.countDocuments(query);
+
     return { subscriptions, total, page, limit };
   } catch (error) {
+    console.error("Error fetching subscriptions:", error);
     throw new Error("Failed to fetch subscriptions");
   }
 };
+
+
 
 // Get a subscription by ID
 const getSubscriptionById = async (subscriptionId) => {
   try {
     return await Subscription.findById(subscriptionId)
-      .populate("employer_id")
-      .populate("package_id");
+      .populate("employer_id profile email")
+      .populate("package_id name");
   } catch (error) {
     throw new Error("Failed to fetch subscription");
   }

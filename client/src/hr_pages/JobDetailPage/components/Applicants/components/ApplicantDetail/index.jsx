@@ -9,7 +9,6 @@ import { Button, CommonAvatar, CommonIcon } from "../../../../../../ui";
 import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../../../../../constants/routeUrl";
-import PdfPreview from "../../../../../../ui/PdfPreview";
 import useConvertData from "../../../../../../hooks/useConvertData";
 import { cvtmp } from "../../../../../../assets/images";
 import TooltipMui from "../../../../../../ui/TooltipMui";
@@ -21,7 +20,7 @@ import { useSelector } from "react-redux";
 
 const ApplicantDetail = ({ id }) => {
   const user = useSelector((state) => state.user);
-  const { data, isLoading, refetch } = useGetApplicant(id, { enabled: !!id });
+  const { data, refetch } = useGetApplicant(id, { enabled: !!id });
   const { dataConvert: detailData } = useConvertData(data);
   const { showSuccess, showError } = useNotifications();
 
@@ -52,15 +51,19 @@ const ApplicantDetail = ({ id }) => {
         body: `${user?.company_name}, vừa xem CV của bạn`,
       });
       await SendEmailServices.cvViewed({
-        recruiterName: user?.company_name,
+        recruiterName: user?.username,
+        companyName: user?.company_name,
+        jobTitle: detailData?.job?.title,
+        applicantName: detailData?.candidate?.profile?.name,
         applicantEmail: detailData?.candidate?.email,
       });
       await ApplicantService.updateApplicant(payload);
-      refetch()
+      refetch();
     } catch (error) {
       showError(error);
     }
   };
+
   return (
     <Formik
       initialValues={{
@@ -111,14 +114,18 @@ const ApplicantDetail = ({ id }) => {
                   </Box>
                   <Box className="overflow-hidden relative border col-span-6 rounded-md">
                     <img
-                      src={cvtmp}
+                      src={detailData?.cv?.theme?.preview_image || cvtmp}
                       className="w-[300px] blur-[0.8px]"
                       alt=""
                     />
                     <TooltipMui content={"Xem CV ứng viên"}>
                       <Link
                         target="_blank"
-                        to={detailData?.cv_url}
+                        to={
+                          detailData?.cv_url
+                            ? detailData.cv_url
+                            : `/view-cv/${detailData?.cv?._id}`
+                        }
                         className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
                         onClick={() => {
                           handelUpdateViewState();

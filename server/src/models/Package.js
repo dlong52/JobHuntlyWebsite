@@ -1,7 +1,18 @@
 const mongoose = require("mongoose");
+const { PACKAGE_CODE } = require("../constants/enum");
 
 const packageSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
+  package_code: {
+    type: String,
+    required: true,
+    enum: [
+      PACKAGE_CODE.ECO,
+      PACKAGE_CODE.PRO,
+      PACKAGE_CODE.MAX,
+      PACKAGE_CODE.MAX_PLUS,
+    ],
+  }, 
   introduce: { type: String },
   discount: { type: Number },
   description: { type: String },

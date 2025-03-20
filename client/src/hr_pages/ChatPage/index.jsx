@@ -15,13 +15,16 @@ import io from "socket.io-client";
 import { Form, Formik } from "formik";
 import { FormikField, InputField } from "../../components/CustomFieldsFormik";
 import { useSelector } from "react-redux";
+import { useGetAllConversations } from "../../hooks/modules/conversation/useGetAllConversations";
+import { useConvertData } from "../../hooks";
 const socket = io("http://localhost:5000");
 const ChatPage = () => {
-  const user = useSelector((state)=>state.user);
+  const user = useSelector((state) => state.user);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const conversationId = "12345"; // Replace with actual conversation ID
-
+  const { data: cvsData } = useGetAllConversations(user?.user_id);
+  const { dataConvert: conversations } = useConvertData(data);
   useEffect(() => {
     socket.emit("joinConversation", { conversationId });
     socket.on("receiveMessage", ({ conversationId: convId, message }) => {
@@ -170,8 +173,8 @@ const ChatPage = () => {
             onSubmit={(values, { resetForm }) => {
               if (values.textMessage) {
                 console.log(values.textMessage.trim());
-                
-                const newMessage = { 
+
+                const newMessage = {
                   conversationId,
                   senderId: user?.user_id, // Replace with actual sender ID
                   content: values.textMessage,

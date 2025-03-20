@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema({
   profile: {
     name: {
       type: String,
+      require: true,
     },
     phone_number: {
       type: String,

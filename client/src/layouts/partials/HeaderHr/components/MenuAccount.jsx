@@ -11,7 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteBase } from "../../../../constants/routeUrl";
 import { useAuthentication } from "../../../../providers/AuthenticationProvider";
 
-const MenuAccount = ({ user }) => {
+const MenuAccount = ({ user, onClose }) => {
   const { logout } = useAuthentication();
   const navigate = useNavigate();
   return (
@@ -50,36 +50,40 @@ const MenuAccount = ({ user }) => {
         <MenuItem
           onClick={() => {
             navigate(RouteBase.HRProfile);
+            onClose();
           }}
         >
           <CommonIcon.EditOutlined className="text-primary" />
           <span className="text-[14px] font-medium">Cài đặt tài khoản</span>
         </MenuItem>
         <MenuItem
-        onClick={() => {
-          navigate(`${RouteBase.HRProfile}?type=1`);
-        }}
+          onClick={() => {
+            navigate(`${RouteBase.HRProfile}?type=1`);
+            onClose();
+          }}
         >
           <CommonIcon.VisibilityOutlined className="text-primary" />
-          <span className="text-[14px] font-medium">
-            Hồ sơ doanh nghiệp
-          </span>
+          <span className="text-[14px] font-medium">Hồ sơ doanh nghiệp</span>
         </MenuItem>
-        <MenuItem onClick={() => {
-          navigate(`${RouteBase.HRProfile}?type=2`);
-        }}>
+        <MenuItem
+          onClick={() => {
+            navigate(`${RouteBase.HRProfile}?type=2`);
+            onClose();
+          }}
+        >
           <CommonIcon.KeyOutlined className="text-primary" />
-          <Link to={"/"} className="text-[14px] font-medium">
-            Đổi mật khẩu
-          </Link>
+          <span className="text-[14px] font-medium">Đổi mật khẩu</span>
         </MenuItem>
         <MenuItem
           onClick={() => {
             logout(user?.user_id);
+            onClose();
           }}
         >
           <CommonIcon.LogoutOutlined className="text-primary" />
-          <span className="text-[14px] font-medium">Đăng xuất</span>
+          <span className="text-[14px] font-medium text-accent-red">
+            Đăng xuất
+          </span>
         </MenuItem>
       </MenuList>
     </Box>

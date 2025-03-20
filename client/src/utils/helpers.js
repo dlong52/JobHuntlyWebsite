@@ -14,19 +14,39 @@ const helpers = {
     return true;
   },
   exportToExcel: (data, fileName = "data.xlsx") => {
+    if (!data || data.length === 0) {
+      console.error("Không có dữ liệu để xuất!");
+      return;
+    }
+  
+    // 1. Chuyển dữ liệu JSON thành sheet
     const worksheet = XLSX.utils.json_to_sheet(data);
-
+  
+    // 2. Thêm style cho header (in đậm + tô màu)
+    const headerStyle = {
+      font: { bold: true, color: { rgb: "FFFFFF" } },
+      fill: { fgColor: { rgb: "0074D9" } }, // Màu xanh dương
+      alignment: { horizontal: "center" }
+    };
+  
+    const range = XLSX.utils.decode_range(worksheet["!ref"]);
+    for (let C = range.s.c; C <= range.e.c; C++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
+      if (worksheet[cellAddress]) {
+        worksheet[cellAddress].s = headerStyle;
+      }
+    }
+  
+    // 3. Tự động căn chỉnh cột
+    worksheet["!cols"] = Object.keys(data[0]).map(() => ({ wch: 20 }));
+  
+    // 4. Tạo workbook và ghi file
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-    const fileData = new Blob([excelBuffer], {
-      type: "application/octet-stream",
-    });
-
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const fileData = new Blob([excelBuffer], { type: "application/octet-stream" });
+  
     saveAs(fileData, fileName);
   },
   convertSalary: (min, max) => {
@@ -42,7 +62,6 @@ const helpers = {
     if (!min && !!max) return max;
     if (!!min && !max) return `${min}+`;
     if (min === max) return min;
-
     return `${min} - ${max}`;
   },
   convertEpmT: (epmT) => {

@@ -1,6 +1,6 @@
 import { Box, Container, Skeleton } from "@mui/material";
 import * as Yup from "yup";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import FormikField from "../../components/CustomFieldsFormik/FormikField";
 import InputField from "../../components/CustomFieldsFormik/InputField";
 import { Form, Formik } from "formik";
@@ -15,7 +15,6 @@ import CreateCvForm from "./components/CreateCvForm";
 import { useSelector } from "react-redux";
 import { useNotifications } from "../../utils/notifications";
 import { CVService } from "../../services/CvServices";
-import { usePDF } from "react-to-pdf";
 import helpers from "../../utils/helpers";
 import { RouteBase } from "../../constants/routeUrl";
 const CreateCVPage = () => {
@@ -94,7 +93,11 @@ const CreateCVPage = () => {
       showError(error);
     }
   };
-
+  useEffect(() => {
+    if (!user?.is_verified) {
+      navigate(RouteBase.VerifyAccount);
+    }
+  }, [user?.is_verified]);
   return (
     <Box>
       <Box className="flex flex-col gap-5">

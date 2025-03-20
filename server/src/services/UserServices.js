@@ -2,42 +2,87 @@ const User = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
+const Company = require("../models/Company");
+const { default: mongoose } = require("mongoose");
 dotenv.config();
 
-const createUser = async (data) => {
-  const {
-    email,
-    password,
-    account_type = "default",
-    role,
-    company,
-    profile,
-  } = data;
+const createUser = async (userData) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const {
+      email,
+      password,
+      role,
+      account_type,
+      companyName,
+      staff_quantity,
+      website,
+      categories,
+      address,
+      description,
+      created_by,
+    } = userData;
 
-  // Kiểm tra email đã tồn tại chưa
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    throw new Error("Email already exists");
+    // Kiểm tra email trước khi làm bất cứ điều gì
+    const existingUser = await User.findOne({ email }).session(session);
+    if (existingUser) {
+      throw new Error("Email đã tồn tại");
+    }
+
+    let hashedPassword = await bcrypt.hash(password, 10);
+    let companyId = null;
+
+    if (companyName) {
+      // Kiểm tra xem công ty đã tồn tại chưa
+      const existingCompany = await Company.findOne({
+        name: companyName,
+      }).session(session);
+      if (existingCompany) {
+        throw new Error("Tên công ty đã tồn tại");
+      }
+
+      const newCompany = new Company({
+        name: companyName,
+        staff_quantity,
+        website,
+        categories,
+        address,
+        description,
+        created_by,
+      });
+
+      const savedCompany = await newCompany.save({ session }); // Lưu trong transaction
+      companyId = savedCompany._id;
+    }
+
+    const payload = {
+      email,
+      password: hashedPassword,
+      role,
+      account_type,
+    };
+
+    if (companyId) {
+      payload.company = companyId;
+    }
+
+    const newUser = new User(payload);
+    await newUser.save({ session }); // Lưu trong transaction
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return {
+      status: "success",
+      message: "User created successfully",
+      data: newUser._id,
+    };
+  } catch (error) {
+    await session.abortTransaction(); // Rollback nếu có lỗi
+    session.endSession();
+    throw error;
   }
-
-  // Nếu tài khoản mặc định -> Hash password
-  let hashedPassword = undefined;
-  if (account_type === "default" && password) {
-    hashedPassword = await bcrypt.hashSync(password, 10);
-  }
-
-  // Tạo user mới
-  const user = await User.create({
-    email,
-    password: hashedPassword,
-    account_type,
-    firebaseUid,
-    role,
-    company,
-    profile,
-  });
-
-  return user;
 };
 
 const getUserById = async (id) => {
@@ -103,8 +148,8 @@ const getAllUsers = async (filters = {}, options = {}) => {
   // Tạo điều kiện tìm kiếm nếu searchName được cung cấp
   if (searchName) {
     restFilters.$or = [
-      { 'profile.name': { $regex: searchName, $options: 'i' } }, // Tìm kiếm theo name (không phân biệt hoa thường)
-      { email: { $regex: searchName, $options: 'i' } }, // Tìm kiếm theo email (không phân biệt hoa thường)
+      { "profile.name": { $regex: searchName, $options: "i" } }, // Tìm kiếm theo name (không phân biệt hoa thường)
+      { email: { $regex: searchName, $options: "i" } }, // Tìm kiếm theo email (không phân biệt hoa thường)
     ];
   }
 

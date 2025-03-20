@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Button, CommonIcon } from "../../ui";
-import { Box, Breadcrumbs, IconButton, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { CommonIcon } from "../../ui";
+import { Box, IconButton, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import useToggleDialog from "../../hooks/useToggleDialog";
@@ -18,6 +18,7 @@ import helpers from "../../utils/helpers";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
 import ChipMui from "../../ui/Chip";
 import TooltipMui from "../../ui/TooltipMui";
+import NotVerify from "./components/NotVerify";
 
 const PostJobPage = () => {
   const user = useSelector((state) => state.user);
@@ -30,13 +31,14 @@ const PostJobPage = () => {
     toggle: toggleDelete,
   } = useToggleDialog();
   const navigate = useNavigate();
-  const { showSuccess, showError } = useNotifications();
+  const { showSuccess, showError, showInfo } = useNotifications();
   const { isLoading, mutateAsync: deletePost } = useDeletePost();
   const { filters, handleChangePage, setFilters } = useFilters({
     page: 1,
     limit: 10,
-    sort: "desc",
+    order: "desc",
     posted_by: user?.user_id,
+    sortBy: "status"
   });
   const { data, refetch, isLoading: loadingPost } = useGetAllPosts(filters);
   const handleSetId = (id) => {
@@ -131,9 +133,26 @@ const PostJobPage = () => {
   ];
   const toolbarActions = [
     {
-      label: <TooltipMui content={"Đăng tin tuyển dụng mới"}><CommonIcon.PostAdd /></TooltipMui>,
+      label: (
+        <TooltipMui content={"Đăng tin tuyển dụng mới"}>
+          <CommonIcon.PostAdd />
+        </TooltipMui>
+      ),
       className: "!bg-primary !shadow-none",
-      onClick: toggle,
+      onClick: () => {
+        if (!user.is_verified) {
+          showInfo(
+            "Bạn cần hoàn thành các bước xác thực để bắt đầu đăng bài.",
+            "Vui lòng xác thực",
+            {
+              vertical: "top",
+              horizontal: "center",
+            }
+          );
+          return;
+        }
+        toggle();
+      },
     },
   ];
   useEffect(() => {
@@ -161,6 +180,7 @@ const PostJobPage = () => {
   return (
     <Box className="flex flex-col gap-y-5">
       <BreadcrumbMui breadcrumbs={breadcrumbs} title={"Tuyển dụng"} />
+      <NotVerify user={user} />
       <Box className="bg-white rounded-md">
         <CustomTable
           columns={columns}
@@ -170,7 +190,7 @@ const PostJobPage = () => {
           rowsPerPage={filters.limit || 20}
           onPageChange={handleChangePage}
           loading={loadingPost}
-          toolbarTitle="Danh sách tin tuyển dụng"
+          toolbarTitle="Tin tuyển dụng"
           toolbarActions={toolbarActions}
         />
       </Box>

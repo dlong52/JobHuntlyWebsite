@@ -18,6 +18,8 @@ import {
   companyCoverDefault,
   companyLogoDefault,
 } from "../../assets/images";
+import CompanyLoadingSkeleton from "../../ui/CompanyLoadingSkeleton";
+import helpers from "../../utils/helpers";
 
 const CompanyDetailPage = () => {
   const { id } = useParams();
@@ -66,153 +68,186 @@ const CompanyDetailPage = () => {
   };
 
   return (
-    <Container className="py-5">
-      <Box className="rounded-md overflow-hidden relative">
-        <img
-          src={detailData?.cover ? detailData.cover : companyCoverDefault}
-          alt=""
-          className="w-full h-[225px] object-cover object-center"
-        />
-        <Box className="relative">
-          <img
-            src={detailData?.logo ? detailData?.logo : companyLogoDefault}
-            alt=""
-            className="size-[180px] rounded-full absolute  object-cover -top-[90px] left-5"
-          />
-        </Box>
-        <Box className="bg-gradient-to-r from-primary-dark to-primary flex pl-[250px] pr-10 py-10">
-          <Box className="">
-            <Typography
-              className="text-white"
-              fontSize={"24px"}
-              fontWeight={500}
-            >
-              {detailData?.name}
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-      <Box className="grid grid-cols-12 mt-5 gap-5">
-        <Box className="col-span-8 flex flex-col gap-5">
-          <Box className="rounded-md overflow-hidden shadow">
-            <Box className="bg-gradient-to-r from-primary-dark to-primary px-6 py-2">
-              <Typography fontSize={"20px"} fontWeight={500} color="white">
-                Giới thiệu công ty
-              </Typography>
+    <>
+      {isLoading ? (
+        <CompanyLoadingSkeleton />
+      ) : (
+        <Container className="py-5">
+          <Box className="rounded-md overflow-hidden relative">
+            <img
+              src={detailData?.cover ? detailData.cover : companyCoverDefault}
+              alt=""
+              className="w-full h-[225px] object-cover object-center"
+            />
+            <Box className="relative">
+              <img
+                src={detailData?.logo ? detailData?.logo : companyLogoDefault}
+                alt=""
+                className="size-[180px] rounded-full absolute  object-cover -top-[90px] left-5"
+              />
             </Box>
-            {detailData?.introduce ? (
-              <Box className="p-5">
-                <HtmlContent string={detailData?.introduce} />
-              </Box>
-            ) : (
-              <MascotEmpty message={"Chưa có thông tin công ty"} />
-            )}
-          </Box>
-          <Box className="rounded-md overflow-hidden shadow">
-            <Box className="bg-gradient-to-r from-primary-dark to-primary px-6 py-2">
-              <Typography fontSize={"20px"} fontWeight={500} color="white">
-                Tuyển dụng
-              </Typography>
-            </Box>
-            {!!jobData?.length ? (
-              <div className="p-5 flex flex-col gap-6">
-                {jobData?.map((job) => (
-                  <JobListItem
-                    key={job._id}
-                    id={job._id}
-                    title={job?.title}
-                    salary={job?.salary}
-                    company={job?.company}
-                    logo={job?.company?.logo}
-                    employment_type={job?.employment_type}
-                    end_date={job?.end_date}
-                  />
-                ))}
-              </div>
-            ) : (
-              <Box>
-                <MascotEmpty message={"Chưa có việc làm nào"} />
-              </Box>
-            )}
-            {!!jobData?.length && (
-              <div className="flex justify-center">
-                <PaginationMui
-                  handleChangePage={handleChangePage}
-                  page={filters.page}
-                  totalPages={postData?.data?.pagination.totalPages}
-                />
-              </div>
-            )}
-          </Box>
-        </Box>
-        <Box className="col-span-4 flex flex-col gap-5">
-          <Box className="rounded-md overflow-hidden shadow">
-            <Box className="bg-gradient-to-r from-primary-dark to-primary px-6 py-2">
-              <Typography fontSize={"20px"} fontWeight={500} color="white">
-                Thông tin liên hệ
-              </Typography>
-            </Box>
-            <div className="p-4">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center">
-                  <CommonIcon.LocationOn />
-                  <Typography fontWeight={500}>Địa chỉ công ty</Typography>
-                </div>
-                <Address
-                  className={"text-gray-600 !text-sm"}
-                  address={detailData?.address}
-                />
-              </div>
-            </div>
-          </Box>
-          <Box className="rounded-md overflow-hidden shadow">
-            <Box className="bg-gradient-to-r from-primary-dark to-primary px-6 py-2">
-              <Typography fontSize={"20px"} fontWeight={500} color="white">
-                Chia sẻ công ty tới bạn bè
-              </Typography>
-            </Box>
-            <div className="p-5 flex flex-col gap-5">
-              <div className="overflow-hidden flex items-center gap-2 flex-nowrap border rounded px-3 py-2">
-                <Typography className="flex-1 truncate">
-                  {currentUrl}
-                </Typography>
-                <Button
-                  onClick={handleCopy}
-                  className="!bg-primary-light !text-primary"
+            <Box className="bg-gradient-to-r from-primary-dark to-primary flex pl-[250px] pr-10 py-10">
+              <Box className="">
+                <Typography
+                  className="text-white"
+                  fontSize={"24px"}
+                  fontWeight={500}
                 >
-                  <CommonIcon.ContentCopy fontSize="small" />
-                </Button>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Typography fontWeight={500}>
-                  Chia sẻ qua mạng xã hội
+                  {detailData?.name}
                 </Typography>
-                <div className="flex gap-2">
-                  <Box
-                    className="size-[48px] flex items-center justify-center rounded-full border cursor-pointer"
-                    onClick={() => shareToSocial("facebook")}
-                  >
-                    <CommonIcon.Facebook />
-                  </Box>
-                  <Box
-                    className="size-[48px] flex items-center justify-center rounded-full border cursor-pointer"
-                    onClick={() => shareToSocial("twitter")}
-                  >
-                    <CommonIcon.Twitter />
-                  </Box>
-                  <Box
-                    className="size-[48px] flex items-center justify-center rounded-full border cursor-pointer"
-                    onClick={() => shareToSocial("linkedin")}
-                  >
-                    <CommonIcon.LinkedIn />
-                  </Box>
+                <div className="flex items-center gap-10 text-white text-sm mt-5">
+                  <div className="flex items-center gap-2 ">
+                    <CommonIcon.LanguageTwoTone className="!text-[18px]" />
+                    <Typography fontSize={"14px"}>
+                      {detailData?.website || "Chưa cập nhật"}
+                    </Typography>
+                  </div>
+                  <div className="flex items-center gap-2 ">
+                    <CommonIcon.GroupsTwoTone className="!text-[18px]" />
+                    <Typography fontSize={"14px"}>
+                      {helpers.convertStaffQuantity(
+                        detailData?.staff_quantity?.min,
+                        detailData?.staff_quantity?.max
+                      ) || ""}{" "}
+                      {!!helpers.convertStaffQuantity(
+                        detailData?.staff_quantity?.min,
+                        detailData?.staff_quantity?.max
+                      ) && "nhân viên"}
+                    </Typography>
+                  </div>
+                  <div className="flex items-center gap-2 ">
+                    <CommonIcon.PhoneInTalkTwoTone className="!text-[18px]" />
+                    <Typography fontSize={"14px"}>
+                      {detailData?.phone || "Chưa cập nhật"}
+                    </Typography>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </Box>
+            </Box>
           </Box>
-        </Box>
-      </Box>
-    </Container>
+          <Box className="grid grid-cols-12 mt-5 gap-5">
+            <Box className="col-span-8 flex flex-col gap-5">
+              <Box className="rounded-md overflow-hidden shadow">
+                <Box className="bg-gradient-to-r from-primary-dark to-primary px-6 py-2">
+                  <Typography fontSize={"20px"} fontWeight={500} color="white">
+                    Giới thiệu công ty
+                  </Typography>
+                </Box>
+                {detailData?.introduce ? (
+                  <Box className="p-5">
+                    <HtmlContent string={detailData?.introduce} />
+                  </Box>
+                ) : (
+                  <MascotEmpty message={"Chưa có thông tin công ty"} />
+                )}
+              </Box>
+              <Box className="rounded-md overflow-hidden shadow">
+                <Box className="bg-gradient-to-r from-primary-dark to-primary px-6 py-2">
+                  <Typography fontSize={"20px"} fontWeight={500} color="white">
+                    Tuyển dụng
+                  </Typography>
+                </Box>
+                {!!jobData?.length ? (
+                  <div className="p-5 flex flex-col gap-6">
+                    {jobData?.map((job) => (
+                      <JobListItem
+                        key={job._id}
+                        id={job._id}
+                        title={job?.title}
+                        salary={job?.salary}
+                        company={job?.company}
+                        logo={job?.company?.logo}
+                        employment_type={job?.employment_type}
+                        end_date={job?.end_date}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <Box>
+                    <MascotEmpty message={"Chưa có việc làm nào"} />
+                  </Box>
+                )}
+                {!!jobData?.length && (
+                  <div className="flex justify-center">
+                    <PaginationMui
+                      handleChangePage={handleChangePage}
+                      page={filters.page}
+                      totalPages={postData?.data?.pagination.totalPages}
+                    />
+                  </div>
+                )}
+              </Box>
+            </Box>
+            <Box className="col-span-4 flex flex-col gap-5">
+              <Box className="rounded-md overflow-hidden shadow">
+                <Box className="bg-gradient-to-r from-primary-dark to-primary px-6 py-2">
+                  <Typography fontSize={"20px"} fontWeight={500} color="white">
+                    Thông tin liên hệ
+                  </Typography>
+                </Box>
+                <div className="p-4">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center">
+                      <CommonIcon.LocationOn />
+                      <Typography fontWeight={500}>Địa chỉ công ty</Typography>
+                    </div>
+                    <Address
+                      className={"text-gray-600 !text-sm"}
+                      address={detailData?.address}
+                    />
+                  </div>
+                </div>
+              </Box>
+              <Box className="rounded-md overflow-hidden shadow">
+                <Box className="bg-gradient-to-r from-primary-dark to-primary px-6 py-2">
+                  <Typography fontSize={"20px"} fontWeight={500} color="white">
+                    Chia sẻ công ty tới bạn bè
+                  </Typography>
+                </Box>
+                <div className="p-5 flex flex-col gap-5">
+                  <div className="overflow-hidden flex items-center gap-2 flex-nowrap border rounded px-3 py-2">
+                    <Typography className="flex-1 truncate">
+                      {currentUrl}
+                    </Typography>
+                    <Button
+                      onClick={handleCopy}
+                      className="!bg-primary-light !text-primary"
+                    >
+                      <CommonIcon.ContentCopy fontSize="small" />
+                    </Button>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Typography fontWeight={500}>
+                      Chia sẻ qua mạng xã hội
+                    </Typography>
+                    <div className="flex gap-2">
+                      <Box
+                        className="size-[48px] flex items-center justify-center rounded-full border cursor-pointer"
+                        onClick={() => shareToSocial("facebook")}
+                      >
+                        <CommonIcon.Facebook />
+                      </Box>
+                      <Box
+                        className="size-[48px] flex items-center justify-center rounded-full border cursor-pointer"
+                        onClick={() => shareToSocial("twitter")}
+                      >
+                        <CommonIcon.Twitter />
+                      </Box>
+                      <Box
+                        className="size-[48px] flex items-center justify-center rounded-full border cursor-pointer"
+                        onClick={() => shareToSocial("linkedin")}
+                      >
+                        <CommonIcon.LinkedIn />
+                      </Box>
+                    </div>
+                  </div>
+                </div>
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+      )}
+    </>
   );
 };
 

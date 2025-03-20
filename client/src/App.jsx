@@ -15,9 +15,12 @@ import { useNotifications } from "./utils/notifications";
 import { useLoadingUser } from "./providers/LoadingUserProvider";
 import { ROLE } from "./constants/enum";
 import CrispChat from "./components/CrispChat";
+import VerifyButton from "./components/VerifyButton";
+import { useNotification } from "./providers/NotificationProvider";
 
 function App() {
   const { setIsLoading } = useLoadingUser();
+  const { refetch } = useNotification();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { showInfo } = useNotifications();
@@ -37,6 +40,7 @@ function App() {
   useEffect(() => {
     const messageListener = async (payload) => {
       showInfo(payload.notification.body, payload.notification.title);
+      refetch();
     };
     onMessageListener(messageListener);
     return () => {

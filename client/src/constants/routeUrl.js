@@ -22,10 +22,12 @@ export const RouteBase = {
   VerifyResult: "/verify-result",
   MyCv: "/my-cv",
   ResetPassword: "/reset-password",
+  ViewCv: "/view-cv/:id",
 
   // HR
   HROverview: "/hr",
   HRJobs: "/hr/jobs",
+  HRJobAction: "/hr/jobs/action",
   HRApplicants: "/hr/applicants",
   HRProfile: "/hr/profile",
   HRChat: "/hr/chat",
@@ -36,6 +38,7 @@ export const RouteBase = {
   HRRecruitmentReport: "/hr/recruitment-report",
   HRMyCompany: "/hr/my-company",
   HRVerify: "/hr/verify",
+  HRVerifyPhone: "/hr/verify-phone",
   HRCvManagement: "/hr/cv-management",
 
   // ADMIN

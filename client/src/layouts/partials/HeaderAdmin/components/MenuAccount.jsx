@@ -11,7 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteBase } from "../../../../constants/routeUrl";
 import { useAuthentication } from "../../../../providers/AuthenticationProvider";
 
-const MenuAccount = ({ user }) => {
+const MenuAccount = ({ user, onClose }) => {
   const { logout } = useAuthentication();
   const navigate = useNavigate();
   return (
@@ -50,24 +50,32 @@ const MenuAccount = ({ user }) => {
         <MenuItem
           onClick={() => {
             navigate(RouteBase.AdminProfile);
+            onClose();
           }}
         >
           <CommonIcon.EditOutlined className="text-primary" />
           <span className="text-[14px] font-medium">Cài đặt tài khoản</span>
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            onClose();
+          }}
+        >
           <CommonIcon.KeyOutlined className="text-primary" />
-          <Link to={"/"} className="text-[14px] font-medium">
+          <span className="text-[14px] font-medium">
             Đổi mật khẩu
-          </Link>
+          </span>
         </MenuItem>
         <MenuItem
           onClick={() => {
             logout(user?.user_id);
+            onClose()
           }}
         >
           <CommonIcon.LogoutOutlined className="text-primary" />
-          <span className="text-[14px] font-medium">Đăng xuất</span>
+          <span className="text-[14px] font-medium text-accent-red">
+            Đăng xuất
+          </span>
         </MenuItem>
       </MenuList>
     </Box>

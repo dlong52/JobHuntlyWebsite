@@ -12,18 +12,19 @@ import { useNotifications } from "../../../../utils/notifications";
 import { PackageService } from "../../../../services/PackageServices";
 import { useGetPackage } from "../../../../hooks/modules/package/useGetPackage";
 import { CommonIcon, CommonStyles } from "../../../../ui";
+import UploadImg from "./components/UploadImg";
 
 const CreateEditPackage = ({ id, toggle, refetch }) => {
   const { showSuccess, showError } = useNotifications();
   const { data, isLoading } = useGetPackage(id, { enabled: !!id });
   const handleSubmit = async (values) => {
-    console.log(values?.features);
-
     const payload = {
       ...(id && { id }),
       name: values?.name,
+      package_code: values?.package_code,
       introduce: values?.introduce,
       discount: values?.discount,
+      image_description: values?.image_description,
       description: values?.description,
       price: values?.price,
       job_post_limit: values?.job_post_limit,
@@ -51,6 +52,8 @@ const CreateEditPackage = ({ id, toggle, refetch }) => {
       const detailData = data?.data?.data;
       return {
         name: detailData?.name,
+        package_code: detailData?.package_code,
+        image_description: detailData?.image_description,
         introduce: detailData?.introduce,
         discount: detailData?.discount,
         description: detailData?.description,
@@ -59,9 +62,7 @@ const CreateEditPackage = ({ id, toggle, refetch }) => {
         duration_in_days: detailData?.duration_in_days,
         is_featured: detailData?.is_featured,
         active: detailData?.active,
-        features: !!detailData?.features?.length
-          ? detailData?.features
-          : ["vsdv"],
+        features: !!detailData?.features?.length ? detailData?.features : [""],
       };
     }
   }, [data]);
@@ -92,6 +93,22 @@ const CreateEditPackage = ({ id, toggle, refetch }) => {
                     classNameContainer="col-span-6"
                     className="bg-[#f8fafc]"
                     required
+                    disabled={!!id}
+                    classNameLabel="font-medium text-neutrals-100"
+                    name="package_code"
+                    component={InputField}
+                    labelTop="Mã dịch vụ"
+                    placeholder="Nhập mã dịch vụ"
+                  />
+                  <FormikField
+                    classNameContainer="col-span-12"
+                    name="image_description"
+                    component={UploadImg}
+                  />
+                  <FormikField
+                    classNameContainer="col-span-12"
+                    className="bg-[#f8fafc]"
+                    required
                     classNameLabel="font-medium text-neutrals-100"
                     name="introduce"
                     component={InputField}
@@ -101,6 +118,7 @@ const CreateEditPackage = ({ id, toggle, refetch }) => {
                   <FormikField
                     classNameContainer="col-span-12"
                     name="description"
+                    className="bg-[#f8fafc]"
                     component={CkEditerField}
                     label="Mô tả chi tiết gói dịch vụ"
                     classNameLabel="font-medium text-neutrals-100"

@@ -4,7 +4,7 @@ const companySchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   website: { type: String },
   logo: { type: String },
-  cover: { type: String },
+  cover: { type: String }, 
   description: { type: String },
   active: { type: Boolean, default: true },
   introduce: { type: String },

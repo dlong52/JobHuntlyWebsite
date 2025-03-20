@@ -12,7 +12,7 @@ const CVModel3 = forwardRef(({ values, show = true, isMock = false }, ref) => {
   });
   return (
     <div ref={ref} className={`${show ? "" : "absolute left-[-99999999px]"}`}>
-      <div className="w-[794px] grid grid-cols-12 text-cv-3 gap-5 p-5 shadow">
+      <div className="w-[794px] bg-white min-h-[1122.5px] grid grid-cols-12 text-cv-3 gap-5 p-5 shadow">
         <div className="col-span-4">
           {/* Avatar */}
           {values?.profile?.avatar ? (

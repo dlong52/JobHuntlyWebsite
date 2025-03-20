@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
@@ -14,13 +14,26 @@ import RevenueChart from "./components/RevenueChart";
 import { useGetAllPaymentSummary } from "../../hooks/modules/payment/useGetAllPaymentSummary";
 import RevenueByPackageChart from "./components/RevenueByPackageChart";
 import BarChartSkeleton from "../../ui/BarChartSkeleton";
+import { useGetAllSubscriptions } from "../../hooks/modules/subscription/useGetAllSubscriptions";
+import { sortBy } from "lodash";
+import TableMui from "../../ui/TableMui";
+import moment from "moment";
 
 const RevenueManagementPage = () => {
   const { filters } = useFilters({
     page: 1,
     limit: 10,
-    // sort: "desc",
+    order: "desc",
   });
+  const { filters: filtersSubscription } = useFilters({
+    page: 1,
+    limit: 5,
+    // sort: "desc",
+    // sortBy: "created_at",
+  });
+  const { data: dataSubscription, isLoading: loadingSubscription } =
+    useGetAllSubscriptions(filtersSubscription);
+  const { dataConvert: subscriptions } = useConvertData(dataSubscription);
   const { data, isLoading } = useGetAllPayments(filters);
   const { data: dataSummary } = useGetAllPaymentSummary();
   const { dataConvert } = useConvertData(data);
@@ -45,10 +58,10 @@ const RevenueManagementPage = () => {
         return (
           <Box>
             <Typography className="text-neutrals-100">
-              {value?.profile?.name}
+              {value?.user_id?.profile?.name}
             </Typography>
             <Typography fontSize={"14px"} className="text-neutrals-60">
-              {value?.company?.name}
+              {value?.user_id?.company?.name}
             </Typography>
           </Box>
         );
@@ -60,7 +73,9 @@ const RevenueManagementPage = () => {
       classNameHeader: "!text-neutrals-60 !text-sm !py-3 !font-normal",
       renderCell: (value) => {
         return (
-          <Typography>{Number(value).toLocaleString("vi-vn")}đ</Typography>
+          <Typography>
+            {Number(value?.amount).toLocaleString("vi-vn")}đ
+          </Typography>
         );
       },
     },
@@ -69,27 +84,19 @@ const RevenueManagementPage = () => {
       headerName: "Gói dịch vụ",
       classNameHeader: "!text-neutrals-60 !text-sm !py-3 !font-normal",
       renderCell: (value) => {
-        return <Typography>{value?.package_id?.name}</Typography>;
-      },
-    },
-    {
-      field: "subscription_id",
-      headerName: "Giá dịch vụ",
-      classNameHeader: "!text-neutrals-60 !text-sm !py-3 !font-normal",
-      renderCell: (value) => {
         return (
-          <Typography>
-            {Number(value?.package_id?.price).toLocaleString("vi-vn")}đ
-          </Typography>
+          <Typography>{value?.subscription_id?.package_id?.name}</Typography>
         );
       },
     },
+
     {
       field: "_id",
       headerName: "In hóa đơn",
       classNameHeader: "!text-neutrals-60 !text-sm !py-3 !font-normal",
       renderCell: (value) => {
         return (
+          // Download invoice button
           <IconButton>
             <CommonIcon.FileDownloadOutlined className="!text-primary" />
           </IconButton>
@@ -97,6 +104,23 @@ const RevenueManagementPage = () => {
       },
     },
   ];
+  const excelData = useMemo(() => {
+    if (dataConvert) {
+      return dataConvert?.map((item) => {
+        return {
+          ID: item?._id,
+          "Tên khách hàng": item?.user_id?.profile?.name,
+          "Email": item?.user_id?.email,
+          "Công ty": item?.user_id?.company?.name,
+          "Dịch vụ đã mua": item?.subscription_id?.package_id?.name,
+          "Số tiền đã trả": Number(item?.amount).toLocaleString("vi-vn"),
+          "Phương thức thanh toán": item?.payment_method,
+          "Ngày thanh toán": moment(item?.created_at).format("HH:mm DD/MM/YYYY"),
+          "Mã giao dịch": item?.transaction_id
+        };
+      });
+    }
+  }, [dataConvert]);
   const toolbarActionLevel = [
     {
       label: (
@@ -108,7 +132,7 @@ const RevenueManagementPage = () => {
       ),
       className: "!bg-transparent !shadow-none !normal-case !p-0",
       onClick: () => {
-        helpers.exportToExcel(dataConvert, "Invoice.xlsx");
+        helpers.exportToExcel(excelData, "Invoice.xlsx");
       },
     },
   ];
@@ -124,7 +148,7 @@ const RevenueManagementPage = () => {
           <RevenueByPackageChart />
         </Box>
         <Box className="col-span-8 px-4 bg-white rounded-md">
-          <CustomTable
+          <TableMui
             classNameTitle="!text-base !font-medium"
             columns={columns}
             rows={dataConvert || []}
@@ -142,6 +166,19 @@ const RevenueManagementPage = () => {
           >
             Đăng kí gần đây
           </Typography>
+          <Box className="flex flex-col gap-3 mt-5">
+            {subscriptions?.map((item) => {
+              return (
+                <Box
+                  key={item?._id}
+                  className="flex items-center justify-between py-4 border-b"
+                >
+                  <Typography>{item?.employer_id?.profile?.name}</Typography>
+                  <Typography>{item?.package_id?.name}</Typography>
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
       </Box>
     </div>

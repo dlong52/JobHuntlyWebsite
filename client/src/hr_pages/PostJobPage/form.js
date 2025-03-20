@@ -5,15 +5,24 @@ export const validationSchema = Yup.object().shape({
   job_benefit: Yup.string().required("Quyền lợi là bắt buộc"),
   requirements: Yup.string().required("Yêu cầu công việc là bắt buộc"),
   work_time: Yup.string().required("Thời gian làm việc là bắt buộc"),
-  // minSalary: Yup.number().typeError("Lương tối thiểu phải là số"),
-  // maxSalary: Yup.number()
-  //   .typeError("Lương tối đa phải là số")
-  //   .min(Yup.ref("minSalary"), "Lương tối đa phải lớn hơn lương tối thiểu"),
+  end_date: Yup.string().required("Ngày hết hạn là bắt buộc"),
+  quantity: Yup.number()
+    .required("Số lượng tuyển là bắt buộc")
+    .moreThan(0, "Số lượng tuyển phải lớn hơn 0")
+    .integer("Số lượng tuyển phải là số nguyên"),
+
+  minSalary: Yup.number().typeError("Lương tối thiểu phải là số"),
+  maxSalary: Yup.number()
+    .typeError("Lương tối đa phải là số")
+    .min(Yup.ref("minSalary"), "Lương tối đa phải lớn hơn lương tối thiểu"),
   employment_type: Yup.object({
     value: Yup.string().required("Hình thức làm việc là bắt buộc"),
   }),
   categories: Yup.object({
     value: Yup.string().nullable().required("Danh mục công việc là bắt buộc"),
+  }),
+  level: Yup.object({
+    value: Yup.string().nullable().required("Cấp bậc là bắt buộc"),
   }),
   province: Yup.object({
     value: Yup.string().required("Tỉnh/Thành phố là bắt buộc"),

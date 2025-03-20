@@ -42,6 +42,40 @@ const getNotifications = async (userId, filters = {}, options = {}) => {
   }
 };
 
+const getAllNotifications = async (filters = {}, options = {}) => {
+  const {
+    page = 1,
+    limit = 10,
+    sortBy = "created_at",
+    order = "desc",
+  } = options;
+
+  // Đảm bảo chỉ lấy field hợp lệ
+  const query = { ...filters };
+  if (query.type) query.type = { $regex: new RegExp(`^${query.type}$`, "i") };
+
+  const sort = { [sortBy]: order === "desc" ? -1 : 1 };
+  const skip = (page - 1) * limit;
+  console.log(query);
+
+  try {
+    const notifications = await Notification.find(query)
+      .sort(sort)
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    const total = await Notification.countDocuments(query);
+    const unreadCount = await Notification.countDocuments({
+      ...query,
+      isRead: false,
+    });
+
+    return { notifications, total, unreadCount, page, limit };
+  } catch (error) {
+    throw new Error("Failed to fetch notifications");
+  }
+};
+
 // Mark notification as read
 const markNotificationAsRead = async (notificationId) => {
   try {
@@ -85,4 +119,5 @@ module.exports = {
   markNotificationAsRead,
   markAllNotificationsAsRead,
   deleteNotification,
+  getAllNotifications,
 };

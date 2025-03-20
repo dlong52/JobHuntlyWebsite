@@ -43,8 +43,34 @@
   font-family: "Inter", serif;
   font-optical-sizing: auto;
 }
+.ck.ck-editor {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Bỏ viền của nội dung */
+.ck.ck-editor__main {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Bỏ viền của toolbar */
+.ck.ck-toolbar {
+  border: none !important;
+  border-bottom: 1px solid var(--neutrals-20) !important;
+  background: transparent !important;
+}
+.ck.ck-editor__main > .ck-editor__editable {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 10px; /* Giữ khoảng cách để dễ nhập liệu */
+}
 ::-webkit-scrollbar {
-  width: 9px; 
+  width: 5px; 
+}
+.custom-scrollbar::-webkit-scrollbar-button {
+  display: none;
 }
 ul{
   list-style: disc;
@@ -72,7 +98,7 @@ ol{
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #44444444;
+  background-color: var(--primary-dark);
   border-radius: 10px;;
 }
 

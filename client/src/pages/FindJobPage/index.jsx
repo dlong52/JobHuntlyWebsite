@@ -17,8 +17,12 @@ import LoadingJob from "../../ui/LoadingJob";
 import { useSearchParams } from "react-router-dom";
 import { useGetAllWishlistByUser } from "../../hooks/modules/wishlist/useGetWishlistByUser";
 import { useSelector } from "react-redux";
+import { useGetAppliedJobs } from "../../hooks/modules/application/useGetAppliedJobs";
 const FindJobPage = () => {
   const { user_id } = useSelector((state) => state.user);
+  const { data: appliedJobData } = useGetAppliedJobs(user_id);
+  const { dataConvert: appliedJobs } = useConvertData(appliedJobData);
+
   const query = useQueryParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: wishlistData } = useGetAllWishlistByUser(user_id);
@@ -188,6 +192,7 @@ const FindJobPage = () => {
                       posted_by={job?.posted_by}
                       status={checkWishlist}
                       employment_type={job?.employment_type}
+                      isApplied={appliedJobs?.includes(job._id)}
                     />
                   );
                 })}

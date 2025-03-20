@@ -30,6 +30,7 @@ export const validationSchema = Yup.object().shape({
 export const initialValues = {
   name: "",
   introduce: "",
+  package_code: "",
   discount: undefined,
   description: "",
   price: undefined,
@@ -37,5 +38,5 @@ export const initialValues = {
   duration_in_days: undefined,
   is_featured: false,
   active: false,
-  features: [""]
+  features: [""],
 };

@@ -40,7 +40,7 @@ const getReports = async (filters = {}, options = {}) => {
       .populate("report_company_target_id", "name")
       .populate({
         path: "report_job_target_id",
-        select: "title",
+        select: "title posted_by",
         populate: { path: "company", select: "name _id" }, // Lấy cả name và _id của company trong Job
       });
 

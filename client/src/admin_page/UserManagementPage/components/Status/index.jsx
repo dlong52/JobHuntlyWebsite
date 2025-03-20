@@ -5,7 +5,7 @@ const Status = ({ status }) => {
   return (
     <ChipMui
       variant={"outlined"}
-      label={status ? "Đang hoạt động" : "đã bị khóa"}
+      label={status ? "Đang hoạt động" : "Đã bị khóa"}
       color={status ? "success" : "error"}
     />
   );

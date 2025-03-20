@@ -26,6 +26,7 @@ export const apiURL = {
   PACKAGE: BASE_URL + "/package",
   WISH_LIST: BASE_URL + "/wishlist",
   ROLE: BASE_URL + "/role",
+  OTP: BASE_URL + "/otp",
   REPORT: BASE_URL + "/report",
   CV: BASE_URL + "/cv",
   CV_THEME: BASE_URL + "/cv-theme",
@@ -35,4 +36,5 @@ export const apiURL = {
   SUBSCRIPTION: BASE_URL + "/subscription",
   OVERVIEW: BASE_URL + "/overview",
   VN_PAY: BASE_URL + "/vnpay",
+  APPLIED_JOBS: BASE_URL + "applied-job",
 };

@@ -14,7 +14,10 @@ const ForgotPasswordPage = () => {
   useEffect(() => {
     const expireTime = localStorage.getItem("emailResetExpireTime");
     if (expireTime) {
-      const remainingTime = Math.max(0, Math.floor((expireTime - Date.now()) / 1000));
+      const remainingTime = Math.max(
+        0,
+        Math.floor((expireTime - Date.now()) / 1000)
+      );
       setTimer(remainingTime);
     }
   }, []);
@@ -39,6 +42,10 @@ const ForgotPasswordPage = () => {
         setTimer(60);
       }
     } catch (error) {
+      if (error.status === 404) {
+        showError("Tài khoản không tồn tại!");
+        return;
+      }
       showError(error);
     }
   };

@@ -4,6 +4,14 @@ import httpServices from "./httpServices";
 const getAllApplicants = async (params) => {
   return httpServices.get(apiURL.APPLICATION, { params: params.queryKey[1] });
 };
+const getAppliedJobs = (userId) => {
+  return httpServices.get(`${apiURL.APPLICATION}/applied-job/${userId}`);
+};
+const getApplicationReport = (companyId, params) => {
+  return httpServices.get(`${apiURL.APPLICATION}/report/${companyId}`, {
+    params: params.queryKey[1],
+  });
+};
 const getApplicant = async (params) => {
   return httpServices.get(`${apiURL.APPLICATION}/${params.queryKey[1]}`);
 };
@@ -24,4 +32,6 @@ export const ApplicantService = {
   getApplicant,
   deleteApplicant,
   updateApplicant,
+  getAppliedJobs,
+  getApplicationReport,
 };

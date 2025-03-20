@@ -25,6 +25,7 @@ import {
   EditCVPage,
   VerifyResultPage,
   ResetPasswordPage,
+  ViewCvPage,
 } from "../pages";
 import {
   ChatPage,
@@ -40,7 +41,9 @@ import {
   ProfileHrPage,
   RecruitmentReportPage,
   ReturnPaymentPage,
-  VerifyPage,
+  VerifyHrPage,
+  VerifyPhoneHrPage,
+  CreateEditJobPage
 } from "../hr_pages";
 import {
   CategoryManagementPage,
@@ -173,7 +176,14 @@ const Routes = [
   {
     path: RouteBase.VerifyResult,
     component: VerifyResultPage,
-    permissionAllow: [ROLE.CANDIDATE],
+    permissionAllow: [ROLE.ALL],
+    layout: null,
+  },
+  {
+    path: RouteBase.ViewCv,
+    component: ViewCvPage,
+    permissionAllow: [ROLE.ALL],
+    layout: null,
   },
   {
     path: "*",
@@ -251,12 +261,6 @@ const Routes = [
     layout: HRLayout,
   },
   {
-    path: RouteBase.HRVerify,
-    component: VerifyPage,
-    permissionAllow: [ROLE.EMPLOYER],
-    layout: HRLayout,
-  },
-  {
     path: RouteBase.HRMyCompany,
     component: MyCompanyPage,
     permissionAllow: [ROLE.EMPLOYER],
@@ -268,7 +272,24 @@ const Routes = [
     permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
   },
-
+  {
+    path: RouteBase.HRVerify,
+    component: VerifyHrPage,
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
+  {
+    path: RouteBase.HRVerifyPhone,
+    component: VerifyPhoneHrPage,
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
+  {
+    path: RouteBase.HRJobAction,
+    component: CreateEditJobPage,
+    permissionAllow: [ROLE.EMPLOYER],
+    layout: HRLayout,
+  },
   // ADMIN Routes
   {
     path: RouteBase.AdminOverview,

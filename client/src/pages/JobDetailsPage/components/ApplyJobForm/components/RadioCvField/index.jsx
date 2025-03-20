@@ -4,6 +4,18 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
+import { styled } from "@mui/material/styles";
+
+const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+  // transition: "all 0.3s ease-in-out",
+  borderRadius: "8px",
+  padding: "4px 8px",
+  margin: "4px 0",
+  border: `1px solid var(--neutrals-40)`,
+  "&.Mui-checked-label": {
+    border: `2px solid var(--primary)`,
+  },
+}));
 
 const RadioCvField = ({
   field,
@@ -16,10 +28,10 @@ const RadioCvField = ({
   classNameLabel = "",
   classNameRadioGroup = "",
   disabled = false,
-  activeColor = "primary", // New prop for active color
+  activeColor = "primary",
   ...props
 }) => {
-  const { name } = field;
+  const { name, value } = field;
   const { touched, errors } = form;
   const showError = Boolean(touched[name] && errors[name]);
 
@@ -35,28 +47,22 @@ const RadioCvField = ({
           htmlFor=""
         >
           {labelTop}
-          {required && (
-            <span style={{ color: "red", marginLeft: 4 }}>*</span>
-          )}
+          {required && <span style={{ color: "red", marginLeft: 4 }}>*</span>}
         </label>
       )}
-      <RadioGroup
-        row={row}
-        className={classNameRadioGroup}
-        {...field}
-        {...props}
-      >
+      <RadioGroup row={row} className={classNameRadioGroup} {...field} {...props}>
         {options.map((option) => (
-          <FormControlLabel
+          <StyledFormControlLabel
             key={option.value}
             value={option.value}
+            className={value === option.value ? "Mui-checked-label" : ""}
             control={
               <Radio
                 disabled={disabled}
                 sx={{
-                  color: activeColor, 
+                  color: "var(--primary)",
                   "&.Mui-checked": {
-                    color: activeColor, 
+                    color: "var(--primary)",
                   },
                 }}
               />

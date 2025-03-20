@@ -14,16 +14,16 @@ const SidebarAdmin = () => {
             <Logo />
           </Box>
         </Box>
-        <Box className="flex flex-col gap-y-3 overflow-y-scroll h-[80%]">
+        <Box className="flex flex-col gap-y-3 overflow-y-auto h-[80%] scrollbar-thin scrollbar-thumb-primary scrollbar-track-transparent custom-scrollbar">
           {sidebarAdminRoutes.map((route, index) => {
             const Icon = route.icon;
             return (
               <Box key={index} className={`relative px-6`}>
                 <Link
                   to={route.path}
-                  className={`flex items-center gap-x-5 px-3 py-3 rounded-lg font-Inter text-base ${
+                  className={`flex items-center gap-x-5 px-3 py-3 rounded-lg font-Inter text-[15px] font-medium ${
                     location.pathname === route.path
-                      ? "bg-primary-light text-primary font-medium"
+                      ? "bg-primary-light text-primary"
                       : "bg-transparent text-gray-700"
                   }`}
                 >

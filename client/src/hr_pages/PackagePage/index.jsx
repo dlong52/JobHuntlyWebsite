@@ -8,8 +8,25 @@ import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import PackageItemSkeleton from "./components/PackageItemSkeleton";
 import useConvertData from "../../hooks/useConvertData";
+import { useSelector } from "react-redux";
+import { useGetAllSubscriptions } from "../../hooks/modules/subscription/useGetAllSubscriptions";
+import { useNotifications } from "../../utils/notifications";
 
 const PackagePage = () => {
+  const { user_id } = useSelector((state) => state.user);
+  const { filters: filtersSub } = useFilters({
+    employer_id: user_id,
+    status: "active",
+    activeOnly: true,
+  });
+  const { data: subData, isLoading: isLoadingSub } = useGetAllSubscriptions(
+    filtersSub,
+    {
+      enabled: !!user_id,
+    }
+  );
+  const { dataConvert: subscriptions } = useConvertData(subData);
+  
   const { filters } = useFilters({
     sort: "desc",
     sortBy: "price",
@@ -45,7 +62,9 @@ const PackagePage = () => {
                         id={item?._id}
                         title={item?.name}
                         price={item?.price}
+                        code={item?.package_code}
                         features={item?.features}
+                        subscriptions={subscriptions}
                       />
                     </Box>
                   );
@@ -60,7 +79,7 @@ const PackagePage = () => {
             <Grid2 container spacing={3}>
               {Array(4)
                 .fill(null)
-                ?.map((item, index) => {
+                ?.map((_, index) => {
                   return (
                     <Grid2 key={index} size={3}>
                       <PackageItemSkeleton />

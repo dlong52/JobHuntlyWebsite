@@ -28,7 +28,7 @@ const OverViewAdminPage = () => {
             </Typography>
             <Typography variant="caption">Tăng 20%</Typography>
           </Box>
-          <CommonIcon.AccountCircleTwoTone className="!text-[#ffffff82] !size-20" />
+          <CommonIcon.GroupsTwoTone className="!text-[#ffffff82] !size-20" />
         </Box>
         <Box className="bg-accent-red rounded-md p-4 flex-1 flex justify-between items-center">
           <Box className="text-white">
@@ -47,7 +47,9 @@ const OverViewAdminPage = () => {
         <Box className="col-span-8">
           <CategoryChart />
         </Box>
-        <Box className="col-span-4"></Box>
+        <Box className="col-span-4 p-5 bg-white rounded-md shadow">
+          <Box className=""></Box>
+        </Box>
       </Box>
     </>
   );

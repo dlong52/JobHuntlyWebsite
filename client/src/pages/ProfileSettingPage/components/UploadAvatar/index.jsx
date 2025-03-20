@@ -37,11 +37,7 @@ const UploadAvatar = () => {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
           setDownloadURL(url);
-          dispatch(
-            updateUser({ ...user, avatar_url: url})
-          );   
-          console.log({user});
-                 
+          dispatch(updateUser({ ...user, avatar_url: url }));
           updateLogo(url);
           setLoading(false);
         });
@@ -123,6 +119,15 @@ const UploadAvatar = () => {
         </Typography>
       </Box>
 
+      {/* <Box>
+        <Typography>Tài khoản chưa xác thực</Typography>
+        <Button
+          className={"!normal-case !bg-accent-green !text-white"}
+          endIcon={<CommonIcon.ShortcutRounded />}
+        >
+          Xác thực ngay
+        </Button>
+      </Box> */}
       <input
         type="file"
         accept="image/*"

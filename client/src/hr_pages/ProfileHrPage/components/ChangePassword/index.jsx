@@ -36,34 +36,50 @@ const ChangePassword = () => {
       enableReinitialize
     >
       {() => (
-        <Box className="flex items-center justify-center py-10">
-          <Form className="flex flex-col gap-4 w-fit text-neutrals-100">
+        <Box className="flex items-center justify-center w-full py-5">
+          <Form className="flex flex-col items-end gap-5 w-full text-neutrals-100">
             <FormikField
-              className="w-[400px]"
+              sx={{
+                fieldset: {
+                  borderRadius: "10px",
+                },
+              }}
+              className="w-full"
               name="oldPassword"
               component={InputField}
               required
               label="Mật khẩu cũ"
-              placeholder="Nhập mật khẩu cũ"
             />
             <FormikField
-              className="w-[400px]"
+              sx={{
+                fieldset: {
+                  borderRadius: "10px",
+                },
+              }}
+              className="w-full"
               name="password"
               component={InputField}
               required
               label="Mật khẩu mới"
-              placeholder="Nhập mật khẩu mới"
             />
             <FormikField
-              className="w-[400px]"
+              sx={{
+                fieldset: {
+                  borderRadius: "10px",
+                },
+              }}
+              className="w-full"
               name="confirmPassword"
               component={InputField}
               required
               label="Nhập lại mật khẩu"
-              placeholder="Nhập lại mật khẩu mới"
             />
-            <Button type="submit" size="large" className="!bg-primary !text-white">
-              Xác nhận
+            <Button
+              type="submit"
+              size="large"
+              className="!bg-primary !rounded-lg !text-white w-fit !normal-case"
+            >
+              Lưu lại
             </Button>
           </Form>
         </Box>

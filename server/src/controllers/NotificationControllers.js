@@ -6,7 +6,6 @@ const Notification = require("../models/Notification");
 const sendNotificationToUser = async (req, res) => {
   const { userId, title, body, type } = req.body;
   try {
-    // Tìm kiếm người dùng trong database
     const user = await User.findById(userId);
     if (!user || !user.fcmToken) {
       return res
@@ -51,41 +50,47 @@ const sendNotificationToUser = async (req, res) => {
 const sendNotificationToAllUsers = async (req, res) => {
   const { title, body } = req.body;
   try {
-    const users = await User.find({ fcmToken: { $exists: true, $ne: null } });
+    // Lấy user có fcmToken hợp lệ và populate role
+    const users = await User.find({
+      fcmToken: { $exists: true, $ne: null },
+    }).populate("role"); // Lấy thông tin role từ bảng Role
 
-    if (!users.length) {
-      return res
-        .status(400)
-        .json({ error: "No users found with valid FCM tokens" });
+    // Lọc những user không có role là ADMIN
+    const filteredUsers = users.filter(user => user.role?.name !== "ADMIN");
+
+    if (!filteredUsers.length) {
+      return res.status(400).json({ error: "No users found with valid FCM tokens" });
     }
 
-    const messages = users.map((user) => ({
+    const messages = filteredUsers.map((user) => ({
       token: user.fcmToken,
-      notification: {
-        title: title,
-        body: body,
-      },
+      notification: { title, body },
     }));
 
-    const responses = await Promise.all(
-      messages.map((message) => admin.messaging().send(message))
-    );
+    // Gửi thông báo đến user hợp lệ
+    const responses = await Promise.all(messages.map((msg) => admin.messaging().send(msg)));
 
-    console.log("Notifications sent successfully:", responses);
+    // Lưu thông báo vào DB cho từng user
+    const notificationsToSave = filteredUsers.map(user => ({
+      user_id: user._id,
+      type: "system",
+      title,
+      body,
+    }));
+
+    await Notification.insertMany(notificationsToSave);
 
     return res.status(200).json({
       status: "success",
-      message: "Notifications sent to all users successfully",
-      responses: responses,
+      message: "Notifications sent and saved successfully",
+      responses,
     });
   } catch (error) {
     console.error("Error sending notifications to all users:", error);
-
-    return res
-      .status(500)
-      .json({ error: "Failed to send notifications to all users" });
+    return res.status(500).json({ error: "Failed to send notifications to all users" });
   }
 };
+
 
 // Create new notification
 const createNotification = async (req, res) => {
@@ -130,12 +135,44 @@ const getNotifications = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const getAllNotifications = async (req, res) => {
+  try {
+    const { page, limit, sortBy, order, ...filters } = req.query;
+    const options = {
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 10,
+      sortBy: sortBy || "created_at",
+      order: order || "desc",
+    };
+    const result = await notificationService.getAllNotifications(
+      filters,
+      options
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: "Notifications retrieved successfully",
+      data: result.notifications,
+      unreadCount: result.unreadCount,
+      pagination: {
+        total: result.total,
+        page: result.page,
+        limit: result.limit,
+        totalPages: Math.ceil(result.total / result.limit),
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Mark a notification as read
 const markNotificationAsRead = async (req, res) => {
   try {
     const { userId } = req.params;
-    const notification = await notificationService.markNotificationAsRead(userId);
+    const notification = await notificationService.markNotificationAsRead(
+      userId
+    );
     res.status(200).json({
       status: "success",
       message: "Notification marked as read",
@@ -146,7 +183,7 @@ const markNotificationAsRead = async (req, res) => {
   }
 };
 const markAllNotifications = async (req, res) => {
-  const { userId } = req.params; 
+  const { userId } = req.params;
 
   try {
     const result = await notificationService.markAllNotificationsAsRead(userId);
@@ -185,4 +222,5 @@ module.exports = {
   deleteNotification,
   sendNotificationToUser,
   sendNotificationToAllUsers,
+  getAllNotifications,
 };

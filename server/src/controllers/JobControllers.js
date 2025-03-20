@@ -86,11 +86,24 @@ const deleteJob = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
+const getJobCounts = async (req, res) => {
+  try {
+    const jobCounts = await jobService.getJobCountLast20Days();
+    res.status(200).json({
+      status: "success",
+      message: "Job was successfully retrieved",
+      data: jobCounts,
+    });
+  } catch (error) {
+    console.error("Error fetching jobs count:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 module.exports = {
   createJob,
   getAllJobs,
   getJobById,
   updateJob,
   deleteJob,
+  getJobCounts
 };

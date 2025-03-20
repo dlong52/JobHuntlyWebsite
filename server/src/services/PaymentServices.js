@@ -34,7 +34,7 @@ const getAllPayments = async (filters = {}, options = {}) => {
         path: "subscription_id",
         populate: {
           path: "package_id",
-          select: "name price", // Chỉ lấy trường name trong company
+          select: "name price", 
         },
       })
       .sort(sort)

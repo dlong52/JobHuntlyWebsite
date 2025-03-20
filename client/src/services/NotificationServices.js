@@ -6,14 +6,19 @@ const getAllNotifications = async (user_id, params) => {
     params: params.queryKey[1],
   });
 };
-const getNotificationByUser = async (params) => {
-  return httpServices.get(`${apiURL.NOTIFICATION}/${params.queryKey[1]}`);
+const getNotifications = async (params) => {
+  return httpServices.get(`${apiURL.NOTIFICATION}`, {
+    params: params.queryKey[1],
+  });
 };
 const createNotification = (payload) => {
   return httpServices.post(apiURL.NOTIFICATION, payload);
 };
 const sendToUser = (payload) => {
   return httpServices.post(`${apiURL.NOTIFICATION}/send-to-user`, payload);
+};
+const sendToAll = (payload) => {
+  return httpServices.post(`${apiURL.NOTIFICATION}/send-to-all`, payload);
 };
 const updateNotification = (payload) => {
   const { id, ...data } = payload;
@@ -28,9 +33,10 @@ const markAllNotifications = (userId) => {
 export const NotificationService = {
   getAllNotifications,
   createNotification,
-  getNotificationByUser,
+  getNotifications,
   deleteNotification,
   updateNotification,
   sendToUser,
   markAllNotifications,
+  sendToAll
 };
