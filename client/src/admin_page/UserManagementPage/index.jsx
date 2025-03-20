@@ -1,4 +1,4 @@
-import { Box, IconButton, TextField, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Button, CommonAvatar, CommonIcon } from "../../ui";
 import CustomTable from "../../ui/Table";
@@ -8,7 +8,7 @@ import RoleChip from "../../ui/Role";
 import { useToggleDialog } from "../../hooks";
 import Status from "./components/Status";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import TooltipMui from "../../ui/TooltipMui";
 import DialogMUI from "../../components/Dialogs";
@@ -17,6 +17,11 @@ import DrawerMui from "../../ui/DrawerMui";
 import UserInfo from "./components/UserInfo";
 import { FormikField, InputField } from "../../components/CustomFieldsFormik";
 import { Form, Formik } from "formik";
+import TableMui from "../../ui/TableMui";
+import Address from "../../components/Address";
+import UpdateStatus from "./components/UpdateStatus";
+import { ROLE } from "../../constants/enum";
+import Unlock from "./components/Unlock";
 
 const UserManagementPage = () => {
   const [userId, setUserId] = useState(null);
@@ -26,6 +31,11 @@ const UserManagementPage = () => {
     open: openUpdateStatus,
     toggle: toggleUpdateStatus,
     shouldRender: shouldRenderUpdateStatus,
+  } = useToggleDialog();
+  const {
+    open: openUnlock,
+    toggle: toggleUnlock,
+    shouldRender: shouldRenderUnlock,
   } = useToggleDialog();
   const { open: openInfo, toggle: toggleInfo } = useToggleDialog();
   const { filters, handleChangePage, setFilters } = useFilters({
@@ -43,9 +53,13 @@ const UserManagementPage = () => {
         return (
           <Box className="flex items-center gap-2">
             <CommonAvatar
-              char={!value?.avatar_url ? value?.name?.charAt(0) : null}
-              className={"border-2 border-accent-blue !bg-primary"}
-              src={value?.avatar_url}
+              char={
+                !value?.profile?.avatar_url
+                  ? value?.profile?.name?.charAt(0)
+                  : null
+              }
+              // className={"border-2 border-accent-blue !bg-primary"}
+              src={value?.profile?.avatar_url}
             />
             <Box>
               <Typography
@@ -53,22 +67,32 @@ const UserManagementPage = () => {
                 fontSize={"16px"}
                 fontWeight={400}
               >
-                {value?.name}
+                {value?.profile?.name}
               </Typography>
               <Typography fontSize={"14px"} className="text-neutrals-60">
-                {value?.address?.province?.name}
+                {value?.email}
               </Typography>
             </Box>
           </Box>
         );
       },
     },
-    { field: "email", headerName: "Email" },
+    {
+      field: "address",
+      headerName: "Địa chỉ",
+      renderCell: (value) => {
+        return value?.address ? (
+          <Address address={value?.address} />
+        ) : (
+          <Typography fontSize={"14px"} className="!text-neutrals-80">Chưa cập nhật</Typography>
+        );
+      },
+    },
     {
       field: "active",
       headerName: "Trạng thái",
       renderCell: (value) => {
-        return <Status status={value} />;
+        return <Status status={value.active} />;
       },
     },
     {
@@ -77,13 +101,13 @@ const UserManagementPage = () => {
       renderCell: (value) => {
         return (
           <>
-            {!value ? (
+            {!value?.is_verified ? (
               <TooltipMui content={"Chưa xác thực"}>
-                <CommonIcon.DoNotDisturb className="text-red-700" />
+                <CommonIcon.Verified className="text-gray-500" />
               </TooltipMui>
             ) : (
               <TooltipMui content={"Đã xác thực"}>
-                <CommonIcon.CheckCircle className="text-green-700" />
+                <CommonIcon.Verified className="text-green-700" />
               </TooltipMui>
             )}
           </>
@@ -94,7 +118,7 @@ const UserManagementPage = () => {
       field: "role",
       headerName: "Vai trò",
       renderCell: (value) => {
-        return <RoleChip role={value?.name} />;
+        return <RoleChip role={value?.role?.name} />;
       },
     },
     {
@@ -107,21 +131,51 @@ const UserManagementPage = () => {
               <IconButton
                 onClick={() => {
                   toggleInfo();
-                  setUserId(value);
+                  setUserId(value?._id);
                 }}
               >
                 <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
               </IconButton>
             </TooltipMui>
-            <TooltipMui content={"Cập nhật trạng thái tài khoản"}>
-              <IconButton
-              // onClick={() => {
-              //   toggleDelete(), setIdDelete(value);
-              // }}
-              >
-                <CommonIcon.DriveFileRenameOutline className="text-red-700" />
-              </IconButton>
-            </TooltipMui>
+            {value?.active ? (
+              <TooltipMui content={"Khóa tài khoản"}>
+                <IconButton
+                  onClick={() => {
+                    if (value?.role?.name === ROLE.ADMIN) {
+                      return;
+                    }
+                    toggleUpdateStatus();
+                    setUserId(value?._id);
+                  }}
+                  disabled={value?.role?.name === ROLE.ADMIN ? true : false}
+                >
+                  <CommonIcon.LockPerson
+                    className={`text-accent-red ${
+                      value?.role?.name === ROLE.ADMIN ? "opacity-45" : ""
+                    }`}
+                  />
+                </IconButton>
+              </TooltipMui>
+            ) : (
+              <TooltipMui content={"Mở khóa tài khoản"}>
+                <IconButton
+                  onClick={() => {
+                    if (value?.role?.name === ROLE.ADMIN) {
+                      return;
+                    }
+                    toggleUnlock();
+                    setUserId(value?._id);
+                  }}
+                  disabled={value?.role?.name === ROLE.ADMIN ? true : false}
+                >
+                  <CommonIcon.LockOpen
+                    className={`text-accent-green ${
+                      value?.role?.name === ROLE.ADMIN ? "opacity-45" : ""
+                    }`}
+                  />
+                </IconButton>
+              </TooltipMui>
+            )}
           </Box>
         );
       },
@@ -148,7 +202,7 @@ const UserManagementPage = () => {
     </Typography>,
   ];
   useEffect(() => {
-    if (!openInfo) {
+    if (!openInfo || !openUpdateStatus || !openUnlock) {
       setUserId(null);
     }
   }, [openInfo]);
@@ -165,7 +219,7 @@ const UserManagementPage = () => {
     <Box>
       <BreadcrumbMui title={"Quản lí người dùng"} breadcrumbs={breadcrumbs} />
       <Box className="bg-white rounded-md mt-5">
-        <CustomTable
+        <TableMui
           columns={columns}
           filters={filters}
           loading={isLoading}
@@ -186,11 +240,11 @@ const UserManagementPage = () => {
                     <FormikField
                       classNameContainer="max-w-[300px]"
                       className="bg-[#fff] "
-                      sx={{
-                        fieldset: {
-                          borderRadius: "9999px",
-                        },
-                      }}
+                      // sx={{
+                      //   fieldset: {
+                      //     borderRadius: "9999px",
+                      //   },
+                      // }}
                       classNameLabel="font-medium text-neutrals-100"
                       name="searchName"
                       component={InputField}
@@ -201,7 +255,7 @@ const UserManagementPage = () => {
                     <Button
                       type={"submit"}
                       className={
-                        "col-span-12 !bg-primary !text-white !rounded-full"
+                        "col-span-12 !bg-primary !text-white "
                       }
                     >
                       <CommonIcon.Search />
@@ -226,8 +280,16 @@ const UserManagementPage = () => {
         <DialogMUI
           toggle={toggleUpdateStatus}
           open={openUpdateStatus}
-          title={"Cập nhật trạng thái tài khoản"}
-          body={<CreateUserForm />}
+          title={"Khóa tài khoản"}
+          body={<UpdateStatus id={userId} />}
+        />
+      )}
+      {shouldRenderUnlock && (
+        <DialogMUI
+          toggle={toggleUnlock}
+          open={openUnlock}
+          title={"Mở khóa tài khoản"}
+          body={<Unlock id={userId} />}
         />
       )}
       <DrawerMui

@@ -1,6 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
+  PhoneAuthProvider,
+  signInWithCredential
+} from "firebase/auth";
 
 import {
   deleteToken,
@@ -78,4 +86,8 @@ export {
   onMessage,
   getMessaging,
   messaging,
+  signInWithPhoneNumber,
+  PhoneAuthProvider,
+  signInWithCredential,
+  RecaptchaVerifier,
 };

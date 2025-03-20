@@ -2,77 +2,107 @@ import React from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { FormControl, FormHelperText } from "@mui/material";
+import { twMerge } from "tailwind-merge";
 
 const CkEditerField = ({
-  field, // Field từ Formik
-  form, // Form từ Formik
+  field,
+  form,
   label,
+  className,
   disabled,
   classNameContainer,
   readOnly = false,
   classNameLabel,
   required = false,
-  optionsToRemove = [], // Các tùy chọn sẽ bị loại bỏ
+  optionsToRemove = [],
   ...props
 }) => {
   const { name, value } = field;
   const { touched, errors } = form;
   const showError = Boolean(touched[name] && errors[name]);
 
-  // Cấu hình các công cụ muốn bỏ
   const editorConfig = {
     isReadOnly: disabled || readOnly,
-    removePlugins: [
-      // "ImageUpload",
-      // "EasyImage",
-      "MediaEmbed",
-      "BlockQuote",
-      "Table",
-      "Heading",
-      ...optionsToRemove,
-    ], // Xóa các plugin theo yêu cầu
+    removePlugins: [...optionsToRemove],
+    toolbar: [
+      "heading",
+      "|",
+      "bold",
+      "italic",
+      "underline",
+      "|",
+      "fontSize",
+      "fontColor",
+      "fontBackgroundColor",
+      "|",
+      "bulletedList",
+      "numberedList",
+      "outdent",
+      "indent",
+      "|",
+      "link",
+      "insertTable",
+      "|",
+      "undo",
+      "redo",
+    ],
+    fontSize: {
+      options: ["tiny", "small", "default", "big", "huge"], // Sử dụng các option có sẵn
+    },
   };
+  
 
-  // Xử lý khi nội dung thay đổi
   const handleChange = (event, editor) => {
     const data = editor.getData();
-    form.setFieldValue(name, data); // Cập nhật giá trị trong Formik
+    form.setFieldValue(name, data);
   };
 
-  // Xử lý khi mất focus, kiểm tra dữ liệu required
   const handleBlur = (event, editor) => {
-    
     const data = editor.getData();
     if (required && !data.trim()) {
-      form.setFieldError(name, `${name} là bắt buộc`); // Đặt lỗi nếu trống      
+      form.setFieldError(name, `${name} là bắt buộc`);
     } else {
-      form.setFieldError(name, undefined); // Xóa lỗi nếu đã có dữ liệu
+      form.setFieldError(name, undefined);
     }
   };
 
   return (
     <FormControl
-    className={`flex flex-col gap-1 ${classNameContainer}`}
+      className={`flex flex-col gap-1 ${classNameContainer}`}
       fullWidth
       error={showError}
     >
-    <div className={`ck-editor-field ${showError ? "has-error" : ""}`}>
-      {label && (
-        <label className={`flex items-center mb-1 ${classNameLabel}`} htmlFor="">
-          {label}
-          {required && <span style={{ color: "red", marginLeft: 4 }}>*</span>}
-        </label>
-      )}
-      <CKEditor
-        editor={ClassicEditor}
-        data={value || ""} // Giá trị hiện tại
-        config={editorConfig} // Cấu hình CKEditor
-        onChange={handleChange}
-        onBlur={handleBlur} // Kiểm tra khi mất focus
-        {...props} // Truyền các props bổ sung
-      />
-      {showError && <FormHelperText><span className="text-red-600">{errors[name]}</span></FormHelperText>}
-    </div>
+      <div className={`ck-editor-field ${showError ? "has-error" : ""}`}>
+        {label && (
+          <label
+            className={`flex items-center mb-1 ${classNameLabel}`}
+            htmlFor=""
+          >
+            {label}
+            {required && <span style={{ color: "red", marginLeft: 4 }}>*</span>}
+          </label>
+        )}
+        <div
+          className={twMerge(
+            "overflow-hidden rounded-[4px] border border-gray-300",
+            className
+          )}
+        >
+          <CKEditor
+            editor={ClassicEditor}
+            data={value || ""}
+            config={editorConfig}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            {...props}
+          />
+        </div>
+        {showError && (
+          <FormHelperText>
+            <span className="text-red-600">{errors[name]}</span>
+          </FormHelperText>
+        )}
+      </div>
     </FormControl>
   );
 };

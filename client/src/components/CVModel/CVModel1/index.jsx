@@ -14,9 +14,9 @@ const CVModel3 = forwardRef(({ values, show = true, isMock = false }, ref) => {
     <div className={`${show ? "" : "absolute left-[-99999999px]"}`}>
       <div
         ref={ref}
-        className="w-[794px] grid grid-cols-12 text-cv-1 gap-5 shadow"
+        className="w-[794px] min-h-[1122.5px] bg-white grid grid-cols-12 text-cv-1 gap-5 shadow"
       >
-        <div className="col-span-4 bg-cv-1-light p-2">
+        <div className="col-span-4 bg-cv-1-light p-2 px-4">
           <div className="flex flex-col gap-2 items-center">
             <div className="text-cv-1 flex items-center font-semibold text-sm justify-center">
               {data?.position}

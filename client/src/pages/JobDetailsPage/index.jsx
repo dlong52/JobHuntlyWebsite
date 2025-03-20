@@ -20,6 +20,7 @@ import JobDetailLoading from "../../ui/JobDetailLoading";
 import moment from "moment";
 import ReportForm from "./components/ReportForm";
 import { companyLogoDefault } from "../../assets/images";
+import { useGetAppliedJobs } from "../../hooks/modules/application/useGetAppliedJobs";
 
 const JobDetailsPage = () => {
   const user = useSelector((state) => state.user);
@@ -34,6 +35,9 @@ const JobDetailsPage = () => {
   );
   const { dataConvert: detailData } = useConvertData(data);
   const { dataConvert: status } = useConvertData(statusData);
+  const { data: appliedJobData } = useGetAppliedJobs(user?.user_id);
+  const { dataConvert: appliedJobs } = useConvertData(appliedJobData);
+  const checkIsApplied = appliedJobs?.includes(id);
 
   if (error) {
     navigate(RouteBase.Home);
@@ -52,7 +56,10 @@ const JobDetailsPage = () => {
   );
   const handleAddToWishlist = async () => {
     if (!user?.user_id || user.role !== ROLE.CANDIDATE) {
-      showInfo("Bạn cần đăng nhập để thực hiện hành động này!");
+      showInfo("Bạn cần đăng nhập để thực hiện hành động này!", null, {
+        vertical: "top",
+        horizontal: "center",
+      });
       return;
     }
     setLoading(true);
@@ -68,7 +75,10 @@ const JobDetailsPage = () => {
   };
   const handleRemoveToWishlist = async () => {
     if (!user?.user_id || user.role !== ROLE.CANDIDATE) {
-      showInfo("Bạn cần đăng nhập để thực hiện hành động này!");
+      showInfo("Bạn cần đăng nhập để thực hiện hành động này!", null, {
+        vertical: "top",
+        horizontal: "center",
+      });
       return;
     }
     setLoading(true);
@@ -145,10 +155,26 @@ const JobDetailsPage = () => {
                         checkDate ? "!bg-gray-500" : "!bg-primary"
                       } !text-white`}
                       startIcon={<CommonIcon.SendOutlined />}
-                      onClick={toggle}
+                      onClick={() => {
+                        if (!user?.is_verified) {
+                          showInfo(
+                            "Tài khoản chưa xác thực không thể dùng tính năng này!",
+                            null,
+                            {
+                              vertical: "top",
+                              horizontal: "center",
+                            }
+                          );
+                        }
+                        toggle();
+                      }}
                       disabled={checkDate}
                     >
-                      {checkDate ? "Đã quá hạn ứng tuyển" : "Ứng tuyển ngay"}
+                      {checkDate
+                        ? "Đã quá hạn ứng tuyển"
+                        : checkIsApplied
+                        ? "Ứng tuyển lại"
+                        : "Ứng tuyển ngay"}
                     </Button>
                     {status ? (
                       <Button
@@ -253,11 +279,25 @@ const JobDetailsPage = () => {
                           className={`${
                             checkDate ? "!bg-gray-500" : "!bg-primary"
                           } !text-white`}
-                          onClick={toggle}
+                          onClick={() => {
+                            if (!user?.is_verified) {
+                              showInfo(
+                                "Tài khoản chưa xác thực không thể dùng tính năng này!",
+                                null,
+                                {
+                                  vertical: "top",
+                                  horizontal: "center",
+                                }
+                              );
+                            }
+                            toggle();
+                          }}
                           disabled={checkDate}
                         >
                           {checkDate
                             ? "Đã quá hạn ứng tuyển"
+                            : checkIsApplied
+                            ? "Ứng tuyển lại"
                             : "Ứng tuyển ngay"}
                         </Button>
                         {status ? (
@@ -465,7 +505,11 @@ const JobDetailsPage = () => {
               isPadding={false}
               open={open}
               title={
-                <Typography fontSize={"22px"} fontWeight={600}>
+                <Typography
+                  className="!text-wrap !max-w-[600px]"
+                  fontSize={"22px"}
+                  fontWeight={600}
+                >
                   Ứng tuyển{" "}
                   <span className="text-primary">{detailData?.title}</span>
                 </Typography>
@@ -484,8 +528,6 @@ const JobDetailsPage = () => {
           )}
           {shouldRenderReport && (
             <DialogMUI
-              // disableScrollLock={false}
-              // isPadding={false}
               open={openReport}
               title={
                 <Typography fontSize={"22px"} fontWeight={600}>

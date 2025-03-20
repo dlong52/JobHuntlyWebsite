@@ -1,10 +1,14 @@
 import { Form, Formik } from "formik";
 import React from "react";
-import { initialValues } from "./form";
-import { FormikField, InputField } from "../../components/CustomFieldsFormik";
+import { initialValues, validationSchema } from "./form";
+import {
+  CkEditerField,
+  FormikField,
+  InputField,
+} from "../../components/CustomFieldsFormik";
 import DatePickerField from "../../components/CustomFieldsFormik/DatePickerField";
 import SelectRoleField from "../../components/SelectField/SelectRoleField";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import SelectProvinceField from "../../components/SelectField/SelectProvinceField";
 import SelectDistrictField from "../../components/SelectField/SelectDistrictField";
 import SelectWardField from "../../components/SelectField/SelectWardField";
@@ -13,17 +17,37 @@ import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import { createUser } from "../../services/UserServices";
 import { useNotifications } from "../../utils/notifications";
+import SelectCategoryField from "../../components/SelectField/SelectCategoryField";
+import { useSelector } from "react-redux";
 
 const CreateUserPage = () => {
+  const { user_id } = useSelector((state) => state.user);
   const { showError, showSuccess } = useNotifications();
   const handleSubmit = async (values) => {
-    const payload = {};
+    const payload = {
+      email: values.email,
+      password: values.password,
+      profile: {
+        name: values.name,
+        birthday: values.birthday,
+        phone_number: values.phone_number,
+      },
+      role: values.role.value,
+      companyName: values.companyName,
+      website: values?.website,
+      description: values?.description,
+      categories: [values?.categories?.value],
+      staff_quantity: {
+        min: values.min_staff,
+        max: values.max_staff,
+      },
+      created_by: user_id,
+    };
     try {
       await createUser(payload);
       showSuccess("Thêm người dùng mới thành công!");
     } catch (error) {
-      console.log(error);
-      showError("Đã xảy ra lỗi khi tạo người dùng mới!");
+      showError(error?.response?.data?.message);
     }
   };
   const breadcrumbs = [
@@ -39,14 +63,19 @@ const CreateUserPage = () => {
     >
       Quản lí người dùng
     </Link>,
-    <Typography fontWeight={500} className="text-neutrals-1d00 !text-sm">
+    <Typography fontWeight={500} className="text-neutrals-100 !text-sm">
       Thêm người dùng mới
     </Typography>,
   ];
   return (
     <Box>
       <BreadcrumbMui breadcrumbs={breadcrumbs} title={"Thêm người dùng mới"} />
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize
+      >
         {({ values }) => {
           const checkRole = values?.role?.label === "Nhà tuyển dụng";
           return (
@@ -112,12 +141,13 @@ const CreateUserPage = () => {
                   <Box className="grid grid-cols-12 gap-5 mt-4">
                     <Box className="border-b border-neutrals-40 pb-5 col-span-12 grid grid-cols-12 gap-5">
                       <FormikField
-                        classNameContainer="col-span-6"
+                        classNameContainer="col-span-12"
                         className="bg-[#f8fafc]"
                         classNameLabel="font-medium text-neutrals-100"
                         name="companyName"
+                        required
                         component={InputField}
-                        label="Tên công ty"
+                        label="Tên công ty (*)"
                         placeholder="Nhập email"
                       />
                       <FormikField
@@ -129,6 +159,7 @@ const CreateUserPage = () => {
                         label="Website"
                         placeholder="Nhập website"
                       />
+                      <SelectCategoryField />
                     </Box>
                     <Box className="col-span-12">
                       <Box className="grid grid-cols-12 gap-5 pb-5 border-b border-neutrals-40">
@@ -165,9 +196,49 @@ const CreateUserPage = () => {
                         />
                       </Box>
                     </Box>
+                    <Box className="col-span-12 flex flex-col gap-2">
+                      <Typography
+                        fontWeight={500}
+                        fontSize={"14px"}
+                        className="text-neutrals-100"
+                      >
+                        Số lượng nhân viên
+                      </Typography>
+                      <Box className="flex gap-4">
+                        <FormikField
+                          name="min_staff"
+                          className="bg-[#f8fafc]"
+                          component={InputField}
+                          type="number"
+                          label="Tối thiểu"
+                        />
+                        <FormikField
+                          name="max_staff"
+                          className="bg-[#f8fafc]"
+                          component={InputField}
+                          type="number"
+                          label="Tối đa"
+                        />
+                      </Box>
+                    </Box>
+                    <FormikField
+                      classNameContainer="col-span-12"
+                      name="introduce"
+                      className="bg-[#f8fafc]"
+                      component={CkEditerField} // Sử dụng CKEditor làm component
+                      label="Giới thiệu về công ty"
+                      classNameLabel="font-medium text-sm text-neutrals-100"
+                    />
                   </Box>
                 </Box>
               )}
+              <Button
+                type="submit"
+                size="large"
+                className="col-span-12 !bg-primary !text-white"
+              >
+                Lưu lại
+              </Button>
             </Form>
           );
         }}

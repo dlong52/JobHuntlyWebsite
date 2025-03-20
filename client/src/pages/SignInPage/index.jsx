@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { Box, Divider, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { auth, provider, signInWithPopup } from "@/../firebaseConfig";
 

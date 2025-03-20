@@ -5,15 +5,16 @@ import {
 } from "@mui/icons-material";
 import React, { useState } from "react";
 import { useToggleDialog } from "../../../../hooks";
-import CVModel1 from "../../../../components/CVModel/CVModel1";
 import { Box, Skeleton } from "@mui/material";
 import DialogCustom from "../../../../components/Dialogs";
 import { useNavigate } from "react-router-dom";
 import { RouteBase } from "../../../../constants/routeUrl";
 import { Button } from "../../../../ui";
 import CVTemplate from "../../../CreateCVPage/components/CvTemplate";
+import { useSelector } from "react-redux";
 
 const CVItem = ({ data }) => {
+  const { is_verified } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
@@ -37,10 +38,16 @@ const CVItem = ({ data }) => {
           <CVTemplate isMock code={data?.theme_code} />
         </Box>
         <Box className="col-span-3 flex flex-col gap-10 h-fit">
-          <h1 className="font-bold text-xl text-primary">Mẫu CV {data?.name}</h1>
+          <h1 className="font-bold text-xl text-primary">
+            Mẫu CV {data?.name}
+          </h1>
           <Box className="flex flex-col gap-5">
             <Button
               onClick={() => {
+                if (!is_verified) {
+                  navigate(RouteBase.VerifyAccount);
+                  return;
+                }
                 navigate(`${RouteBase.CVTemplate}/${data?._id}`);
               }}
               startIcon={<BorderColorOutlined />}
@@ -92,6 +99,10 @@ const CVItem = ({ data }) => {
             </button>
             <button
               onClick={() => {
+                if (!is_verified) {
+                  navigate(RouteBase.VerifyAccount);
+                  return;
+                }
                 navigate(`${RouteBase.CVTemplate}/${data?._id}`);
               }}
               className="text-white flex items-center gap-2 px-4 py-1 bg-primary w-fit rounded-full text-xs hover:bg-primary-dark transition-colors duration-300"
@@ -106,7 +117,12 @@ const CVItem = ({ data }) => {
         </Box>
       </Box>
       {shouldRender && (
-        <DialogCustom open={open} toggle={toggleDialog} body={Content} size="lg" />
+        <DialogCustom
+          open={open}
+          toggle={toggleDialog}
+          body={Content}
+          size="lg"
+        />
       )}
     </>
   );

@@ -2,6 +2,7 @@ const express = require("express");
 const notificationRouter = express.Router();
 const notificationController = require("../controllers/NotificationControllers");
 
+notificationRouter.get("/", notificationController.getAllNotifications);
 notificationRouter.put("/:id", notificationController.markNotificationAsRead);
 notificationRouter.delete("/:id", notificationController.deleteNotification);
 notificationRouter.get("/:userId", notificationController.getNotifications);

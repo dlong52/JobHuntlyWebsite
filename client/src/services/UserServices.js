@@ -28,7 +28,7 @@ const getUserById = async (params) => {
   return httpServices.get(`${apiURL.USER}/${params.queryKey[1]}`);
 };
 const createUser = (payload) => {
-  return httpServices.User(apiURL.USER, payload);
+  return httpServices.post(apiURL.USER, payload);
 };
 const updateUser = (payload) => {
   const { id, ...data } = payload;

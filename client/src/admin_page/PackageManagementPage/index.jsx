@@ -132,7 +132,7 @@ const PackageManagementPage = () => {
       {shouldRender && (
         <DialogMUI
           isPadding={false}
-          title={idPackage? "Cập nhật gói dịch vụ":"Thêm gói dịch vụ mới"}
+          title={idPackage ? "Cập nhật gói dịch vụ" : "Thêm gói dịch vụ mới"}
           disableScrollLock={true}
           className="w-fit"
           open={open}

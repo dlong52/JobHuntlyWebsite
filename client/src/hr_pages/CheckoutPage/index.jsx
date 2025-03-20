@@ -13,7 +13,7 @@ import {
 import { useSelector } from "react-redux";
 import { VnPayServices } from "../../services/VnPayServices";
 import { useNotifications } from "../../utils/notifications";
-import { useConvertData } from "../../hooks";
+import { useConvertData, useFilters } from "../../hooks";
 import Loading from "../../components/Loading";
 import { Button, CommonIcon } from "../../ui";
 import { vnpay } from "../../assets/images";
@@ -25,17 +25,30 @@ import { useSearchParams } from "react-router-dom";
 import { PaymentService } from "../../services/PaymentServices";
 import { SubscriptionService } from "../../services/SubscriptionServices";
 import moment from "moment";
+import { useGetAllSubscriptions } from "../../hooks/modules/subscription/useGetAllSubscriptions";
 
 const CheckoutPage = () => {
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
   const query = useQueryParams();
-  const { showError } = useNotifications();
+  const { showError, showInfo } = useNotifications();
   const id = query?.package;
   const { data, isLoading } = useGetPackage(id, { enabled: !!id });
   const { dataConvert } = useConvertData(data);
   const price = dataConvert?.price * ((100 - dataConvert?.discount) / 100) || 0;
 
+  const { filters: filtersSub } = useFilters({
+    employer_id: user.user_id,
+    status: "active",
+    activeOnly: true,
+  });
+  const { data: subData, isLoading: isLoadingSub } = useGetAllSubscriptions(
+    filtersSub,
+    {
+      enabled: !!user.user_id,
+    }
+  );
+  const { dataConvert: subscriptions } = useConvertData(subData);
   const handlePayment = async () => {
     try {
       setLoading(true);
@@ -91,7 +104,7 @@ const CheckoutPage = () => {
         employer_id: user?.user_id,
         package_id: orderInfo?.id,
         start_date: moment().format(),
-        end_date: moment().add(10, "days").format(),
+        end_date: moment().add(30, "days").format(),
         job_post_remaining: orderInfo?.job_post_remaining,
       });
       if (subscriptionRes?.data?.status === "success") {
@@ -123,6 +136,10 @@ const CheckoutPage = () => {
       return;
     }
   }, [transactionInfo]);
+  const checkAlreadyPackage = subscriptions?.some(
+    (item) => item.package_id._id === id
+  );
+  console.log(checkAlreadyPackage);
 
   return (
     <>
@@ -291,7 +308,15 @@ const CheckoutPage = () => {
                     startIcon={<CommonIcon.Payment />}
                     size={"large"}
                     className="mt-5 !bg-primary hover:bg-blue-600 text-white py-3 rounded-lg"
-                    onClick={handlePayment}
+                    onClick={() => {
+                      if (checkAlreadyPackage) {
+                        showInfo(
+                          "Bạn đang sử dụng gói dịch vụ này vui lòng chọn gói khác!"
+                        );
+                        return;
+                      }
+                      handlePayment();
+                    }}
                   >
                     Thanh toán
                   </Button>

@@ -3,16 +3,30 @@ import React from "react";
 import { CommonIcon } from "../../../ui";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteBase } from "../../../constants/routeUrl";
+import { PACKAGE_CODE } from "../../../constants/enum";
+import { useNotifications } from "../../../utils/notifications";
 
-const PackageItem = ({ id, title, price, features }) => {
+const PackageItem = ({ id, title, price, features, code, subscriptions }) => {
   const navigate = useNavigate();
+  const { showInfo } = useNotifications();
+  const checkAlreadyPackage = subscriptions?.some(
+    (item) => item.package_id._id === id
+  );
   return (
     <div className="flex flex-col gap-2 rounded-md transition-all min-h-[400px] duration-500 bg-white overflow-hidden">
       <Link
         to={`${RouteBase.HRPackage}/${id}`}
-        className="bg-gradient-to-tr from-primary-dark via-primary to-primary-light pt-[6px]"
+        className={`bg-gradient-to-tr ${
+          code === PACKAGE_CODE.ECO
+            ? "bg-accent-green"
+            : code === PACKAGE_CODE.PRO
+            ? "bg-accent-yellow"
+            : code === PACKAGE_CODE.MAX
+            ? "bg-blue-800"
+            : "from-primary-dark via-primary to-primary-light"
+        } pt-[6px]`}
       >
-        <Box className="bg-neutrals-100 shadow-inner text-white flex items-center justify-center py-3 rounded-t-lg">
+        <Box className="bg-neutrals-100 relative shadow-inner text-white flex items-center justify-center py-3 rounded-t-lg">
           <Typography
             textTransform={"uppercase"}
             fontSize={"17px"}
@@ -25,6 +39,11 @@ const PackageItem = ({ id, title, price, features }) => {
           >
             {title}
           </Typography>
+          {code === PACKAGE_CODE.MAX_PLUS && (
+            <div className="absolute right-0 from-primary-dark bg-gradient-to-tr via-primary to-primary-light text-[10px] py-[3px] px-3 rounded-l-sm font-medium">
+              VIP
+            </div>
+          )}
         </Box>
       </Link>
       <Box className="p-4 w-full flex flex-col gap-5">
@@ -40,6 +59,12 @@ const PackageItem = ({ id, title, price, features }) => {
         </Typography>
         <Button
           onClick={() => {
+            if (checkAlreadyPackage) {
+              showInfo(
+                "Bạn đang sử dụng gói dịch vụ này vui lòng chọn gói khác!"
+              );
+              return;
+            }
             navigate(`${RouteBase.HRCheckout}?package=${id}`);
           }}
           variant="outlined"
@@ -54,9 +79,9 @@ const PackageItem = ({ id, title, price, features }) => {
               <Box key={index} className="flex items-start gap-3">
                 <CommonIcon.CheckRounded
                   fontSize="small"
-                  className="rounded-full bg-primary-light p-[3px] text-primary"
+                  className="rounded-full bg-primary-light p-[2px] mt-[2px] text-primary"
                 />
-                <Typography fontSize={"15px"} color="var(--neutrals-80)">
+                <Typography fontSize={"14px"} color="var(--neutrals-80)">
                   {item}
                 </Typography>
               </Box>

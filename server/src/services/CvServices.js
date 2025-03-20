@@ -1,4 +1,4 @@
-const CV = require('../models/CV');
+const CV = require("../models/CV");
 
 // Create a new CV
 const createCV = async (cvData) => {
@@ -6,32 +6,41 @@ const createCV = async (cvData) => {
     const newCV = new CV(cvData);
     return await newCV.save();
   } catch (error) {
-    throw new Error('Failed to create CV');
+    throw new Error("Failed to create CV");
   }
 };
 
 // Get all CVs with optional filters
 const getAllCVs = async (filters = {}, options = {}) => {
   try {
-    const { page = 1, limit = 10, sortBy = 'created_at', order = 'desc' } = options;
-    const sort = { [sortBy]: order === 'desc' ? -1 : 1 };
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = "created_at",
+      order = "desc",
+    } = options;
+    const sort = { [sortBy]: order === "desc" ? -1 : 1 };
     const skip = (page - 1) * limit;
 
-    const cvs = await CV.find(filters).sort(sort).skip(skip).limit(parseInt(limit)).populate("theme");
+    const cvs = await CV.find(filters)
+      .sort(sort)
+      .skip(skip)
+      .limit(parseInt(limit))
+      .populate("theme");
     const total = await CV.countDocuments(filters);
 
     return { cvs, total, page, limit };
   } catch (error) {
-    throw new Error('Failed to fetch CVs');
+    throw new Error("Failed to fetch CVs");
   }
 };
 
 // Get a CV by ID
 const getCVById = async (cvId) => {
   try {
-    return await CV.findById(cvId).populate('user');
+    return await CV.findById(cvId).populate("user").populate("theme");
   } catch (error) {
-    throw new Error('Failed to fetch CV');
+    throw new Error("Failed to fetch CV");
   }
 };
 
@@ -40,7 +49,7 @@ const updateCV = async (cvId, cvData) => {
   try {
     return await CV.findByIdAndUpdate(cvId, cvData, { new: true });
   } catch (error) {
-    throw new Error('Failed to update CV');
+    throw new Error("Failed to update CV");
   }
 };
 
@@ -49,7 +58,7 @@ const deleteCV = async (cvId) => {
   try {
     return await CV.findByIdAndDelete(cvId);
   } catch (error) {
-    throw new Error('Failed to delete CV');
+    throw new Error("Failed to delete CV");
   }
 };
 

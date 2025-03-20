@@ -1,18 +1,40 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-import { Box, Typography, InputBase, Divider } from "@mui/material";
+import { Box, Typography, InputBase } from "@mui/material";
 import { CommonAvatar, CommonIcon } from "../../ui";
-import { emptyChat } from "../../assets/images";
+import { cpLogo, emptyChat } from "../../assets/images";
 import { Logo } from "../../components";
 import { Form, Formik } from "formik";
 import { FormikField, InputField } from "../../components/CustomFieldsFormik";
 import { useSelector } from "react-redux";
+import { useConvertData, useFilters, useQueryParams } from "../../hooks";
+import { useGetAllApplicants } from "../../hooks/modules/application/userGetApplicants";
+import { RouteBase } from "../../constants/routeUrl";
+import { Link } from "react-router-dom";
+import { useGetAllConversations } from "../../hooks/modules/conversation/useGetAllConversations";
+import { useGetAppliedJobs } from "../../hooks/modules/application/useGetAppliedJobs";
+import { ConversationService } from "../../services/ConversationServices";
 const socket = io("http://localhost:5000");
 
 const ConnectPage = () => {
-  const user = useSelector((state)=>state.user);
+  const { id } = useQueryParams();
+
+  const user = useSelector((state) => state.user);
   const [messages, setMessages] = useState([]);
-  const conversationId = "12345";
+  const { filters, handleChangePage } = useFilters({
+    page: 1,
+    limit: 10,
+    candidate: user?.user_id,
+    isDuplicate: false,
+  });
+  const { data, isLoading } = useGetAppliedJobs(user?.user_id, {});
+  // const { data, isLoading } = useGetAllApplicants(filters, {
+  //   enabled: !!user?.user_id,
+  // });
+  const { dataConvert } = useConvertData(data);
+  const { data: cvsData } = useGetAllConversations(user?.user_id);
+  const { dataConvert: conversations } = useConvertData(data);
+  const conversationId = "123456789";
 
   useEffect(() => {
     socket.emit("joinConversation", { conversationId });
@@ -25,7 +47,24 @@ const ConnectPage = () => {
       socket.off("receiveMessage");
     };
   }, [conversationId]);
-
+  const handleCreateConversation = async () => {
+    try {
+      await ConversationService.createConversation({
+        participants: [
+          {
+            user_id: user?.user_id,
+            username: user?.username,
+            role: user?.role,
+          },
+          {
+            user_id: user?.user_id,
+            username: user?.username,
+            role: user?.role,
+          },
+        ],
+      });
+    } catch (error) {}
+  };
   return (
     <Box className="fixed inset-0 grid grid-cols-12">
       <Box className="col-span-3 p-5 bg-white rounded-md border-r">
@@ -43,10 +82,15 @@ const ConnectPage = () => {
             }}
           />
         </Box>
+        <Box>
+          {conversations?.map((item) => {
+            return <Box key={item?._id}></Box>;
+          })}
+        </Box>
       </Box>
       <Box className="col-span-6 flex flex-col justify-between bg-white rounded-md">
         <div className="flex items-center gap-2 p-5 border-b">
-          <CommonAvatar active />
+          <CommonAvatar />
           <Typography
             fontSize={"16px"}
             color="var(--neutrals-100)"
@@ -138,6 +182,37 @@ const ConnectPage = () => {
         <Typography className="!font-semibold">
           Tin tuyển dụng đã ứng tuyển{" "}
         </Typography>
+        <Box className="flex flex-col gap-6 mt-10">
+          {dataConvert?.map((item) => {
+            return (
+              <>
+                <Box className="flex items-center gap-5 overflow-hidden">
+                  <div className="flex w-4/5 gap-3">
+                    <img
+                      src={item?.company?.logo || cpLogo}
+                      alt=""
+                      className="w-10 rounded-full"
+                    />
+                    <Box className="flex flex-col w-full">
+                      <span className="font-semibold text-sm truncate">
+                        {item?.title}
+                      </span>
+                      <span className="text-neutrals-60 text-sm truncate">
+                        {item?.company?.name}
+                      </span>
+                    </Box>
+                  </div>
+                  <Link
+                    to={`${RouteBase.Connect}?id=${item?.posted_by}`}
+                    className="!bg-primary-light text-nowrap !rounded-full !text-primary h-fit py-1 px-2 text-sm"
+                  >
+                    Nhắn tin
+                  </Link>
+                </Box>
+              </>
+            );
+          })}
+        </Box>
       </Box>
     </Box>
   );

@@ -5,89 +5,89 @@ const sidebarHrRoutes = [
   {
     path: RouteBase.HROverview,
     name: "Bảng tin",
-    icon: CommonIcon.DashboardOutlined,
+    icon: CommonIcon.DashboardCustomizeTwoTone,
   },
   {
     path: RouteBase.HRJobs,
     name: "Tin tuyển dụng",
-    icon: CommonIcon.NewspaperOutlined,
+    icon: CommonIcon.NewspaperTwoTone,
   },
   {
     path: RouteBase.HRRecruitmentReport,
     name: "Báo cáo tuyển dụng",
-    icon: CommonIcon.FeedOutlined,
+    icon: CommonIcon.FeedTwoTone,
   },
   {
     path: RouteBase.HRCvManagement,
     name: "Quản lí CV",
-    icon: CommonIcon.AccountCircleOutlined,
+    icon: CommonIcon.AccountCircleTwoTone,
   },
   {
     path: RouteBase.HRMyCompany,
     name: "Doanh nghiệp",
-    icon: CommonIcon.Business,
+    icon: CommonIcon.BusinessTwoTone,
   },
   {
     path: RouteBase.HRPackage,
     name: "Mua dịch vụ",
-    icon: CommonIcon.Wallet,
+    icon: CommonIcon.WalletTwoTone,
   },
   {
     path: RouteBase.HRMyPackage,
     name: "Dịch vụ của tôi",
-    icon: CommonIcon.AutoFixHighOutlined,
+    icon: CommonIcon.CardTravelTwoTone,
   },
 ];
 const sidebarAdminRoutes = [
   {
     path: RouteBase.AdminOverview,
     name: "Bảng tin",
-    icon: CommonIcon.DashboardOutlined,
+    icon: CommonIcon.DashboardCustomizeTwoTone,
   },
   {
     path: RouteBase.AdminPostManagement,
     name: "Tin tuyển dụng",
-    icon: CommonIcon.NewspaperOutlined,
+    icon: CommonIcon.NewspaperTwoTone,
   },
   {
     path: RouteBase.AdminPackageManagement,
     name: "Dịch vụ",
-    icon: CommonIcon.Wallet,
+    icon: CommonIcon.WalletTwoTone,
   },
   {
     path: RouteBase.AdminNotifyManagement,
     name: "Thông báo",
-    icon: CommonIcon.Notifications,
+    icon: CommonIcon.NotificationsTwoTone,
   },
   {
     path: RouteBase.AdminCompanyManagement,
     name: "Quản lí công ty",
-    icon: CommonIcon.Business,
+    icon: CommonIcon.BusinessTwoTone,
   },
   {
     path: RouteBase.AdminUserManagement,
     name: "Quản lí người dùng",
-    icon: CommonIcon.People,
+    icon: CommonIcon.PeopleTwoTone,
   },
   {
     path: RouteBase.AdminRevenueManagement,
     name: "Quản lí doanh thu",
-    icon: CommonIcon.Troubleshoot,
+    icon: CommonIcon.TroubleshootTwoTone,
   },
   {
     path: RouteBase.AdminCategory,
     name: "Quản lí danh mục",
-    icon: CommonIcon.Category,
+    icon: CommonIcon.CategoryTwoTone,
   },
   {
     path: RouteBase.AdminCvTheme,
     name: "Chủ đề CV",
-    icon: CommonIcon.ColorLens,
+    icon: CommonIcon.ColorLensTwoTone,
   },
   {
     path: RouteBase.AdminReport,
     name: "Báo cáo",
-    icon: CommonIcon.Report,
+    icon: CommonIcon.ReportTwoTone,
   },
 ];
 export { sidebarHrRoutes, sidebarAdminRoutes };

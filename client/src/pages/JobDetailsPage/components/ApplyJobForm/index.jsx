@@ -17,6 +17,7 @@ import { ApplicantService } from "../../../../services/ApplicationServices";
 import { useConvertData, useFilters } from "../../../../hooks";
 import { useGetAllCvs } from "../../../../hooks/modules/cv/useGetAllCv";
 import RadioCvField from "./components/RadioCvField";
+import { RouteBase } from "../../../../constants/routeUrl";
 
 const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
   const user = useSelector((state) => state.user);
@@ -29,14 +30,23 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
     if (dataConvert) {
       return dataConvert?.map((item) => {
         return {
-          label: item?.cv_name,
-          values: item._id,
+          label: (
+            <Typography>
+              {item?.cv_name}{" "}
+              <a
+                className="text-primary text-sm ml-2 font-medium"
+                target="_blank"
+                href={`${RouteBase.ViewCv}/${item._id}`}
+              >
+                Xem
+              </a>
+            </Typography>
+          ),
+          value: item._id,
         };
       });
     }
   }, [dataConvert]);
-  console.log(cvOptions);
-  
   const [loading, setLoading] = useState(false);
 
   const { showSuccess, showError, showInfo } = useNotifications();
@@ -46,18 +56,30 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
       .trim()
       .max(1000, "Thư xin việc không được vượt quá 1000 ký tự.")
       .required("Thư xin việc là bắt buộc."),
+    cv_url: Yup.string().url("CV URL không hợp lệ").nullable(),
+    cv: Yup.mixed().nullable(),
+    isCvOnline: Yup.boolean(),
 
-    cv_url: Yup.string().trim().url("CV phải là một URL hợp lệ."),
+    // Kiểm tra ít nhất một trong hai trường cv_url hoặc cv phải có giá trị
+    cvValidation: Yup.string().test(
+      "cv-or-url-required",
+      "Vui lòng tải lên CV hoặc nhập link CV",
+      function () {
+        const { cv_url, cv } = this.parent;
+        return !!cv_url || !!cv;
+      }
+    ),
   });
-
   const handleSubmit = async (values) => {
     const payload = {
       candidate: user?.user_id,
       job: jobId,
-      cv_url: values?.cv_url,
       company: companyId,
       cover_letter: values?.cover_letter,
+      ...(values?.cv_url ? { cv_url: values.cv_url } : {}),
+      ...(values?.cv ? { cv: values.cv } : {}),
     };
+
     setLoading(true);
     try {
       if (user?.user_id && user?.role === ROLE.CANDIDATE) {
@@ -65,8 +87,8 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
         if (res?.data?.status === "success") {
           await NotificationService.sendToUser({
             userId: posted_by?._id,
-            title: `đã ứng tuyển vào ${name}`,
-            body: "vndslk",
+            title: `${user?.username} đã ứng tuyển vào ${name}`,
+            body: "",
           });
         }
         showSuccess("Ứng tuyển thành công!");
@@ -87,15 +109,17 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
         initialValues={{
           cover_letter: "",
           cv_url: "",
+          cv: "",
           isCvOnline: false,
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        // enableReinitialize
       >
         {({ values }) => {
           return (
-            <Form className="">
-              <div className="flex flex-col gap-5 w-[700px] p-5 overflow-y-auto">
+            <Form className="min-w-[600px]">
+              <div className="flex flex-col gap-5 max-w-[700px] p-5 overflow-y-auto">
                 <Typography
                   className="flex items-center gap-2"
                   fontSize={"16px"}
@@ -109,9 +133,9 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
                   <FormikField name="cv_url" component={UploadCV} />
                 )}
                 {values.isCvOnline && (
-                  <Box className="p-4 rounded-md border border-primary">
+                  <Box className="p-4 px-5 rounded-md border border-primary">
                     <FormikField
-                      name="isCvOnline"
+                      name="cv"
                       labelTop="Chọn CV online"
                       classNameLabel="text-neutrals-100 font-medium"
                       options={cvOptions}

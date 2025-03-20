@@ -33,6 +33,7 @@ const JobBarChart = () => {
   const { filters } = useFilters({
     page: 1,
     limit: 5,
+    sortBy: "job_count",
     sort: "desc",
   });
 
@@ -55,7 +56,7 @@ const JobBarChart = () => {
         Nhu cầu tuyển dụng theo ngành nghề
       </h2>
       <ResponsiveContainer width="100%" height={250}>
-        <BarChart data={categories} barSize={50}>
+        <BarChart data={categories} barSize={35} margin={{ left: -40 }}>
           <defs>
             {categories.map((entry, index) => (
               <linearGradient
@@ -90,6 +91,7 @@ const JobBarChart = () => {
           >
             {categories.map((entry, index) => (
               <Cell
+                radius={[3, 3, 0, 0]}
                 key={`cell-${index}`}
                 fill={`url(#gradient-${index})`}
                 style={{ transition: "all 0.5s ease-in-out" }}

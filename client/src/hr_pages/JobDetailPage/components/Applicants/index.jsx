@@ -1,7 +1,7 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { RouteBase } from "../../../../constants/routeUrl";
-import { Button, CommonAvatar, CommonIcon } from "../../../../ui";
+import { Button, CommonAvatar } from "../../../../ui";
 import { useGetAllApplicants } from "../../../../hooks/modules/application/userGetApplicants";
 import CustomTable from "../../../../ui/Table";
 import useFilters from "../../../../hooks/useFilters";
@@ -10,13 +10,9 @@ import moment from "moment";
 import Status from "./components/Status";
 import { useToggleDialog } from "../../../../hooks";
 import DialogMUI from "../../../../components/Dialogs";
-import ApplicantDetail from "./components/AplicantDetail";
-import { NotificationService } from "../../../../services/NotificationServices";
-import { useSelector } from "react-redux";
-import { SendEmailServices } from "../../../../services/SendEmailServices";
+import ApplicantDetail from "./components/ApplicantDetail";
 import { useNotifications } from "../../../../utils/notifications";
 import BreadcrumbMui from "../../../../ui/BreadcrumbMui";
-import TooltipMui from "../../../../ui/TooltipMui";
 import ChipMui from "../../../../ui/Chip";
 
 const Applicants = ({ jobId }) => {
@@ -44,7 +40,7 @@ const Applicants = ({ jobId }) => {
       setApplicantId(null);
     }
   }, [open]);
-  
+
   const columns = [
     {
       field: "candidate",
@@ -80,7 +76,13 @@ const Applicants = ({ jobId }) => {
     {
       field: "isViewed",
       headerName: "Trạng thái xem",
-      renderCell: (value) => <ChipMui label={value? "Đã xem" : "Chưa xem"} variant={"outlined"} color={value ? "info" : "warning"} />,
+      renderCell: (value) => (
+        <ChipMui
+          label={value ? "Đã xem" : "Chưa xem"}
+          variant={"outlined"}
+          color={value ? "info" : "warning"}
+        />
+      ),
     },
     {
       field: "_id",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import { Typography } from "@mui/material";
@@ -6,8 +6,13 @@ import BreadcrumbMui from "../../ui/BreadcrumbMui";
 import { Form, Formik } from "formik";
 import { FormikField, InputField } from "../../components/CustomFieldsFormik";
 import Button from "../../ui/Button";
+import { useFilters } from "../../hooks";
+import { useGetNotifications } from "../../hooks/modules/notification/useGetNotifications";
+import { NotificationService } from "../../services/NotificationServices";
+import { useNotifications } from "../../utils/notifications";
 
 const NotifyManagementPage = () => {
+  const { showSuccess, showError } = useNotifications();
   const breadcrumbs = [
     <Link
       to={RouteBase.AdminOverview}
@@ -19,16 +24,31 @@ const NotifyManagementPage = () => {
       Thông báo
     </Typography>,
   ];
-  const handleSubmit = async () => {
+  const initialFilters = useMemo(
+    () => ({ page: 1, limit: 20, sort: "desc", type: "system" }),
+    []
+  );
+  const { filters } = useFilters(initialFilters);
+
+  const { data, isLoading, refetch } = useGetNotifications(filters);
+
+  const notifications = useMemo(() => data?.data?.data || [], [data]);
+  const handleSubmit = async (values) => {
     try {
-    } catch (error) {}
+      NotificationService.sendToAll(values);
+      showSuccess("Gửi thông báo thành công!");
+    } catch (error) {
+      showError(error);
+    }
   };
   const initialValues = {
-
-  }
+    title: "",
+    body: "",
+    type: "system",
+  };
   return (
     <div>
-      <BreadcrumbMui title={"Thông báo"} breadcrumbs={breadcrumbs} />
+      <BreadcrumbMui title={"Thông báo hệ thống"} breadcrumbs={breadcrumbs} />
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}

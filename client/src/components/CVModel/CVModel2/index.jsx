@@ -13,7 +13,7 @@ const CVModel2 = forwardRef(({ values, show = true, isMock = false }, ref) => {
   
   return (
     <div ref={ref} className={`w-fit ${show ? "" : "absolute left-[-99999999px]"}`}>
-      <div className="w-[794px] shadow p-5">
+      <div className="w-[794px] bg-white min-h-[1122.5px] shadow p-5">
         {/* Thông tin ứng viên */}
         <div className="flex items-start gap-5">
           {/* Avatar */}

@@ -3,6 +3,7 @@ const jobRouter = express.Router();
 const JobController = require("../controllers/JobControllers");
 
 jobRouter.get("", JobController.getAllJobs); 
+jobRouter.get("/count", JobController.getJobCounts); 
 jobRouter.get("/:id", JobController.getJobById); 
 jobRouter.post("", JobController.createJob);
 jobRouter.put("/:id", JobController.updateJob);

@@ -21,9 +21,9 @@ const Sidebar = () => {
               <Box key={index} className={`relative px-6`}>
                 <Link
                   to={route.path}
-                  className={`flex items-center gap-x-5 px-3 py-3 rounded-lg font-Inter text-base ${
+                  className={`flex items-center gap-x-5 px-3 py-3 rounded-lg font-Inter text-[15px] font-medium ${
                     location.pathname === route.path
-                      ? "bg-primary-light text-primary font-medium"
+                      ? "bg-primary-light text-primary"
                       : "bg-transparent text-gray-700"
                   }`}
                 >

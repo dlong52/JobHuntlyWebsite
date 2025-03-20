@@ -8,6 +8,12 @@ export const cvTheme = {
   "POLITE-THEME": "POLITE-THEME",
   "DELICATE-THEME": "DELICATE-THEME",
 };
+export const PACKAGE_CODE = {
+  ECO: "eco",
+  PRO: "pro",
+  MAX: "max",
+  MAX_PLUS: "max_plus",
+};
 export const employmentTypeOptions = [
   {
     label: "Toàn thời gian",
@@ -48,6 +54,7 @@ export const APPLICANT_STATUS = {
   SUITABLE: "suitable",
   ACCEPTED: "accept",
   REJECTED: "rejected",
+  INTERVIEW: "interview",
 };
 
 export const applicantStatusOptions = [
@@ -66,6 +73,10 @@ export const applicantStatusOptions = [
   {
     label: "Nhận việc",
     value: APPLICANT_STATUS.ACCEPTED,
+  },
+  {
+    label: "Hẹn phỏng vấn",
+    value: APPLICANT_STATUS.INTERVIEW,
   },
 ];
 export const exps = {

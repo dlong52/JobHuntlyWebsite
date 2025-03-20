@@ -11,4 +11,6 @@ export { default as ReturnPaymentPage } from "./ReturnPaymentPage";
 export { default as CvManagementHrPage } from "./CvManagementHrPage";
 export { default as RecruitmentReportPage } from "./RecruitmentReportPage";
 export { default as MyCompanyPage } from "./MyCompanyPage";
-export { default as VerifyPage } from "./VerifyPage";
+export { default as VerifyHrPage } from "./VerifyHrPage";
+export { default as VerifyPhoneHrPage } from "./VerifyPhoneHrPage";
+export { default as CreateEditJobPage } from "./CreateEditJobPage";

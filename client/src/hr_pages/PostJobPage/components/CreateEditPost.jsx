@@ -21,6 +21,7 @@ import { useNotifications } from "../../../utils/notifications";
 import moment from "moment";
 import { useGetPost } from "../../../hooks/modules/post/useGetPost";
 import { CommonStyles } from "../../../ui";
+import SelectSubscriptionField from "../../../components/SelectField/SelectSubscriptionField";
 
 const CreateEditJobPost = ({ id, toggle, refetch }) => {
   const user = useSelector((state) => state.user);
@@ -62,6 +63,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
       title: values.title,
       experience: values?.isYear ? values.experience * 12 : values.experience,
       gender: values?.gender,
+      subscription_id: values?.subscription_id?.value,
       description: values.description,
       requirements: values.requirements,
       job_benefit: values.job_benefit,
@@ -113,6 +115,10 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
       const checkIsYear = dataEdit?.experience % 12 === 0;
       return {
         title: dataEdit?.title,
+        subscription_id: {
+          label: dataEdit?.subscription_id?.package_id?.name,
+          value: dataEdit?.subscription_id?._id,
+        },
         experience: checkIsYear
           ? dataEdit?.experience / 12
           : dataEdit?.experience,
@@ -173,7 +179,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
               <Form className="flex flex-col w-[1000px] relative">
                 <div className="grid grid-cols-12 gap-4 p-5">
                   <FormikField
-                    classNameContainer="col-span-12"
+                    classNameContainer="col-span-8"
                     className="bg-[#f8fafc]"
                     required
                     classNameLabel="font-medium text-neutrals-100"
@@ -181,6 +187,12 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     component={InputField}
                     labelTop="Tiêu đề công việc"
                     placeholder="Nhập tiêu đề công việc"
+                  />
+                  <SelectSubscriptionField
+                    disabled={!!id}
+                    className="bg-[#f8fafc]"
+                    labelTop="Chạy dịch vụ"
+                    classNameContainer="col-span-4"
                   />
                   {/* Experience */}
                   <div className="col-span-8 flex items-center">
@@ -204,6 +216,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                   <FormikField
                     classNameContainer="col-span-12"
                     name="description"
+                    className="bg-[#f8fafc]"
                     component={CkEditerField}
                     label="Mô tả công việc"
                     classNameLabel="font-medium text-neutrals-100"

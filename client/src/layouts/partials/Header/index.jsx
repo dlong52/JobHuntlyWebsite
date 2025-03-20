@@ -12,27 +12,29 @@ import useFilters from "../../../hooks/useFilters";
 import { useGetAllNotifications } from "../../../hooks/modules/notification/useGetAllNotifications";
 import { useLoadingUser } from "../../../providers/LoadingUserProvider";
 import LoadingAccount from "./components/LoadingAccount";
+import { useNotification } from "../../../providers/NotificationProvider";
 
 const Header = () => {
   const location = useLocation();
   const user = useSelector((state) => state.user);
   const { isLoading: loadingUser } = useLoadingUser();
   const [isScrolled, setIsScrolled] = useState(false);
-  const { filters } = useFilters({
-    page: 1,
-    limit: 5,
-    sort: "desc",
-  });
-  const { data, isLoading, refetch } = useGetAllNotifications(
-    user?.user_id,
-    filters
-  );
-  const notifications = useMemo(() => {
-    if (data) {
-      return data?.data?.data;
-    }
-    return [];
-  }, [data]);
+  const { notifications, isLoading, refetch, unreadCount } = useNotification();
+  // const { filters } = useFilters({
+  //   page: 1,
+  //   limit: 5,
+  //   sort: "desc",
+  // });
+  // const { data, isLoading, refetch } = useGetAllNotifications(
+  //   user?.user_id,
+  //   filters
+  // );
+  // const notifications = useMemo(() => {
+  //   if (data) {
+  //     return data?.data?.data;
+  //   }
+  //   return [];
+  // }, [data]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -128,7 +130,7 @@ const Header = () => {
                   >
                     <Badge
                       color="error"
-                      badgeContent={data?.data?.unreadCount}
+                      badgeContent={unreadCount}
                       max={99}
                     >
                       <Box className="rounded-full size-[40px] text-primary bg-[#2121d120] flex justify-center items-center cursor-pointer">

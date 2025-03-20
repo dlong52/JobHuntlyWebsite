@@ -1,22 +1,44 @@
 import { Box, IconButton, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TableMui from "../../ui/TableMui";
 import { useGetAllReports } from "../../hooks/modules/report/useGetAllReports";
-import { useConvertData, useFilters } from "../../hooks";
+import { useConvertData, useFilters, useToggleDialog } from "../../hooks";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
 import { CommonAvatar, CommonIcon } from "../../ui";
-import { companyLogoDefault } from "../../assets/images";
 import TooltipMui from "../../ui/TooltipMui";
+import ChipMui from "../../ui/Chip";
+import DialogMUI from "../../components/Dialogs";
+import UpdateStatus from "./components/UpdateStatus";
+import HideJob from "./components/HideJob";
+import SkipReport from "./components/SkipReport";
 
 const ReportManagementPage = () => {
+  const [userId, setUserId] = useState(null);
+  const [jobId, setJobId] = useState(null);
+  const [reportId, setReportId] = useState(null);
   const { filters, handleChangePage } = useFilters({
     page: 1,
     limit: 20,
   });
   const { data, isLoading } = useGetAllReports();
   const { dataConvert } = useConvertData(data);
+  const {
+    open: openUpdateStatus,
+    toggle: toggleUpdateStatus,
+    shouldRender: shouldRenderUpdateStatus,
+  } = useToggleDialog();
+  const {
+    open: openJob,
+    toggle: toggleJob,
+    shouldRender: shouldRenderJob,
+  } = useToggleDialog();
+  const {
+    open: openSkip,
+    toggle: toggleSkip,
+    shouldRender: shouldRenderSkip,
+  } = useToggleDialog();
   const columns = [
     {
       field: "reported_by",
@@ -44,28 +66,11 @@ const ReportManagementPage = () => {
         return (
           <Link
             className="text-primary font-medium hover:underline text-[16px]"
-            to={`${RouteBase.Job}/${value?.report_job_target_id._id}`}
+            to={`${RouteBase.Job}/${value?.report_job_target_id?._id}`}
+            target="_blank"
           >
             {value?.report_job_target_id?.title}
           </Link>
-        );
-      },
-    },
-    {
-      field: "report_job_target_id",
-      headerName: "Công ty",
-      renderCell: (value) => {
-        console.log(value?.report_job_target_id);
-
-        return (
-          <TooltipMui content={<Box><CommonAvatar className={"sh"} src={value?.report_job_target_id?.company.logo || companyLogoDefault} /></Box>}>
-            <Link
-              className="text-primary font-medium hover:underline text-[16px]"
-              to={`${RouteBase.Company}/${value?.report_job_target_id?.company._id}`}
-            >
-              {value?.report_job_target_id?.company.name}
-            </Link>
-          </TooltipMui>
         );
       },
     },
@@ -77,17 +82,111 @@ const ReportManagementPage = () => {
       },
     },
     {
-        field: "_id",
-        headerName: "Hành động",
-        renderCell: (value) => {
-          return (
-            <IconButton>
-              <CommonIcon.Report className="!text-primary" />
-            </IconButton>
-          );
-        },
+      field: "reason",
+      headerName: "Trạng thái",
+      renderCell: (value) => {
+        return (
+          <ChipMui
+            label={
+              value?.status === "pending"
+                ? "Chưa giải quyết"
+                : value?.status === "resolved"
+                ? "Đã giải quyết"
+                : "Từ chối"
+            }
+            color={
+              value?.status === "pending"
+                ? "warning"
+                : value?.status === "resolved"
+                ? "success"
+                : "error"
+            }
+          />
+        );
       },
+    },
+    {
+      field: "_id",
+      headerName: "Hành động",
+      renderCell: (value) => {
+        return (
+          <Box className="flex items-center gap-1">
+            <TooltipMui content={"Ẩn bài đăng"}>
+              <IconButton
+                disabled={
+                  value.status === "rejected" || value.status === "resolved"
+                    ? true
+                    : false
+                }
+                onClick={() => {
+                  setJobId(value?.report_job_target_id?._id);
+                  setReportId(value?._id);
+                  toggleJob();
+                }}
+              >
+                <CommonIcon.VisibilityOff
+                  className={`${
+                    value.status === "rejected" || value.status === "resolved"
+                      ? "opacity-45"
+                      : ""
+                  } !text-primary`}
+                />
+              </IconButton>
+            </TooltipMui>
+            <TooltipMui content={"Khóa tài khoản đăng bài này"}>
+              <IconButton
+                disabled={
+                  value.status === "rejected" || value.status === "resolved"
+                    ? true
+                    : false
+                }
+                onClick={() => {
+                  setUserId(value?.report_job_target_id?.posted_by);
+                  setReportId(value?._id);
+                  toggleUpdateStatus();
+                }}
+              >
+                <CommonIcon.LockPerson
+                  className={`${
+                    value.status === "rejected" || value.status === "resolved"
+                      ? "opacity-45"
+                      : ""
+                  } !text-accent-red`}
+                />
+              </IconButton>
+            </TooltipMui>
+            <TooltipMui content={"Bỏ qua báo cáo này"}>
+              <IconButton
+                disabled={
+                  value.status === "rejected" || value.status === "resolved"
+                    ? true
+                    : false
+                }
+                onClick={() => {
+                  setReportId(value?._id);
+                  toggleSkip();
+                }}
+              >
+                <CommonIcon.ThumbDownAlt
+                  className={`${
+                    value.status === "rejected" || value.status === "resolved"
+                      ? "opacity-45"
+                      : ""
+                  } !text-accent-yellow`}
+                />
+              </IconButton>
+            </TooltipMui>
+          </Box>
+        );
+      },
+    },
   ];
+  useEffect(() => {
+    if (!openUpdateStatus) {
+      setUserId(null);
+      setReportId(null);
+    }
+  }, [openUpdateStatus]);
   const breadcrumbs = [
     <Link
       to={RouteBase.AdminOverview}
@@ -115,10 +214,35 @@ const ReportManagementPage = () => {
           onPageChange={handleChangePage}
           loading={isLoading}
           // toolbarActions={toolbarActionCategory}
-          toolbarTitle="Danh sách dịch vụ"
+          toolbarTitle="Danh sách các báo cáo"
           filters={filters}
         />
       </Box>
+      {/* HideJob */}
+      {shouldRenderUpdateStatus && (
+        <DialogMUI
+          toggle={toggleUpdateStatus}
+          open={openUpdateStatus}
+          title={"Khóa tài khoản"}
+          body={<UpdateStatus id={userId} reportId={reportId} />}
+        />
+      )}
+      {shouldRenderJob && (
+        <DialogMUI
+          toggle={toggleJob}
+          open={openJob}
+          title={"Ẩn tin tuyển dụng"}
+          body={<HideJob id={jobId} reportId={reportId} />}
+        />
+      )}
+      {shouldRenderSkip && (
+        <DialogMUI
+          toggle={toggleSkip}
+          open={openSkip}
+          title={"Bỏ qua báo cáo"}
+          body={<SkipReport reportId={reportId} />}
+        />
+      )}
     </div>
   );
 };

@@ -4,6 +4,9 @@ import httpServices from "./httpServices";
 const getAllPosts = async (params) => {
   return httpServices.get(apiURL.POST, { params: params.queryKey[1] });
 };
+const getJobCount = async () => {
+  return httpServices.get(`${apiURL.POST}/count`);
+};
 const getPost = async (params) => {
   return httpServices.get(`${apiURL.POST}/${params.queryKey[1]}`);
 };
@@ -19,6 +22,7 @@ const deleteJob = (id) => {
 };
 
 export const postService = {
+  getJobCount,
   getAllPosts,
   createPost,
   getPost,

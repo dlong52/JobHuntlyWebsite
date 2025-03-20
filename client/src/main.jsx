@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import AuthProvider from "./providers/AuthenticationProvider";
 import { SnackbarProvider } from "./providers/SnackbarProvider";
 import { LoadingUserProvider } from "./providers/LoadingUserProvider.jsx";
+import { NotificationProvider } from "./providers/NotificationProvider.jsx";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -22,7 +23,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <QueryClientProvider client={queryClient}>
               <LoadingUserProvider>
-                <App />
+                <NotificationProvider>
+                  <App />
+                </NotificationProvider>
               </LoadingUserProvider>
             </QueryClientProvider>
           </LocalizationProvider>

@@ -10,6 +10,7 @@ const COLORS = ["#FF6361", "#0088FE", "#845EC2", "#FFB700"];
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
+    const isDefaultData = payload[0].name === "Không có dữ liệu";
     return (
       <div
         className="text-white px-4 py-2 rounded-lg shadow-md"
@@ -17,17 +18,20 @@ const CustomTooltip = ({ active, payload }) => {
       >
         <div className="flex items-center gap-1 text-neutrals-100">
           <Typography fontSize={"14px"} fontWeight={500}>
-            {payload[0].name}:{" "}
+            {payload[0].name}
           </Typography>
-          <Typography fontSize={"14px"} fontWeight={500}>
-            {helpers.numberFormat(Number(payload[0].value))}
-          </Typography>
+          {!isDefaultData && (
+            <Typography fontSize={"14px"} fontWeight={500}>
+              {helpers.numberFormat(Number(payload[0].value))}
+            </Typography>
+          )}
         </div>
       </div>
     );
   }
   return null;
 };
+
 const CustomLegend = ({ payload }) => {
   return (
     <div className="flex flex-wrap justify-center mt-4">
@@ -45,9 +49,14 @@ const CustomLegend = ({ payload }) => {
     </div>
   );
 };
+const DEFAULT_DATA = [
+  { _id: "Không có dữ liệu", totalRevenue: 1, fill: "#D3D3D3" },
+];
+
 const RevenueByPackageChart = () => {
   const { data, isLoading } = useGetRevenueByPackage();
   const { dataConvert } = useConvertData(data);
+  const chartData = dataConvert?.length ? dataConvert : DEFAULT_DATA;
 
   return (
     <>
@@ -57,19 +66,22 @@ const RevenueByPackageChart = () => {
         <div className="flex flex-col items-center">
           <PieChart width={320} height={320}>
             <Pie
-              data={dataConvert}
+              data={chartData}
               dataKey="totalRevenue"
               nameKey="_id"
               cx="50%"
               cy="50%"
               animationDuration={800}
               animationEasing="ease-out"
-              fill="#8884d8"
             >
-              {dataConvert?.map((entry, index) => (
+              {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
+                  fill={
+                    dataConvert.length
+                      ? COLORS[index % COLORS.length]
+                      : "#D3D3D3"
+                  }
                 />
               ))}
             </Pie>

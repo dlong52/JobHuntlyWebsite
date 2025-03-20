@@ -48,7 +48,7 @@ database.connect();
 routes(app);
 
 // Check connect elasticsearch
-// checkElastic();
+checkElastic();
 
 // Innit socket
 initSocket(server);

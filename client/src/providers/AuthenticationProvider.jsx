@@ -68,8 +68,8 @@ const AuthProvider = ({ children }) => {
       setIsLogging(true);
       await helpers.sleepTime(1500);
 
+      await requestForToken(email);
       const res = await HttpService.post(apiURL.SIGN_IN, { email, password });
-      requestForToken(email);
       const { access_token } = res.data.data;
 
       HttpService.saveTokenStorage(access_token);

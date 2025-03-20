@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { AutocompleteField, FormikField } from "../CustomFieldsFormik";
 import { useGetAllRoles } from "../../hooks/modules/role/useGetAllRoles";
 import { ROLE } from "../../constants/enum";
+import { useConvertData } from "../../hooks";
 
 const SelectRoleField = ({
   labelTop,
@@ -12,7 +13,7 @@ const SelectRoleField = ({
   multiple,
 }) => {
   const { data, isLoading } = useGetAllRoles();
-  const roles = data?.data?.data;
+  const { dataConvert: roles } = useConvertData(data);
   const roleOptions = useMemo(() => {
     if (roles) {
       return roles?.map((role) => {
