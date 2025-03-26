@@ -56,7 +56,7 @@ const PackageManagementPage = () => {
           <ChipMui
             color={value ? "success" : "error"}
             label={value ? "Đang hoạt động" : "Không hoạt động"}
-            variant={"outlined"}
+            variant={"filled"}
           />
         );
       },

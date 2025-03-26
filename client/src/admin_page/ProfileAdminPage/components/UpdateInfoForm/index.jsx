@@ -48,8 +48,6 @@ const UpdateInfoForm = () => {
       showError(error);
     }
   };
-  console.log(moment(user?.birthday).format("DD/MM/YYYY"));
-
   return (
     <Box className="p-4 w-full">
       <Formik
@@ -147,7 +145,7 @@ const UpdateInfoForm = () => {
               <Button
                 type={"submit"}
                 size={"large"}
-                className={"col-span-3 !bg-accent-blue !text-white"}
+                className={"col-span-3 !bg-primary !normal-case !text-white"}
               >
                 Cập nhật
               </Button>

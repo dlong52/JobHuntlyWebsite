@@ -14,10 +14,15 @@ export const SnackbarProvider = ({ children }) => {
     title: "",
     message: "",
     severity: "success",
-    anchorOrigin: { vertical: "bottom", horizontal: "right" }, // Default position
+    anchorOrigin: { vertical: "bottom", horizontal: "right" },
   });
 
-  const showSnackbar = (message, severity = "success", title, anchor = { vertical: "bottom", horizontal: "right" }) => {
+  const showSnackbar = (
+    message,
+    severity = "success",
+    title,
+    anchor = { vertical: "bottom", horizontal: "right" }
+  ) => {
     setSnackbar({ open: true, title, message, severity, anchorOrigin: anchor });
   };
 
@@ -35,6 +40,7 @@ export const SnackbarProvider = ({ children }) => {
         anchorOrigin={snackbar.anchorOrigin} // Dynamic position
       >
         <Alert
+          variant="filled"
           onClose={handleClose}
           severity={snackbar.severity}
           sx={{ width: "100%" }}

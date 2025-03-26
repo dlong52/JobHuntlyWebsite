@@ -60,7 +60,6 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
     cv: Yup.mixed().nullable(),
     isCvOnline: Yup.boolean(),
 
-    // Kiểm tra ít nhất một trong hai trường cv_url hoặc cv phải có giá trị
     cvValidation: Yup.string().test(
       "cv-or-url-required",
       "Vui lòng tải lên CV hoặc nhập link CV",
@@ -114,7 +113,7 @@ const ApplyJobForm = ({ onClose, jobId, name, posted_by, companyId }) => {
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
-        // enableReinitialize
+        enableReinitialize
       >
         {({ values }) => {
           return (

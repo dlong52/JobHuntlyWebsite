@@ -25,10 +25,11 @@ const getAllCompanies = async (filters = {}, options = {}) => {
     query.name = { $regex: filters.name, $options: "i" };
   }
   if (filters.province) {
-    query["address.province.name"] = {
-      $regex: filters.province,
-      $options: "i",
-    };
+    query["address.province.name"] = { $regex: filters.province, $options: "i" };
+  }
+  // Add filter by province ID
+  if (filters.provinceId) {
+    query["address.province.id"] = filters.provinceId;
   }
 
   const skip = (page - 1) * limit;

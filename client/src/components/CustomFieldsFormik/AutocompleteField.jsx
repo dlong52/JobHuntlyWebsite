@@ -4,6 +4,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputAdornment from "@mui/material/InputAdornment";
+import Chip from "@mui/material/Chip"; // Thêm import Chip
 
 const AutocompleteField = ({
   field,
@@ -27,9 +28,24 @@ const AutocompleteField = ({
   const { name, value } = field;
   const { touched, errors, setFieldValue } = form;
   const showError = Boolean(touched[name] && errors[name]);
+
+  // Đảm bảo giá trị luôn là array nếu multiple=true
+  const currentValue = React.useMemo(() => {
+    if (multiple) {
+      return Array.isArray(value) ? value : value ? [value] : [];
+    } else {
+      return value || null;
+    }
+  }, [value, multiple]);
+
   const handleChange = (_, selectedValue) => {
-    setFieldValue(name, multiple ? selectedValue || [] : selectedValue || null);
+    if (multiple) {
+      setFieldValue(name, selectedValue || []);
+    } else {
+      setFieldValue(name, selectedValue || null);
+    }
   };
+
   return (
     <FormControl
       className={`flex flex-col gap-1 ${classNameContainer}`}
@@ -47,38 +63,56 @@ const AutocompleteField = ({
         defaultValue={defaultValue}
         multiple={multiple}
         getOptionLabel={(option) => option?.label ?? ""}
-        value={multiple ? value ?? [] : value ?? null}
+        value={currentValue}
         onChange={handleChange}
         isOptionEqualToValue={(option, selected) => {
-          return JSON.stringify(option) === JSON.stringify(selected);
+          if (!option && !selected) return true;
+          if (!option || !selected) return false;
+
+          // So sánh bằng value thay vì toàn bộ object
+          return option.value === selected.value;
         }}
         disabled={disabled}
+        renderTags={(tagValue, getTagProps) =>
+          tagValue.map((option, index) => (
+            <Chip
+              label={option.label}
+              {...getTagProps({ index })}
+              size={size === "small" ? "small" : "medium"}
+            />
+          ))
+        }
         renderInput={(params) => (
           <TextField
             {...params}
-            placeholder={placeholder}
+            placeholder={currentValue?.length > 0 ? "" : placeholder}
             size={size}
             className={className}
             error={showError}
             variant={variant}
-            // helperText={showError ? errors[name] : ""}
             InputProps={{
               ...params.InputProps,
-              startAdornment: leftIcon && (
-                <InputAdornment
-                  className={disabled ? "opacity-30" : ""}
-                  position="start"
-                >
-                  {leftIcon}
-                </InputAdornment>
+              startAdornment: (
+                <>
+                  {leftIcon && (
+                    <InputAdornment
+                      className={disabled ? "opacity-30" : ""}
+                      position="start"
+                    >
+                      {leftIcon}
+                    </InputAdornment>
+                  )}
+                  {params.InputProps.startAdornment}
+                </>
               ),
             }}
           />
         )}
         {...props}
       />
-
-      {showError && <FormHelperText>{errors[name]?.value}</FormHelperText>}
+      {showError && (
+        <FormHelperText>{errors[name]?.value || errors[name]}</FormHelperText>
+      )}
     </FormControl>
   );
 };

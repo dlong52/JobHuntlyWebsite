@@ -54,7 +54,7 @@ const CheckboxField = ({
         />
         {labelTop && (
           <label
-            className={`flex items-center cursor-pointer ${classNameLabel}`}
+            className={`flex text-neutrals-100 items-center cursor-pointer text-nowrap ${classNameLabel}`}
             htmlFor={name}
           >
             {labelTop}

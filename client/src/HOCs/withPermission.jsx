@@ -1,26 +1,45 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { RouteBase } from "../constants/routeUrl";
 import { ROLE } from "../constants/enum";
+import { NotFoundPage } from "../pages";
 
 const ComponentWrapper = ({ children, permissionAllow = [] }) => {
   const { role } = useSelector((state) => state.user);
+  const hasPermission = useMemo(() => {
+    return permissionAllow.includes(ROLE.ALL) || permissionAllow.includes(role);
+  }, [permissionAllow, role]);
 
-  if (permissionAllow.includes(ROLE.ALL) || permissionAllow.includes(role)) {
-    return <Fragment>{children}</Fragment>;
+  if (!hasPermission && !!role) {
+    return (
+      <div className="fixed inset-0 bg-white z-[9999999999999999]">
+        <NotFoundPage />
+      </div>
+    );
   }
-  // window.location.href = RouteBase.SignIn;
-  return null;
+
+  return <Fragment>{children}</Fragment>;
+};
+
+ComponentWrapper.propTypes = {
+  children: PropTypes.node.isRequired,
+  permissionAllow: PropTypes.arrayOf(PropTypes.string),
 };
 
 const withPermission = (Component, permissionAllow = []) => {
-  return function WrappedComponent(props) {
+  const WrappedComponent = (props) => {
     return (
       <ComponentWrapper permissionAllow={permissionAllow}>
         <Component {...props} />
       </ComponentWrapper>
     );
   };
+
+  WrappedComponent.propTypes = {
+    permissionAllow: PropTypes.arrayOf(PropTypes.string),
+  };
+
+  return WrappedComponent;
 };
 
 export default withPermission;

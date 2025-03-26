@@ -6,6 +6,7 @@ export { default as Location } from './icons/Name=Location.svg'
 export { default as Search } from './icons/Name=Search.svg'
 export { default as Twitter } from './icons/Name=Twitter.svg'
 export { default as excel } from './icons/excel.svg'
+export { default as search } from './icons/search.svg'
 export { default as VNFlag } from './icons/VNFlag.webp'
 
 // Logo
@@ -24,6 +25,7 @@ export { default as companyCoverDefault } from './background/companyCoverDefault
 export { default as bgCv } from './background/bgCv.jpg'
 export { default as bgAuth } from './background/bgAuth.png'
 export { default as bgLogin } from './background/bgLogin.svg'
+export { default as startConversation } from './background/startConversation.svg'
 export { default as chart } from './background/chart.svg'
 export { default as payment_success } from './background/payment_success.svg'
 export { default as sendOpt } from './background/sendOtp.svg'

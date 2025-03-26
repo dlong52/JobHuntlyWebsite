@@ -17,7 +17,7 @@ const UserInfo = ({ userId, onClose }) => {
   return (
     <>
       {!isLoading ? (
-        <Box className="min-w-[400px] min-h-full flex flex-col gap-5 text-neutrals-100">
+        <Box className="min-w-[400px] max-w-[450px] min-h-full flex flex-col gap-5 text-neutrals-100">
           <Box className="flex justify-between items-center px-4 py-2 border-b w-full">
             <Typography fontWeight={500} fontSize={"18px"}>
               Thông tin tài khoản
@@ -30,12 +30,14 @@ const UserInfo = ({ userId, onClose }) => {
             <Box className="flex justify-center">
               <CommonStyles.CommonAvatar
                 className={"!size-24 !bg-accent-blue"}
-                src={dataConvert?.profile?.avatar_url}
+                src={
+                  dataConvert?.profile?.avatar_url &&
+                  dataConvert?.profile?.avatar_url
+                }
                 char={
                   !dataConvert?.profile?.avatar_url &&
                   dataConvert?.profile?.name.charAt(0)
                 }
-                variant={"rounded"}
               />
             </Box>
             <Box className="w-full flex justify-between mt-10 px-4">
@@ -49,11 +51,11 @@ const UserInfo = ({ userId, onClose }) => {
                     dataConvert?.is_verified ? "Đã xác thực" : "Chưa xác thực"
                   }`}
                 >
-                  <CommonIcon.CheckCircle
+                  <CommonIcon.Verified
                     fontSize="small"
                     className={`${
                       dataConvert?.is_verified
-                        ? "!text-green-600"
+                        ? "!text-accent-green"
                         : "!text-gray-600"
                     }`}
                   />
@@ -64,7 +66,10 @@ const UserInfo = ({ userId, onClose }) => {
               <Typography fontWeight={500}>Thông tin liên lạc</Typography>
               <Box className="flex flex-col gap-4">
                 <Box className="flex gap-2">
-                  <CommonIcon.MailOutlineRounded fontSize="small" />
+                  <CommonIcon.MailOutlineRounded
+                    className="!text-neutrals-100 !mt-[2px]"
+                    fontSize="small"
+                  />
                   <Box className="flex flex-col">
                     <Typography fontSize={"14px"} fontWeight={500}>
                       Địa chỉ email
@@ -75,7 +80,10 @@ const UserInfo = ({ userId, onClose }) => {
                   </Box>
                 </Box>
                 <Box className="flex gap-2">
-                  <CommonIcon.PhoneOutlined fontSize="small" />
+                  <CommonIcon.PhonelinkRingOutlined
+                    className="!text-neutrals-100 !mt-1"
+                    fontSize="small"
+                  />
                   <Box className="flex flex-col">
                     <Typography fontSize={"14px"} fontWeight={500}>
                       Số điện thoại
@@ -95,7 +103,7 @@ const UserInfo = ({ userId, onClose }) => {
                 <Box className="flex items-start gap-5">
                   <img
                     src={dataConvert?.company?.logo}
-                    className="size-20"
+                    className="size-20 border rounded object-container"
                     alt=""
                   />
                   <Box className="flex flex-col">
@@ -105,12 +113,16 @@ const UserInfo = ({ userId, onClose }) => {
                     >
                       {dataConvert?.company?.name}
                     </Link>
-                    <Typography className="flex gap-1 items-center text-gray-600 !text-sm">
-                      Trụ sở chính:{" "}
-                      <Address
-                        className={"text-gray-600 !text-sm"}
-                        address={dataConvert?.company?.address}
-                      />
+                    <Typography className="flex gap-1 leading-4 flex-nowrap break-words items-start text-gray-600 !text-sm !mt-1">
+                      {"Trụ sở chính:  "}
+                      {dataConvert?.company?.address ? (
+                        <Address
+                          className={"text-gray-600 !text-sm"}
+                          address={dataConvert?.company?.address}
+                        />
+                      ) : (
+                        "Chưa cập nhật"
+                      )}
                     </Typography>
                   </Box>
                 </Box>

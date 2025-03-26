@@ -11,11 +11,11 @@ import { RouteBase } from "../../../../constants/routeUrl";
 import { useNavigate } from "react-router-dom";
 
 const CvItem = ({ data }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const { showError, showSuccess } = useNotifications();
   const { open, shouldRender, toggle } = useToggleDialog();
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const handleDelete = async () => {
     setIsLoading(true);
@@ -62,6 +62,9 @@ const CvItem = ({ data }) => {
         </Typography>
         <div className="flex items-center gap-1">
           <Button
+            onClick={() =>
+              (window.location.href = `https://www.facebook.com/sharer/sharer.php?u=https://jobhuntlyclient.vercel.app/${RouteBase.ViewCv}/${data?._id}`)
+            }
             startIcon={<CommonIcon.Reply />}
             className="!bg-[#ffffff24] !text-white !text-xs !rounded-full flex-1"
           >

@@ -7,7 +7,7 @@ const Address = ({ address, className }) => {
   }${address?.ward?.name ? `${address?.ward?.name}, ` : ""}${
     address?.district?.name ? `${address?.district?.name}, ` : ""
   }${address?.province?.name ? `${address?.province?.name}` : ""}`;
-  return <Typography className={className}>{addressInfo}</Typography>;
+  return addressInfo;
 };
 
 export default Address;

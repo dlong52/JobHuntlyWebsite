@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import CommonIcon from "../../ui/CommonIcon";
 import CategoryChart from "./components/CategoryChart";
+import RevenueByPackageChart from "../RevenueManagementPage/components/RevenueByPackageChart";
 const OverViewAdminPage = () => {
   return (
     <>
@@ -48,7 +49,9 @@ const OverViewAdminPage = () => {
           <CategoryChart />
         </Box>
         <Box className="col-span-4 p-5 bg-white rounded-md shadow">
-          <Box className=""></Box>
+          <Box className="">
+            <RevenueByPackageChart/>
+          </Box>
         </Box>
       </Box>
     </>

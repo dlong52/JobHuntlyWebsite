@@ -12,9 +12,12 @@ import { RouteBase } from "../../../../constants/routeUrl";
 import { Button } from "../../../../ui";
 import CVTemplate from "../../../CreateCVPage/components/CvTemplate";
 import { useSelector } from "react-redux";
+import { useNotifications } from "../../../../utils/notifications";
+import { ROLE } from "../../../../constants/enum";
 
 const CVItem = ({ data }) => {
-  const { is_verified } = useSelector((state) => state.user);
+  const { is_verified, role } = useSelector((state) => state.user);
+  const { showInfo } = useNotifications();
   const [loading, setLoading] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
@@ -44,6 +47,10 @@ const CVItem = ({ data }) => {
           <Box className="flex flex-col gap-5">
             <Button
               onClick={() => {
+                if (role !== ROLE.CANDIDATE) {
+                  showInfo("Bạn cần đăng nhập để thực hiện chức năng này!");
+                  return;
+                }
                 if (!is_verified) {
                   navigate(RouteBase.VerifyAccount);
                   return;
@@ -99,6 +106,10 @@ const CVItem = ({ data }) => {
             </button>
             <button
               onClick={() => {
+                if (role !== ROLE.CANDIDATE) {
+                  showInfo("Bạn cần đăng nhập để thực hiện chức năng này!");
+                  return;
+                }
                 if (!is_verified) {
                   navigate(RouteBase.VerifyAccount);
                   return;

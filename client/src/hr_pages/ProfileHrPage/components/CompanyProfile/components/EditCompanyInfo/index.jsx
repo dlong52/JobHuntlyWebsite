@@ -32,6 +32,7 @@ const EditCompanyInfo = () => {
       phone: values?.phone,
       website: values?.website,
       introduce: values?.introduce,
+      categories: values?.categories?.map((item) => item?.value),
       staff_quantity: {
         min: values?.min_staff,
         max: values?.max_staff,
@@ -102,8 +103,6 @@ const EditCompanyInfo = () => {
           enableReinitialize
         >
           {({ values }) => {
-            // console.log({ values });
-
             return (
               <Form className="grid grid-cols-12 gap-4 w-full text-neutrals-100">
                 <FormikField

@@ -71,7 +71,7 @@ const CvManagementHrPage = () => {
       field: "",
       headerName: "Ngày ứng tuyển",
       renderCell: (value) => {
-        return <Box>{moment(value.created_at).format("DD/MM/YYYY")}</Box>;
+        return <Box>{moment(value?.applied_date).format("DD/MM/YYYY")}</Box>;
       },
     },
     {
@@ -144,7 +144,7 @@ const CvManagementHrPage = () => {
   return (
     <Box className="flex flex-col gap-y-5">
       <BreadcrumbMui breadcrumbs={breadcrumbs} title={"Quản lí CV ứng viên"} />
-      <div className="">
+      <Box className="">
         <TableMui
           columns={columns}
           filters={filters}
@@ -156,7 +156,7 @@ const CvManagementHrPage = () => {
           onPageChange={handleChangePage}
           toolbarTitle={"Danh sách CV ứng viên"}
         />
-      </div>
+      </Box>
       {shouldRender && (
         <DialogMUI
           open={open}

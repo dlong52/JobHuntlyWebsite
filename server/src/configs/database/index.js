@@ -1,15 +1,18 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+// src/config/mongodb.js
+const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
-dotenv.config();
+const mongoUri = process.env.MONGODB_URL;
 
 const connect = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URL);
-    console.log("✅ MongoDB connected successfully");
-  } catch (e) {
-    console.error("❌ MongoDB connection failed", e);
-    process.exit(1); // Thoát chương trình nếu kết nối thất bại
+    const client = new MongoClient(mongoUri);
+    await client.connect();
+    console.log('✅ MongoDB Connected Successfully');
+    return client;
+  } catch (error) {
+    console.error('❌ MongoDB Connection Error:', error);
+    process.exit(1);
   }
 };
 

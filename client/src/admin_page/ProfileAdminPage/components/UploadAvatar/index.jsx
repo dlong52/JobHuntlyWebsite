@@ -59,7 +59,6 @@ const UploadAvatar = () => {
       showError(error);
     }
   };
-  console.log({ downloadURL });
 
   return (
     <Box
@@ -77,7 +76,7 @@ const UploadAvatar = () => {
         />
         <Button
           onClick={triggerFileUpload}
-          className="text-nowrap !bg-accent-blue !text-white !px-4 !capitalize"
+          className="text-nowrap !bg-primary !text-white !px-4 !normal-case"
           disabled={loading} // Disable button while loading
         >
           {loading

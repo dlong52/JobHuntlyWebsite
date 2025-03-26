@@ -1,23 +1,18 @@
-import React, { useMemo } from "react";
+import React from "react";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import { Box, IconButton, Typography } from "@mui/material";
 import { useConvertData, useFilters } from "../../hooks";
 import { useGetAllPayments } from "../../hooks/modules/payment/useGetAllPayments";
-import CustomTable from "../../ui/Table";
 import TooltipMui from "../../ui/TooltipMui";
 import { CommonIcon } from "../../ui";
-import { excel } from "../../assets/images";
-import helpers from "../../utils/helpers";
 import RevenueChart from "./components/RevenueChart";
 import { useGetAllPaymentSummary } from "../../hooks/modules/payment/useGetAllPaymentSummary";
 import RevenueByPackageChart from "./components/RevenueByPackageChart";
 import BarChartSkeleton from "../../ui/BarChartSkeleton";
 import { useGetAllSubscriptions } from "../../hooks/modules/subscription/useGetAllSubscriptions";
-import { sortBy } from "lodash";
 import TableMui from "../../ui/TableMui";
-import moment from "moment";
 
 const RevenueManagementPage = () => {
   const { filters } = useFilters({
@@ -25,17 +20,16 @@ const RevenueManagementPage = () => {
     limit: 10,
     order: "desc",
   });
+  const navigate = useNavigate();
   const { filters: filtersSubscription } = useFilters({
     page: 1,
     limit: 5,
-    // sort: "desc",
-    // sortBy: "created_at",
   });
   const { data: dataSubscription, isLoading: loadingSubscription } =
     useGetAllSubscriptions(filtersSubscription);
   const { dataConvert: subscriptions } = useConvertData(dataSubscription);
-  const { data, isLoading } = useGetAllPayments(filters);
   const { data: dataSummary } = useGetAllPaymentSummary();
+  const { data, isLoading } = useGetAllPayments(filters);
   const { dataConvert } = useConvertData(data);
   const { dataConvert: summary } = useConvertData(dataSummary);
   const breadcrumbs = [
@@ -60,9 +54,13 @@ const RevenueManagementPage = () => {
             <Typography className="text-neutrals-100">
               {value?.user_id?.profile?.name}
             </Typography>
-            <Typography fontSize={"14px"} className="text-neutrals-60">
+            <Link
+              to={`${RouteBase.Company}/${value?.user_id?.company?._id}`}
+              fontSize={"14px"}
+              className="text-neutrals-60"
+            >
               {value?.user_id?.company?.name}
-            </Typography>
+            </Link>
           </Box>
         );
       },
@@ -92,53 +90,39 @@ const RevenueManagementPage = () => {
 
     {
       field: "_id",
-      headerName: "In hóa đơn",
+      headerName: "Chi tiết",
       classNameHeader: "!text-neutrals-60 !text-sm !py-3 !font-normal",
       renderCell: (value) => {
         return (
-          // Download invoice button
-          <IconButton>
-            <CommonIcon.FileDownloadOutlined className="!text-primary" />
+          <IconButton
+            onClick={() =>
+              navigate(
+                `${RouteBase.AdminRevenueManagement}/details/${value?._id}`
+              )
+            }
+          >
+            <CommonIcon.Info className="!text-primary" />
           </IconButton>
         );
       },
     },
   ];
-  const excelData = useMemo(() => {
-    if (dataConvert) {
-      return dataConvert?.map((item) => {
-        return {
-          ID: item?._id,
-          "Tên khách hàng": item?.user_id?.profile?.name,
-          "Email": item?.user_id?.email,
-          "Công ty": item?.user_id?.company?.name,
-          "Dịch vụ đã mua": item?.subscription_id?.package_id?.name,
-          "Số tiền đã trả": Number(item?.amount).toLocaleString("vi-vn"),
-          "Phương thức thanh toán": item?.payment_method,
-          "Ngày thanh toán": moment(item?.created_at).format("HH:mm DD/MM/YYYY"),
-          "Mã giao dịch": item?.transaction_id
-        };
-      });
-    }
-  }, [dataConvert]);
   const toolbarActionLevel = [
     {
       label: (
-        <TooltipMui content={"Xuất file Excel"}>
-          <Box>
-            <img src={excel} alt="" className="size-8" />
-          </Box>
+        <TooltipMui content={"Xem tất cả"}>
+          <CommonIcon.ArrowForwardRounded />
         </TooltipMui>
       ),
-      className: "!bg-transparent !shadow-none !normal-case !p-0",
+      className: "!bg-primary-light !text-primary !shadow-none !normal-case",
       onClick: () => {
-        helpers.exportToExcel(excelData, "Invoice.xlsx");
+        navigate(`${RouteBase.AdminRevenueManagement}/details`);
       },
     },
   ];
 
   return (
-    <div>
+    <Box>
       <BreadcrumbMui title={"Doanh thu"} breadcrumbs={breadcrumbs} />
       <Box className="mt-5 grid grid-cols-12 gap-4 bg-transparent">
         <Box className="col-span-8 p-5 rounded-md bg-white ">
@@ -147,7 +131,7 @@ const RevenueManagementPage = () => {
         <Box className="col-span-4 p-5 rounded-md bg-white">
           <RevenueByPackageChart />
         </Box>
-        <Box className="col-span-8 px-4 bg-white rounded-md">
+        <Box className="col-span-8 bg-white rounded-md">
           <TableMui
             classNameTitle="!text-base !font-medium"
             columns={columns}
@@ -158,7 +142,7 @@ const RevenueManagementPage = () => {
             filters={filters}
           />
         </Box>
-        <Box className="col-span-4 p-5 rounded-md bg-white">
+        <Box className="col-span-4 p-5 h-fit rounded-md bg-white">
           <Typography
             fontSize={"16px"}
             fontWeight={500}
@@ -181,7 +165,7 @@ const RevenueManagementPage = () => {
           </Box>
         </Box>
       </Box>
-    </div>
+    </Box>
   );
 };
 

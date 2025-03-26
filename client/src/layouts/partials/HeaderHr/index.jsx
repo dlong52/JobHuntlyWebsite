@@ -29,6 +29,7 @@ const HeaderHr = () => {
         <Box className="flex items-center gap-3">
           <Link
             to={RouteBase.HRChat}
+            target="_blank"
             className="size-9 flex items-center justify-center rounded-md bg-primary-light text-primary"
           >
             <CommonIcon.QuestionAnswer />
