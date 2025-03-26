@@ -23,6 +23,7 @@ const initialState = {
   company_website: "",
   company_staff_quantity: "",
   company_address: {},
+  isLogged: false,
 };
 export const userSlide = createSlice({
   name: "user",
@@ -32,6 +33,7 @@ export const userSlide = createSlice({
       const { _id, profile, email, access_token, role, company, is_verified } =
         action.payload;
       state.user_id = _id || state.user_id;
+      state.isLogged = true;
       state.username = profile?.name || state.username;
       state.email = email || state.email;
       state.is_verified = is_verified || state.is_verified;
@@ -55,6 +57,7 @@ export const userSlide = createSlice({
         company?.staff_quantity || state.company_staff_quantity;
     },
     resetUser: (state) => {
+      state.isLogged = false;
       state.user_id = null;
       state.username = null;
       state.email = null;

@@ -8,8 +8,6 @@ import { RouteBase } from "../../../constants/routeUrl";
 import NotifyPopover from "./components/NotifyPopover";
 import AccountPopover from "./components/AccountPopover";
 import { ROLE } from "../../../constants/enum";
-import useFilters from "../../../hooks/useFilters";
-import { useGetAllNotifications } from "../../../hooks/modules/notification/useGetAllNotifications";
 import { useLoadingUser } from "../../../providers/LoadingUserProvider";
 import LoadingAccount from "./components/LoadingAccount";
 import { useNotification } from "../../../providers/NotificationProvider";
@@ -20,21 +18,6 @@ const Header = () => {
   const { isLoading: loadingUser } = useLoadingUser();
   const [isScrolled, setIsScrolled] = useState(false);
   const { notifications, isLoading, refetch, unreadCount } = useNotification();
-  // const { filters } = useFilters({
-  //   page: 1,
-  //   limit: 5,
-  //   sort: "desc",
-  // });
-  // const { data, isLoading, refetch } = useGetAllNotifications(
-  //   user?.user_id,
-  //   filters
-  // );
-  // const notifications = useMemo(() => {
-  //   if (data) {
-  //     return data?.data?.data;
-  //   }
-  //   return [];
-  // }, [data]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,9 +33,8 @@ const Header = () => {
     };
   }, []);
 
-  // Function to check if current route matches
   const isActive = (path) => location.pathname.includes(path);
-  const onClose = ()=>{}
+  const onClose = () => {};
   return (
     <Fragment>
       <Box
@@ -101,13 +83,13 @@ const Header = () => {
                 !user.role) && (
                 <Fragment>
                   <Link
-                    to={"/sign-in"}
+                    to={RouteBase.SignIn}
                     className="text-primary font-semibold text-base"
                   >
                     Đăng nhập
                   </Link>
                   <Link
-                    to={"/sign-up"}
+                    to={RouteBase.SignUp}
                     className="bg-primary text-white px-4 py-2 rounded font-semibold text-base"
                   >
                     Đăng ký
@@ -128,11 +110,7 @@ const Header = () => {
                     transformOrigin={{ vertical: "top", horizontal: "right" }}
                     zIndex={1300}
                   >
-                    <Badge
-                      color="error"
-                      badgeContent={unreadCount}
-                      max={99}
-                    >
+                    <Badge color="error" badgeContent={unreadCount} max={99}>
                       <Box className="rounded-full size-[40px] text-primary bg-[#2121d120] flex justify-center items-center cursor-pointer">
                         <CommonIcon.Notifications />
                       </Box>
@@ -142,20 +120,26 @@ const Header = () => {
                   <Badge color="secondary">
                     <Link
                       to={RouteBase.Connect}
+                      target="_blank"
                       className="rounded-full size-[40px] text-primary bg-[#2121d120] flex justify-center items-center"
                     >
                       <CommonIcon.QuestionAnswer />
                     </Link>
                   </Badge>
                   <CommonPopover
-                    body={<AccountPopover user={user} onClose={() => onClose?.()} />}
+                    body={
+                      <AccountPopover user={user} onClose={() => onClose?.()} />
+                    }
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     transformOrigin={{ vertical: "top", horizontal: "right" }}
                     zIndex={1300}
                     onClose={onClose}
                   >
                     <Box className="cursor-pointer" variant="contained">
-                      <CommonAvatar src={user?.avatar_url} />
+                      <CommonAvatar
+                        className={"!shadow"}
+                        src={user?.avatar_url}
+                      />
                     </Box>
                   </CommonPopover>
                 </Box>

@@ -5,7 +5,10 @@ const messageSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Conversation",
   },
-  sender_id: mongoose.Schema.Types.ObjectId,
+  sender_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   content: String,
   attachments: [
     {

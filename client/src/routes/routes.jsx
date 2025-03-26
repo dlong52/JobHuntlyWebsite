@@ -43,7 +43,7 @@ import {
   ReturnPaymentPage,
   VerifyHrPage,
   VerifyPhoneHrPage,
-  CreateEditJobPage
+  CreateEditJobPage,
 } from "../hr_pages";
 import {
   CategoryManagementPage,
@@ -53,9 +53,11 @@ import {
   NotifyManagementPage,
   OverViewAdminPage,
   PackageManagementPage,
+  PaymentDetailPage,
   PostManageMentPage,
   ProfileAdminPage,
   ReportManagementPage,
+  RevenueDetailPage,
   RevenueManagementPage,
   UserDetailPage,
   UserManagementPage,
@@ -66,6 +68,7 @@ const Routes = [
     path: RouteBase.Home,
     component: HomePage,
     permissionAllow: [ROLE.ALL],
+    mustLogin: false,
   },
   {
     path: RouteBase.SignIn,
@@ -139,8 +142,9 @@ const Routes = [
   {
     path: RouteBase.Connect,
     component: ConnectPage,
-    permissionAllow: [ROLE.ALL],
+    permissionAllow: [ROLE.CANDIDATE],
     layout: null,
+    showCrisp: false,
   },
   {
     path: RouteBase.Profile,
@@ -220,8 +224,9 @@ const Routes = [
   {
     path: RouteBase.HRChat,
     component: ChatPage,
+    showCrisp: false,
     permissionAllow: [ROLE.EMPLOYER],
-    layout: HRLayout,
+    layout: null,
   },
   {
     path: RouteBase.HRPackage,
@@ -342,6 +347,18 @@ const Routes = [
   {
     path: RouteBase.AdminRevenueManagement,
     component: RevenueManagementPage,
+    permissionAllow: [ROLE.ADMIN],
+    layout: AdminLayout,
+  },
+  {
+    path: `${RouteBase.AdminRevenueManagement}/details`,
+    component: RevenueDetailPage,
+    permissionAllow: [ROLE.ADMIN],
+    layout: AdminLayout,
+  },
+  {
+    path: `${RouteBase.AdminRevenueManagement}/details/:id`,
+    component: PaymentDetailPage,
     permissionAllow: [ROLE.ADMIN],
     layout: AdminLayout,
   },

@@ -9,6 +9,7 @@ const SelectProvinceField = ({
   placeholder = "Tỉnh/thành phố",
   variant,
   disabled,
+  sx
 }) => {
   const { provinces, loading } = useAddress();
   const provinceOptions = useMemo(() => {
@@ -26,6 +27,7 @@ const SelectProvinceField = ({
       className={className}
       required={required}
       name="province"
+      sx={sx}
       variant={variant}
       disabled={disabled}
       placeholder={loading ? "Đang tải dữ liệu..." : placeholder}

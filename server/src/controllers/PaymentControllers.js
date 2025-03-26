@@ -17,7 +17,18 @@ const createPayment = async (req, res) => {
 // Get all payments
 const getAllPayments = async (req, res) => {
   try {
-    const { page, limit, sortBy, order, ...filters } = req.query;
+    const { 
+      page, 
+      limit, 
+      sortBy, 
+      order, 
+      searchName, 
+      package_id, 
+      from_date, 
+      to_date, 
+      ...filters 
+    } = req.query;
+    
     const options = {
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 10,
@@ -25,7 +36,29 @@ const getAllPayments = async (req, res) => {
       order: order || "desc",
     };
 
-    const result = await paymentService.getAllPayments(filters, options);
+    // Construct filter object
+    const filterParams = { ...filters };
+    
+    // Add searchName filter if provided
+    if (searchName) {
+      filterParams.searchName = searchName;
+    }
+    
+    // Add package_id filter if provided
+    if (package_id) {
+      filterParams.package_id = package_id;
+    }
+    
+    // Add date range filters if provided
+    if (from_date) {
+      filterParams.from_date = from_date;
+    }
+    
+    if (to_date) {
+      filterParams.to_date = to_date;
+    }
+
+    const result = await paymentService.getAllPayments(filterParams, options);
     res.status(200).json({
       status: "success",
       message: "Payments retrieved successfully",

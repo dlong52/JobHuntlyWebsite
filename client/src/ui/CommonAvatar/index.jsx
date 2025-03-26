@@ -10,7 +10,7 @@ const CommonAvatar = (props) => {
       <Avatar
         variant={variant}
         sx={sx}
-        src={!char && !!src ? src : avatar}
+        src={!char && !!src ? src : !!char && !src ? char : avatar}
         className={`!object-cover ${className}`}
       >
         {char}
@@ -27,7 +27,7 @@ CommonAvatar.propTypes = {
   src: PropTypes.string,
   char: PropTypes.string,
   sx: PropTypes.object,
-  variant: PropTypes.string
+  variant: PropTypes.string,
 };
 
 export default CommonAvatar;

@@ -53,6 +53,11 @@ const TableMui = ({
   }));
   const classes = useStyles();
 
+  // Determine if a column is the last visible column
+  const isLastColumn = (index) => {
+    return index === columns.length - 1;
+  };
+
   const renderTableContent = () => {
     if (loading) {
       return (
@@ -60,8 +65,11 @@ const TableMui = ({
           <Table>
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
-                  <TableCell key={column.field}>
+                {columns.map((column, index) => (
+                  <TableCell 
+                    key={column.field}
+                    align={isLastColumn(index) ? "right" : (column.align || "left")}
+                  >
                     <Skeleton />
                   </TableCell>
                 ))}
@@ -70,10 +78,13 @@ const TableMui = ({
             <TableBody>
               {Array(5)
                 .fill(null)
-                .map((_, index) => (
-                  <TableRow key={index}>
-                    {columns.map((column) => (
-                      <TableCell key={column.field}>
+                .map((_, rowIndex) => (
+                  <TableRow key={rowIndex}>
+                    {columns.map((column, colIndex) => (
+                      <TableCell 
+                        key={column.field}
+                        align={isLastColumn(colIndex) ? "right" : (column.align || "left")}
+                      >
                         <Skeleton />
                       </TableCell>
                     ))}
@@ -99,14 +110,15 @@ const TableMui = ({
           {isHeader && (
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
+                {columns.map((column, index) => (
                   <TableCell
                     className={twMerge(
                       "text-nowrap text-neutrals-100",
                       column?.classNameHeader
                     )}
                     key={column.field}
-                    align={column.align || "left"}
+                    // Apply right alignment to the last column header
+                    align={isLastColumn(index) ? "right" : (column.align || "left")}
                   >
                     {column.headerName}
                   </TableCell>
@@ -115,10 +127,16 @@ const TableMui = ({
             </TableHead>
           )}
           <TableBody>
-            {rows.map((row, index) => (
-              <TableRow key={row.id || index}>
-                {columns.map((column) => (
-                  <TableCell key={column.field} align={column.align || "left"}>
+            {rows.map((row, rowIndex) => (
+              <TableRow key={row.id || rowIndex}>
+                {columns.map((column, colIndex) => (
+                  <TableCell 
+                    key={column.field} 
+                    // Apply right alignment to the last column cells
+                    align={isLastColumn(colIndex) ? "right" : (column.align || "left")}
+                    // Add additional class for the last column if needed
+                    className={isLastColumn(colIndex) ? "justify-end" : ""}
+                  >
                     {column.renderCell ? column.renderCell(row) : JSON.stringify(row)}
                   </TableCell>
                 ))}

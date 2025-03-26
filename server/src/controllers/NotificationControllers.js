@@ -53,25 +53,28 @@ const sendNotificationToAllUsers = async (req, res) => {
     // Lấy user có fcmToken hợp lệ và populate role
     const users = await User.find({
       fcmToken: { $exists: true, $ne: null },
-    }).populate("role"); // Lấy thông tin role từ bảng Role
+    }).populate("role");
 
-    // Lọc những user không có role là ADMIN
-    const filteredUsers = users.filter(user => user.role?.name !== "ADMIN");
-
-    if (!filteredUsers.length) {
+    // Lấy tất cả users để lưu notification, bao gồm cả ADMIN
+    const allUsersForDB = await User.find({});
+    
+    if (!users.length) {
       return res.status(400).json({ error: "No users found with valid FCM tokens" });
     }
 
-    const messages = filteredUsers.map((user) => ({
+    // Chỉ gửi FCM notification cho non-admin users
+    const nonAdminUsers = users.filter(user => user.role?.name !== "ADMIN");
+    
+    const messages = nonAdminUsers.map((user) => ({
       token: user.fcmToken,
       notification: { title, body },
     }));
 
-    // Gửi thông báo đến user hợp lệ
+    // Gửi thông báo đến non-admin users
     const responses = await Promise.all(messages.map((msg) => admin.messaging().send(msg)));
 
-    // Lưu thông báo vào DB cho từng user
-    const notificationsToSave = filteredUsers.map(user => ({
+    // Lưu thông báo vào DB cho TẤT CẢ users (bao gồm cả admin)
+    const notificationsToSave = allUsersForDB.map(user => ({
       user_id: user._id,
       type: "system",
       title,

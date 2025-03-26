@@ -36,7 +36,7 @@ const AuthenticationContext = createContext({
 export const useAuthentication = () => useContext(AuthenticationContext);
 
 const AuthProvider = ({ children }) => {
-  const tokenLocalStorage = HttpService.getTokenSession();
+  const tokenLocalStorage = HttpService.getTokenStorage();
   const servicesLocalStorage = HttpService.getServiceStorage();
 
   //! State

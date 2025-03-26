@@ -29,7 +29,11 @@ const CompanyCardItem = ({ id, avatar, cover, name, description }) => {
             {name}
           </Link>
         )}
-        {description && <Typography>{description}</Typography>}
+        {description && (
+          <Typography fontSize={"14px"} className="!line-clamp-2 text-neutrals-80">
+            {description}
+          </Typography>
+        )}
       </div>
     </div>
   );

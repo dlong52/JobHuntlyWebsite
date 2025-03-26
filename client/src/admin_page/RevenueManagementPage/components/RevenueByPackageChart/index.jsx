@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGetRevenueByPackage } from "../../../../hooks/modules/payment/useGetRevenueByPackage";
 import { useConvertData } from "../../../../hooks";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
@@ -49,6 +49,7 @@ const CustomLegend = ({ payload }) => {
     </div>
   );
 };
+
 const DEFAULT_DATA = [
   { _id: "Không có dữ liệu", totalRevenue: 1, fill: "#D3D3D3" },
 ];
@@ -56,7 +57,33 @@ const DEFAULT_DATA = [
 const RevenueByPackageChart = () => {
   const { data, isLoading } = useGetRevenueByPackage();
   const { dataConvert } = useConvertData(data);
-  const chartData = dataConvert?.length ? dataConvert : DEFAULT_DATA;
+  const [chartData, setChartData] = useState(DEFAULT_DATA);
+  const [isAnimationActive, setIsAnimationActive] = useState(true);
+  const [key, setKey] = useState(0); // Key to force re-render when needed
+  
+  // Handle data changes
+  useEffect(() => {
+    if (!isLoading) {
+      // Reset animation state when data changes
+      setIsAnimationActive(true);
+      
+      // Set chart data with fill color information baked in
+      const processedData = dataConvert?.length 
+        ? dataConvert.map((item, index) => ({
+            ...item,
+            fill: COLORS[index % COLORS.length]
+          }))
+        : DEFAULT_DATA;
+        
+      setChartData(processedData);
+      setKey(prevKey => prevKey + 1);
+    }
+  }, [dataConvert, isLoading]);
+
+  // Handle animation end
+  const handleAnimationEnd = () => {
+    setIsAnimationActive(false);
+  };
 
   return (
     <>
@@ -64,24 +91,24 @@ const RevenueByPackageChart = () => {
         <PieChartSkeleton />
       ) : (
         <div className="flex flex-col items-center">
-          <PieChart width={320} height={320}>
+          <PieChart width={320} height={320} key={`pie-chart-${key}`}>
             <Pie
               data={chartData}
               dataKey="totalRevenue"
               nameKey="_id"
               cx="50%"
               cy="50%"
+              outerRadius={100}
+              animationBegin={0}
               animationDuration={800}
               animationEasing="ease-out"
+              isAnimationActive={isAnimationActive}
+              onAnimationEnd={handleAnimationEnd}
             >
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={
-                    dataConvert.length
-                      ? COLORS[index % COLORS.length]
-                      : "#D3D3D3"
-                  }
+                  fill={entry.fill}
                 />
               ))}
             </Pie>

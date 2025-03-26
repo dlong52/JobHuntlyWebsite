@@ -15,8 +15,8 @@ import { useNotifications } from "./utils/notifications";
 import { useLoadingUser } from "./providers/LoadingUserProvider";
 import { ROLE } from "./constants/enum";
 import CrispChat from "./components/CrispChat";
-import VerifyButton from "./components/VerifyButton";
 import { useNotification } from "./providers/NotificationProvider";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   const { setIsLoading } = useLoadingUser();
@@ -62,38 +62,51 @@ function App() {
   };
   return (
     <>
-      {[ROLE.EMPLOYER, ROLE.CANDIDATE].includes(user?.role) && (
-        <CrispChat
-          email={
-            user?.role == ROLE.CANDIDATE || user?.role === ROLE.EMPLOYER
-              ? user?.email
-              : ""
-          }
-          name={
-            user?.role == ROLE.CANDIDATE || user?.role === ROLE.EMPLOYER
-              ? user?.username
-              : ""
-          }
-        />
-      )}
       <Routes>
         {routes.map((route, index) => {
           const Page = route.component;
           let Layout = MainLayout;
+          const isMustLogin = route.mustLogin;
 
           const WrappedPage = withPermission(Page, route.permissionAllow || []);
 
+          const CheckingPrivateComponent = isMustLogin
+            ? PrivateRoute
+            : Fragment;
+
           if (route.layout) Layout = route.layout;
           if (route.layout === null) Layout = Fragment;
-
+          let isShowCrisp = true;
+          if (route.showCrisp === false) {
+            isShowCrisp = false;
+          }
           return (
             <Route
               key={index}
               path={route.path}
               element={
-                <Layout>
-                  <WrappedPage />
-                </Layout>
+                <CheckingPrivateComponent>
+                  <Layout>
+                    {[ROLE.EMPLOYER, ROLE.CANDIDATE].includes(user?.role) &&
+                      isShowCrisp && (
+                        <CrispChat
+                          email={
+                            user?.role == ROLE.CANDIDATE ||
+                            user?.role === ROLE.EMPLOYER
+                              ? user?.email
+                              : ""
+                          }
+                          name={
+                            user?.role == ROLE.CANDIDATE ||
+                            user?.role === ROLE.EMPLOYER
+                              ? user?.username
+                              : ""
+                          }
+                        />
+                      )}
+                    <WrappedPage />
+                  </Layout>
+                </CheckingPrivateComponent>
               }
             />
           );

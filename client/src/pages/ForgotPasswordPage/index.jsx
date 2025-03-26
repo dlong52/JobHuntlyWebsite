@@ -37,7 +37,7 @@ const ForgotPasswordPage = () => {
       if (values?.email) {
         await SendEmailServices.sendChangePassword({ email: values.email });
         showSuccess("Vui lòng kiểm tra hòm thư của bạn để đặt lại mật khẩu");
-        const expireTime = Date.now() + 60000; // 1 phút
+        const expireTime = Date.now() + 60000; 
         localStorage.setItem("emailResetExpireTime", expireTime);
         setTimer(60);
       }

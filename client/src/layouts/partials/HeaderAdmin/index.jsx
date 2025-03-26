@@ -18,18 +18,17 @@ const HeaderAdmin = () => {
           Xin chào, {user?.username || "Admin"}👋
         </Typography>
         <Box className="flex items-center gap-3">
-          <Box className="size-9 flex items-center justify-center rounded-md bg-primary-light text-primary">
-            <CommonIcon.NotificationsTwoTone />
-          </Box>
           <CommonPopover
             body={<MenuAccount user={user} />}
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             transformOrigin={{ vertical: "top", horizontal: "right" }}
             zIndex={1300}
-            onClick={() => console.log("Popover clicked!")}
           >
-            <Box className="flex items-center gap-2 border p-[5px] rounded-full bg-primary text-white">
-              <CommonAvatar src={user?.avatar_url || undefined} sx={{ width: "30px", height: "30px" }} />
+            <Box className="flex items-center gap-2 border p-[5px] rounded-full bg-primary text-white hover:bg-primary-dark transition-all duration-500 cursor-pointer">
+              <CommonAvatar
+                src={user?.avatar_url || undefined}
+                sx={{ width: "30px", height: "30px" }}
+              />
               <CommonIcon.ArrowDropDownRounded sx={{ fontSize: "30px" }} />
             </Box>
           </CommonPopover>

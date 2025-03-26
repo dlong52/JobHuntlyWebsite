@@ -25,26 +25,97 @@ const helpers = {
     // 2. Thêm style cho header (in đậm + tô màu)
     const headerStyle = {
       font: { bold: true, color: { rgb: "FFFFFF" } },
-      fill: { fgColor: { rgb: "0074D9" } }, // Màu xanh dương
-      alignment: { horizontal: "center" }
+      fill: { patternType: "solid", fgColor: { rgb: "4472C4" } }, // Màu xanh Microsoft
+      alignment: { horizontal: "center", vertical: "center" },
+      border: {
+        top: { style: "thin", color: { rgb: "B4B4B4" } },
+        bottom: { style: "thin", color: { rgb: "B4B4B4" } },
+        left: { style: "thin", color: { rgb: "B4B4B4" } },
+        right: { style: "thin", color: { rgb: "B4B4B4" } }
+      }
+    };
+  
+    // Style cho các ô dữ liệu
+    const dataStyle = {
+      font: { color: { rgb: "000000" } },
+      alignment: { horizontal: "left", vertical: "center", wrapText: true },
+      border: {
+        top: { style: "thin", color: { rgb: "D9D9D9" } },
+        bottom: { style: "thin", color: { rgb: "D9D9D9" } },
+        left: { style: "thin", color: { rgb: "D9D9D9" } },
+        right: { style: "thin", color: { rgb: "D9D9D9" } }
+      }
+    };
+  
+    // Style riêng cho hàng chẵn (tô màu xen kẽ)
+    const alternateRowStyle = {
+      ...dataStyle,
+      fill: { patternType: "solid", fgColor: { rgb: "F2F2F2" } }
     };
   
     const range = XLSX.utils.decode_range(worksheet["!ref"]);
+    
+    // Áp dụng style cho header
     for (let C = range.s.c; C <= range.e.c; C++) {
       const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
-      if (worksheet[cellAddress]) {
-        worksheet[cellAddress].s = headerStyle;
+      if (!worksheet[cellAddress]) {
+        worksheet[cellAddress] = { v: "", t: "s" };
+      }
+      worksheet[cellAddress].s = headerStyle;
+    }
+  
+    // Áp dụng style cho các ô dữ liệu với hàng chẵn tô màu xen kẽ
+    for (let R = range.s.r + 1; R <= range.e.r; R++) {
+      for (let C = range.s.c; C <= range.e.c; C++) {
+        const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+        if (!worksheet[cellAddress]) {
+          worksheet[cellAddress] = { v: "", t: "s" };
+        }
+        worksheet[cellAddress].s = R % 2 === 0 ? alternateRowStyle : dataStyle;
       }
     }
   
-    // 3. Tự động căn chỉnh cột
-    worksheet["!cols"] = Object.keys(data[0]).map(() => ({ wch: 20 }));
+    // 3. Tự động căn chỉnh cột dựa trên nội dung
+    const columnWidths = [];
+    for (let C = range.s.c; C <= range.e.c; C++) {
+      let maxLength = 10; // Độ rộng tối thiểu
+      
+      // Lấy độ dài tiêu đề
+      const headerCell = worksheet[XLSX.utils.encode_cell({ r: 0, c: C })];
+      if (headerCell && headerCell.v) {
+        maxLength = Math.max(maxLength, String(headerCell.v).length * 1.2);
+      }
+      
+      // Tìm độ dài tối đa cho mỗi cột dựa trên nội dung
+      for (let R = range.s.r + 1; R <= range.e.r; R++) {
+        const cell = worksheet[XLSX.utils.encode_cell({ r: R, c: C })];
+        if (cell && cell.v) {
+          maxLength = Math.max(maxLength, String(cell.v).length * 1.1);
+        }
+      }
+      
+      // Giới hạn độ rộng tối đa
+      columnWidths.push({ wch: Math.min(maxLength, 50) });
+    }
+    
+    worksheet["!cols"] = columnWidths;
   
+    // Thêm chiều cao cho hàng header
+    worksheet["!rows"] = [{ hpt: 25 }]; // Header cao hơn
+    
     // 4. Tạo workbook và ghi file
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
   
-    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    // Thêm thuộc tính cho workbook
+    workbook.Props = {
+      Title: fileName.replace(".xlsx", ""),
+      Subject: "Dữ liệu xuất",
+      Author: "Hệ thống",
+      CreatedDate: new Date()
+    };
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array", bookSST: false });
     const fileData = new Blob([excelBuffer], { type: "application/octet-stream" });
   
     saveAs(fileData, fileName);

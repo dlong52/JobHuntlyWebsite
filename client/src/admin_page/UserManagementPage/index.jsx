@@ -1,7 +1,6 @@
 import { Box, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Button, CommonAvatar, CommonIcon } from "../../ui";
-import CustomTable from "../../ui/Table";
 import { useGetAllUsers } from "../../hooks/modules/user/useGetAllUsers";
 import useFilters from "../../hooks/useFilters";
 import RoleChip from "../../ui/Role";
@@ -15,13 +14,20 @@ import DialogMUI from "../../components/Dialogs";
 import CreateUserForm from "./components/CreateUserForm";
 import DrawerMui from "../../ui/DrawerMui";
 import UserInfo from "./components/UserInfo";
-import { FormikField, InputField } from "../../components/CustomFieldsFormik";
+import {
+  CheckboxField,
+  FormikField,
+  InputField,
+} from "../../components/CustomFieldsFormik";
 import { Form, Formik } from "formik";
 import TableMui from "../../ui/TableMui";
-import Address from "../../components/Address";
 import UpdateStatus from "./components/UpdateStatus";
 import { ROLE } from "../../constants/enum";
 import Unlock from "./components/Unlock";
+import SelectProvinceField from "../../components/SelectField/SelectProvinceField";
+import { Google, search } from "../../assets/images";
+import SelectRoleField from "../../components/SelectField/SelectRoleField";
+import SelectAccountTypeField from "../../components/SelectField/SelectAccountTypeField";
 
 const UserManagementPage = () => {
   const [userId, setUserId] = useState(null);
@@ -79,12 +85,20 @@ const UserManagementPage = () => {
     },
     {
       field: "address",
-      headerName: "Địa chỉ",
+      headerName: "Phương thức",
       renderCell: (value) => {
-        return value?.address ? (
-          <Address address={value?.address} />
-        ) : (
-          <Typography fontSize={"14px"} className="!text-neutrals-80">Chưa cập nhật</Typography>
+        return (
+          <Box>
+            {value?.account_type === "default" ? (
+              <TooltipMui content={"Đăng kí mặc định"}>
+                <CommonIcon.AccountCircle className="!text-neutrals-80" />
+              </TooltipMui>
+            ) : (
+              <TooltipMui content={"Đăng kí bằng google"}>
+                <img src={Google} alt="" className="size-6" />
+              </TooltipMui>
+            )}
+          </Box>
         );
       },
     },
@@ -202,22 +216,100 @@ const UserManagementPage = () => {
     </Typography>,
   ];
   useEffect(() => {
-    if (!openInfo || !openUpdateStatus || !openUnlock) {
+    if (!openInfo && !openUpdateStatus && !openUnlock) {
       setUserId(null);
     }
-  }, [openInfo]);
-  const handleSubmit = (values) => {
-    const search = {
-      searchName: values.searchName,
-    };
-    setFilters((prev) => {
-      return { ...prev, ...search };
-    });
-  };
+  }, [openInfo, openUpdateStatus, openUnlock]);
   // Render
   return (
     <Box>
       <BreadcrumbMui title={"Quản lí người dùng"} breadcrumbs={breadcrumbs} />
+      <Box className="mt-5 p-3 bg-white rounded-md">
+        <Formik
+          initialValues={{ searchName: filters.searchName || "" }}
+          enableReinitialize={true}
+          onSubmit={(values) => {
+            setFilters({
+              ...filters,
+              searchName: values.searchName,
+              role: values?.role?.value,
+              account_type: values?.account_type?.value,
+              active: values?.active,
+              is_verified: values?.is_verified,
+            });
+          }}
+        >
+          {({}) => (
+            <Form className="grid grid-cols-12 gap-2">
+              <FormikField
+                classNameContainer="col-span-4"
+                sx={{
+                  fieldset: {
+                    borderRadius: "10px",
+                  },
+                  "& .MuiInputBase-input::placeholder": {
+                    fontSize: "14px",
+                    fontStyle: "italic",
+                  },
+                }}
+                name="searchName"
+                placeholder="Tìm theo tên, email người dùng..."
+                component={InputField}
+              />
+              <SelectAccountTypeField
+                classNameContainer="col-span-3"
+                sx={{
+                  fieldset: {
+                    borderRadius: "10px",
+                  },
+                  "& .MuiInputBase-input::placeholder": {
+                    fontSize: "14px",
+                    fontStyle: "italic",
+                  },
+                }}
+              />
+              <SelectRoleField
+                classNameContainer="col-span-3"
+                sx={{
+                  fieldset: {
+                    borderRadius: "10px",
+                  },
+                  "& .MuiInputBase-input::placeholder": {
+                    fontSize: "14px",
+                    fontStyle: "italic",
+                  },
+                }}
+              />
+              <Button
+                type={"submit"}
+                className={
+                  "!bg-primary !col-span-2  !text-white !normal-case !rounded-[10px]"
+                }
+              >
+                <img src={search} className="size-6" alt="" />
+              </Button>
+              <Box className="col-span-4 flex items-center gap-2">
+                <FormikField
+                  classNameContainer="w-fit"
+                  classNameLabel="text-sm font-medium"
+                  name="active"
+                  activeColor="var(--primary)"
+                  labelTop="Trạng thái"
+                  component={CheckboxField}
+                />
+                <FormikField
+                  classNameContainer="w-fit"
+                  classNameLabel="text-sm font-medium"
+                  name="is_verified"
+                  activeColor="var(--primary)"
+                  labelTop="Xác thực"
+                  component={CheckboxField}
+                />
+              </Box>
+            </Form>
+          )}
+        </Formik>
+      </Box>
       <Box className="bg-white rounded-md mt-5">
         <TableMui
           columns={columns}
@@ -228,43 +320,7 @@ const UserManagementPage = () => {
           page={filters.page}
           rowsPerPage={filters.limit || 20}
           onPageChange={handleChangePage}
-          toolbarTitle={
-            <Formik
-              initialValues={{}}
-              onSubmit={handleSubmit}
-              enableReinitialize
-            >
-              {() => {
-                return (
-                  <Form className="flex gap-4">
-                    <FormikField
-                      classNameContainer="max-w-[300px]"
-                      className="bg-[#fff] "
-                      // sx={{
-                      //   fieldset: {
-                      //     borderRadius: "9999px",
-                      //   },
-                      // }}
-                      classNameLabel="font-medium text-neutrals-100"
-                      name="searchName"
-                      component={InputField}
-                      size="small"
-                      required
-                      placeholder="Tìm theo tên, email người dùng"
-                    />
-                    <Button
-                      type={"submit"}
-                      className={
-                        "col-span-12 !bg-primary !text-white "
-                      }
-                    >
-                      <CommonIcon.Search />
-                    </Button>
-                  </Form>
-                );
-              }}
-            </Formik>
-          }
+          toolbarTitle={"Danh sách người dùng"}
           toolbarActions={toolbarActions}
         />
       </Box>
