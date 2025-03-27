@@ -8,6 +8,7 @@ export { default as Twitter } from './icons/Name=Twitter.svg'
 export { default as excel } from './icons/excel.svg'
 export { default as search } from './icons/search.svg'
 export { default as VNFlag } from './icons/VNFlag.webp'
+export { default as hotjob } from './icons/hotjob.png'
 
 // Logo
 export { default as logo } from './logo/logo.svg'

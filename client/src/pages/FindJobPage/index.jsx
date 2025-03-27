@@ -17,6 +17,7 @@ import { useSearchParams } from "react-router-dom";
 import { useGetAllWishlistByUser } from "../../hooks/modules/wishlist/useGetWishlistByUser";
 import { useSelector } from "react-redux";
 import { useGetAppliedJobs } from "../../hooks/modules/application/useGetAppliedJobs";
+import { PACKAGE_CODE } from "../../constants/enum";
 
 const FindJobPage = () => {
   const { user_id } = useSelector((state) => state.user);
@@ -150,6 +151,7 @@ const FindJobPage = () => {
                 status={isWishlisted}
                 employment_type={job?.employment_type}
                 isApplied={isApplied}
+                isHot={job?.subscription_id?.package_id?.package_code === PACKAGE_CODE.MAX_PLUS}
               />
             );
           })}
