@@ -138,7 +138,6 @@ const HomePage = () => {
       <Container className="container mx-auto pt-8 md:pt-14">
         <Box className="flex items-center justify-between pb-4 md:pb-8">
           <h1 className="font-ClashDisplay font-semibold text-xl md:text-3xl flex gap-2 md:gap-3 items-center text-neutrals-100">
-            <img src={flash} alt="" className="h-6 md:h-8" />
             <span>
               Tin tuyển dụng, việc làm{" "}
               <span className="text-accent-blue"> tốt nhất</span>

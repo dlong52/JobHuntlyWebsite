@@ -21,7 +21,6 @@ import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentError from "./components/PaymentError";
 import Error from "./components/Error";
 import PaymentLoading from "./components/PaymentLoading";
-import { useSearchParams } from "react-router-dom";
 import { PaymentService } from "../../services/PaymentServices";
 import { SubscriptionService } from "../../services/SubscriptionServices";
 import moment from "moment";
@@ -108,7 +107,7 @@ const CheckoutPage = () => {
         job_post_remaining: orderInfo?.job_post_remaining,
       });
       if (subscriptionRes?.data?.status === "success") {
-        const paymentRes = await PaymentService.createPayment({
+        await PaymentService.createPayment({
           user_id: user?.user_id,
           subscription_id: subscriptionRes?.data?.data?._id,
           amount: Number(transactionInfo?.vnp_Amount) / 100,
@@ -123,9 +122,7 @@ const CheckoutPage = () => {
       localStorage.setItem(`order_${transactionInfo?.vnp_TxnRef}`, false);
     }
   };
-  // useEffect(() => {
-  //   verifyTransaction();
-  // }, [transactionInfo?.vnp_SecureHash]);
+
   useEffect(() => {
     if (
       transactionInfo?.vnp_TransactionStatus === "00" &&
@@ -139,8 +136,6 @@ const CheckoutPage = () => {
   const checkAlreadyPackage = subscriptions?.some(
     (item) => item.package_id._id === id
   );
-  console.log(checkAlreadyPackage);
-
   return (
     <>
       {!isLoading ? (

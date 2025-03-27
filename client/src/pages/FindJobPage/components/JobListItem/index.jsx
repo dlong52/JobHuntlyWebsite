@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback } from "react";
-import { companyLogoDefault } from "../../../../assets/images";
+import { companyLogoDefault, hotjob } from "../../../../assets/images";
 import { Box, Typography } from "@mui/material";
 import { Button, CommonIcon } from "../../../../ui";
 import helpers from "../../../../utils/helpers";
@@ -8,12 +8,12 @@ import { RouteBase } from "../../../../constants/routeUrl";
 import { useToggleDialog } from "../../../../hooks";
 import ApplyJobForm from "../../../JobDetailsPage/components/ApplyJobForm";
 import DialogMUI from "../../../../components/Dialogs";
-import useStatusWishlist from "../../../../hooks/modules/wishlist/useStatusWishlist";
 import { WishListService } from "../../../../services/WishListServices";
 import { useNotifications } from "../../../../utils/notifications";
 import { useSelector } from "react-redux";
 import ChipMui from "../../../../ui/Chip";
 import { ROLE } from "../../../../constants/enum";
+import TooltipMui from "../../../../ui/TooltipMui";
 
 const JobListItem = ({
   id,
@@ -26,6 +26,7 @@ const JobListItem = ({
   end_date,
   status,
   isApplied,
+  isHot,
 }) => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -74,7 +75,28 @@ const JobListItem = ({
   }, [id, user, showInfo, showError, showSuccess]);
 
   return (
-    <Box className="border p-6 rounded-lg shadow transition-all duration-500 hover:shadow-lg hover:shadow-primary-light">
+    <Box className="border relative p-6 rounded-lg shadow transition-all duration-500 hover:shadow-lg hover:shadow-primary-light">
+      {isHot && (
+        <TooltipMui
+          sx={{
+            "& .MuiTooltip-tooltip": {
+              backgroundColor: "red", // Đổi màu nền
+              color: "white", // Đổi màu chữ
+              fontSize: "14px",
+            },
+            "& .MuiTooltip-arrow": {
+              color: "black", // Đổi màu mũi tên theo màu nền
+            },
+          }}
+          content={"Việc làm tốt nhất"}
+        >
+          <img
+            src={hotjob}
+            className="absolute top-[-30px] left-[-20px] size-14"
+            alt=""
+          />
+        </TooltipMui>
+      )}
       <Box className="flex items-start gap-3 w-full">
         <Box
           className="w-[98px] aspect-square shadow overflow-hidden rounded-md"
