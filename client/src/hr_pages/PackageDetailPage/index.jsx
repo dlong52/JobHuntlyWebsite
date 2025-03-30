@@ -14,7 +14,7 @@ import { useNotifications } from "../../utils/notifications";
 const PackageDetailPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { user_id } = useSelector((state) => state.user);
+  const { user_id, is_verified } = useSelector((state) => state.user);
   const { filters: filtersSub } = useFilters({
     employer_id: user_id,
     status: "active",
@@ -165,6 +165,12 @@ const PackageDetailPage = () => {
                   if (checkAlreadyPackage) {
                     showInfo(
                       "Bạn đang sử dụng gói dịch vụ này vui lòng chọn gói khác!"
+                    );
+                    return;
+                  }
+                  if (!is_verified) {
+                    showInfo(
+                      "Bạn cần xác thực tài khoản để sử dụng dịch vụ của JobHuntly!"
                     );
                     return;
                   }

@@ -5,8 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteBase } from "../../../constants/routeUrl";
 import { PACKAGE_CODE } from "../../../constants/enum";
 import { useNotifications } from "../../../utils/notifications";
+import { useSelector } from "react-redux";
 
 const PackageItem = ({ id, title, price, features, code, subscriptions }) => {
+  const { is_verified } = useSelector((state) => state?.user)
   const navigate = useNavigate();
   const { showInfo } = useNotifications();
   const checkAlreadyPackage = subscriptions?.some(
@@ -16,26 +18,24 @@ const PackageItem = ({ id, title, price, features, code, subscriptions }) => {
     <div className="flex flex-col gap-2 rounded-md transition-all min-h-[400px] duration-500 bg-white overflow-hidden">
       <Link
         to={`${RouteBase.HRPackage}/${id}`}
-        className={`bg-gradient-to-tr ${
-          code === PACKAGE_CODE.ECO
-            ? "bg-accent-green"
-            : code === PACKAGE_CODE.PRO
+        className={`bg-gradient-to-tr ${code === PACKAGE_CODE.ECO
+          ? "bg-accent-green"
+          : code === PACKAGE_CODE.PRO
             ? "bg-accent-yellow"
             : code === PACKAGE_CODE.MAX
-            ? "bg-blue-800"
-            : "from-primary-dark via-primary to-primary-light"
-        } pt-[6px]`}
+              ? "bg-blue-800"
+              : "from-primary-dark via-primary to-primary-light"
+          } pt-[6px]`}
       >
         <Box className="bg-neutrals-100 relative shadow-inner text-white flex items-center justify-center py-3 rounded-t-lg">
           <Typography
             textTransform={"uppercase"}
             fontSize={"17px"}
             fontWeight={500}
-            className={`${
-              title === "Huntly Max Plus"
-                ? "!font-bold uppercase text-transparent bg-clip-text bg-gradient-to-tr from-primary-light via-accent-blue to-primary"
-                : ""
-            }`}
+            className={`${title === "Huntly Max Plus"
+              ? "!font-bold uppercase text-transparent bg-clip-text bg-gradient-to-tr from-primary-light via-accent-blue to-primary"
+              : ""
+              }`}
           >
             {title}
           </Typography>
@@ -62,6 +62,12 @@ const PackageItem = ({ id, title, price, features, code, subscriptions }) => {
             if (checkAlreadyPackage) {
               showInfo(
                 "Bạn đang sử dụng gói dịch vụ này vui lòng chọn gói khác!"
+              );
+              return;
+            }
+            if (!is_verified) {
+              showInfo(
+                "Bạn cần xác thực tài khoản để sử dụng dịch vụ của JobHuntly!"
               );
               return;
             }

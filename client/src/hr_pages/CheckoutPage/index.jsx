@@ -310,6 +310,12 @@ const CheckoutPage = () => {
                         );
                         return;
                       }
+                      if (!user.is_verified) {
+                        showInfo(
+                          "Bạn cần xác thực tài khoản để sử dụng dịch vụ của JobHuntly!"
+                        );
+                        return;
+                      }
                       handlePayment();
                     }}
                   >

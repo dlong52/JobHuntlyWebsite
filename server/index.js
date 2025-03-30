@@ -69,7 +69,7 @@ async function main() {
 
     // Tạo index jobs trước khi sync
     await syncServices.createJobIndex();
-    console.log("📝 Đã kiểm tra/tạo index jobs");
+    // console.log("📝 Đã kiểm tra/tạo index jobs");
 
     // Thực hiện sync jobs
     const syncedJobCount = await syncServices.syncJobsToElasticsearch();
@@ -77,9 +77,6 @@ async function main() {
 
   } catch (error) {
     console.error("❌ Lỗi trong quá trình khởi tạo và đồng bộ:", error);
-    // Nếu muốn ứng dụng vẫn chạy được dù sync thất bại
-    // Có thể comment lại dòng throw hoặc xử lý theo logic riêng
-    // throw error;
   }
 }
 main();
