@@ -58,6 +58,7 @@ const MenuAccount = ({ user, onClose }) => {
         </MenuItem>
         <MenuItem
           onClick={() => {
+            navigate(RouteBase.AdminChangePassword)
             onClose();
           }}
         >

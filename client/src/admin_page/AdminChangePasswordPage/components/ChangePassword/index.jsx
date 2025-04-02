@@ -36,7 +36,7 @@ const ChangePassword = () => {
       enableReinitialize
     >
       {() => (
-        <Box className="flex items-center justify-center w-full py-5">
+        <Box className="flex items-center justify-center w-full">
           <Form className="flex flex-col items-end gap-5 w-full text-neutrals-100">
             <FormikField
               sx={{

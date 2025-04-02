@@ -87,7 +87,7 @@ const PackageItem = ({ id, title, price, features, code, subscriptions }) => {
                   fontSize="small"
                   className="rounded-full bg-primary-light p-[2px] mt-[2px] text-primary"
                 />
-                <Typography fontSize={"14px"} color="var(--neutrals-80)">
+                <Typography fontSize={"14px"} color="var(--neutrals-80)" className="!line-clamp-1">
                   {item}
                 </Typography>
               </Box>

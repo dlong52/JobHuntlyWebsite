@@ -26,17 +26,81 @@ const createConversation = async (participants) => {
   return await newConversation.save();
 };
 
-const getConversationsByUserId = async (userId) => {
-  return await Conversation.find({ "participants.user_id": userId })
+const getConversationsByUserId = async (userId, searchName) => {
+  // Start with the base query
+  let query = { "participants.user_id": userId };
+  
+  // If searchName is provided, add search conditions
+  if (searchName) {
+    // Find conversations where any participant matches the search criteria
+    query = {
+      $and: [
+        { "participants.user_id": userId },
+        {
+          $or: [
+            // Search by participant username (case insensitive)
+            { "participants.username": { $regex: searchName, $options: 'i' } },
+            // The below conditions will be applied during population
+          ]
+        }
+      ]
+    };
+  }
+  
+  // Build the base query
+  const baseQuery = Conversation.find(query)
     .populate({
       path: "participants.user_id",
-      select: "username email role company profile", // Lấy các trường từ User
+      select: "username email role company profile",
       populate: {
-        path: "company", // Populate tiếp company nếu nó là ObjectId
-        select: "name logo", // Lấy các trường từ Company
+        path: "company",
+        select: "name logo",
       },
     })
     .sort({ updated_at: -1 });
+  
+  // Execute the query to get conversations
+  let conversations = await baseQuery;
+  
+  // If searchName is provided, filter the results after population
+  if (searchName && conversations.length > 0) {
+    return conversations.filter(conversation => {
+      // Check if any participant's email, name, or company name matches the search
+      return conversation.participants.some(participant => {
+        // Check username from conversation (already checked in the query but keeping it for completeness)
+        if (participant.username && 
+            participant.username.toLowerCase().includes(searchName.toLowerCase())) {
+          return true;
+        }
+        
+        // Check user fields after population
+        const user = participant.user_id;
+        if (!user) return false;
+        
+        // Check email
+        if (user.email && 
+            user.email.toLowerCase().includes(searchName.toLowerCase())) {
+          return true;
+        }
+        
+        // Check profile name
+        if (user.profile && user.profile.name && 
+            user.profile.name.toLowerCase().includes(searchName.toLowerCase())) {
+          return true;
+        }
+        
+        // Check company name
+        if (user.company && user.company.name && 
+            user.company.name.toLowerCase().includes(searchName.toLowerCase())) {
+          return true;
+        }
+        
+        return false;
+      });
+    });
+  }
+  
+  return conversations;
 };
 
 module.exports = {

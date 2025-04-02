@@ -46,6 +46,7 @@ import {
   CreateEditJobPage,
 } from "../hr_pages";
 import {
+  AdminChangePasswordPage,
   CategoryManagementPage,
   CompanyManagementPage,
   CreateUserPage,
@@ -383,6 +384,12 @@ const Routes = [
   {
     path: RouteBase.AdminReport,
     component: ReportManagementPage,
+    permissionAllow: [ROLE.ADMIN],
+    layout: AdminLayout,
+  },
+  {
+    path: RouteBase.AdminChangePassword,
+    component: AdminChangePasswordPage,
     permissionAllow: [ROLE.ADMIN],
     layout: AdminLayout,
   },

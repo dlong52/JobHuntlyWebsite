@@ -24,7 +24,6 @@ import TableMui from "../../ui/TableMui";
 import UpdateStatus from "./components/UpdateStatus";
 import { ROLE } from "../../constants/enum";
 import Unlock from "./components/Unlock";
-import SelectProvinceField from "../../components/SelectField/SelectProvinceField";
 import { Google, search } from "../../assets/images";
 import SelectRoleField from "../../components/SelectField/SelectRoleField";
 import SelectAccountTypeField from "../../components/SelectField/SelectAccountTypeField";
@@ -197,7 +196,7 @@ const UserManagementPage = () => {
   ];
   const toolbarActions = [
     {
-      label: <CommonIcon.Add />,
+      label: <CommonIcon.PersonAdd />,
       className: "!bg-primary !shadow-none",
       onClick: () => {
         navigate(RouteBase.AdminCreateUser);

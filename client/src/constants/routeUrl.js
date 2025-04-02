@@ -1,3 +1,5 @@
+import ChangePassword from "../hr_pages/ProfileHrPage/components/ChangePassword";
+
 export const RouteBase = {
   // All
   Home: "/",
@@ -55,4 +57,5 @@ export const RouteBase = {
   AdminCategory: "/admin/category",
   AdminCvTheme: "/admin/cv-theme",
   AdminReport: "/admin/report",
+  AdminChangePassword: "/admin/change-password",
 };
