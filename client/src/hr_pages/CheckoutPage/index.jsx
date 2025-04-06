@@ -56,6 +56,8 @@ const CheckoutPage = () => {
         orderDescription: JSON.stringify({
           id: id,
           job_post_remaining: dataConvert?.job_post_limit,
+          duration_in_days: dataConvert?.duration_in_days,
+          user_id: user.user_id,
         }),
         orderType: "other",
         language: "vn",
@@ -100,15 +102,15 @@ const CheckoutPage = () => {
     const orderInfo = JSON.parse(decodedString);
     try {
       const subscriptionRes = await SubscriptionService.createSubscription({
-        employer_id: user?.user_id,
+        employer_id: orderInfo.user_id,
         package_id: orderInfo?.id,
         start_date: moment().format(),
-        end_date: moment().add(30, "days").format(),
+        end_date: moment().add(orderInfo?.duration_in_days, "days").format(),
         job_post_remaining: orderInfo?.job_post_remaining,
       });
       if (subscriptionRes?.data?.status === "success") {
         await PaymentService.createPayment({
-          user_id: user?.user_id,
+          user_id: orderInfo.user_id,
           subscription_id: subscriptionRes?.data?.data?._id,
           amount: Number(transactionInfo?.vnp_Amount) / 100,
           payment_method: "VNPay",

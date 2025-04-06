@@ -15,7 +15,7 @@ const MainLayout = ({ children }) => {
     <Box className="">
       <Header />
       <Box
-        className={`bg-neutrals-0 text-neutrals-100 pb-20 ${
+        className={`bg-slate-50 text-neutrals-100 ${
           location.pathname === RouteBase.Home ||
           location.pathname === RouteBase.Job
             ? ""

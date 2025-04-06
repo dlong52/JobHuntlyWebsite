@@ -4,9 +4,9 @@ import { Box, Container, useMediaQuery, useTheme } from "@mui/material";
 import { Form, Formik } from "formik";
 
 // Assets and constants
-import { 
-  cpLogo, lineBanner, Location, Search, 
-  banner, bannerChild, flash 
+import {
+  cpLogo, lineBanner, Location, Search,
+  banner, bannerChild, flash
 } from "@/assets/images";
 import { RouteBase } from "../../constants/routeUrl";
 import { PACKAGE_CODE } from "../../constants/enum";
@@ -36,7 +36,7 @@ const SectionHeader = ({ title, highlightedText, linkTo }) => (
     <h1 className="font-ClashDisplay font-semibold text-xl md:text-3xl text-neutrals-100">
       {title} <span className="text-accent-blue">{highlightedText}</span>
     </h1>
-    
+
     {linkTo && (
       <Link
         to={linkTo}
@@ -72,7 +72,7 @@ const FeaturedJobCard = ({ item }) => (
         {helpers.convertSalary(item?.salary?.min, item?.salary?.max)}
       </span>
     </Box>
-    
+
     <Box className="flex flex-col">
       <span className="font-semibold truncate text-sm md:text-base">
         {item?.title}
@@ -120,14 +120,14 @@ const HomePage = () => {
     const queryParams = new URLSearchParams();
     if (values.province?.label) queryParams.append('location', values.province.label);
     if (values.position) queryParams.append('title', values.position);
-    
+
     navigate(`${RouteBase.Job}?${queryParams.toString()}`);
   };
 
   // Responsive grid column configurations
   const jobGridColumns = "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
   const categoryGridColumns = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
-  
+
   // Loading count by viewport
   const loadingCount = isMobile ? 4 : isTablet ? 6 : 8;
 
@@ -160,12 +160,12 @@ const HomePage = () => {
               <img src={lineBanner} alt="" className="max-w-full" />
             </h1>
           </FadeInComponent>
-          
+
           <span className="max-w-[521px] text-neutrals-60 font-Epilogue text-sm md:text-base leading-6 md:leading-7">
             Nền tảng tuyệt vời cho người tìm việc đang tìm kiếm những đỉnh cao
             mới trong sự nghiệp và đam mê khởi nghiệp.
           </span>
-          
+
           <Formik
             initialValues={{ position: "", province: { label: "" } }}
             onSubmit={handleSearchSubmit}
@@ -181,12 +181,12 @@ const HomePage = () => {
                     placeholder="Vị trí tuyển dụng, tên công ty"
                   />
                 </Box>
-                
+
                 <Box className="flex items-center min-w-[150px] md:min-w-[300px] gap-2">
                   <img src={Location} alt="" className="w-5 md:w-auto" />
                   <SelectProvinceField variant="standard" />
                 </Box>
-                
+
                 <Button
                   type="submit"
                   size={isMobile ? "medium" : "large"}
@@ -202,12 +202,12 @@ const HomePage = () => {
 
       {/* Top Jobs Section */}
       <Container className="container mx-auto pt-8 md:pt-14">
-        <SectionHeader 
-          title="Tin tuyển dụng, việc làm" 
-          highlightedText="tốt nhất" 
-          linkTo={RouteBase.Job} 
+        <SectionHeader
+          title="Tin tuyển dụng, việc làm"
+          highlightedText="tốt nhất"
+          linkTo={RouteBase.Job}
         />
-        
+
         {!jobsLoading ? (
           <Box className={`grid ${jobGridColumns} gap-4 md:gap-6`}>
             {jobs?.map((item, index) => (
@@ -232,22 +232,22 @@ const HomePage = () => {
 
       {/* Categories Section */}
       <Container className="container mx-auto pt-8 md:pt-14">
-        <SectionHeader 
-          title="Khám phá theo" 
-          highlightedText="ngành nghề" 
-          linkTo={RouteBase.Job} 
+        <SectionHeader
+          title="Khám phá theo"
+          highlightedText="ngành nghề"
+          linkTo={RouteBase.Job}
         />
-        
+
         {!categoriesLoading ? (
           <Box className={`grid ${categoryGridColumns} gap-4 md:gap-6`}>
             {categories?.map((category, index) => (
-              <Link
+              <a
                 key={category._id || `category-${index}`}
-                to={`${RouteBase.Job}?category=${category._id}`}
-                className="border rounded-sm overflow-hidden"
+                href={`${RouteBase.Job}?category=${category._id}`}
+                className=""
               >
                 <CategoryItem loading={false} data={category} />
-              </Link>
+              </a>
             ))}
           </Box>
         ) : (
@@ -256,14 +256,14 @@ const HomePage = () => {
       </Container>
 
       {/* Featured Jobs Section */}
-      <Box className="bg-white rounded-t-3xl bg-no-repeat bg-contain bg-right">
+      <Box className="bg-white rounded-t-3xl bg-no-repeat bg-contain bg-right pb-10">
         <Container className="py-6 md:py-10 mt-4">
-          <SectionHeader 
-            title="Các việc làm" 
-            highlightedText="nổi bật" 
-            linkTo={RouteBase.Job} 
+          <SectionHeader
+            title="Các việc làm"
+            highlightedText="nổi bật"
+            linkTo={RouteBase.Job}
           />
-          
+
           <Box className={`grid ${jobGridColumns} gap-4 md:gap-6`}>
             {jobs?.map((item, index) => (
               <Link
