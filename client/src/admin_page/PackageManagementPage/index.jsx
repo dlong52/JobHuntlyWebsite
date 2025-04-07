@@ -14,12 +14,13 @@ import helpers from "../../utils/helpers";
 import ChipMui from "../../ui/Chip";
 
 const PackageManagementPage = () => {
-  const [idPackage, setIdPackage] = useState();
+  const [idPackage, setIdPackage] = useState(null);
   const { open, shouldRender, toggle } = useToggleDialog();
   const { filters, handleChangePage } = useFilters({
     page: 1,
     limit: 10,
-    sort: "desc",
+    order: "desc",
+    sortBy: "price"
   });
   const { data, isLoading, refetch } = useGetAllPackages(filters);
   const toolbarActions = [

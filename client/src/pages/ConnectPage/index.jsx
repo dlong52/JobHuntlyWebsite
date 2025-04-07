@@ -6,7 +6,7 @@ import { Logo } from "../../components";
 import { Form, Formik } from "formik";
 import { FormikField, InputField } from "../../components/CustomFieldsFormik";
 import { useSelector } from "react-redux";
-import { useConvertData, useQueryParams } from "../../hooks";
+import { useConvertData, useFilters, useQueryParams } from "../../hooks";
 import { RouteBase } from "../../constants/routeUrl";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetAllConversations } from "../../hooks/modules/conversation/useGetAllConversations";
@@ -18,18 +18,21 @@ import { useGetMessage } from "../../hooks/modules/message/useGetMessage";
 import socket from "../../utils/socket";
 import Picker from "@emoji-mart/react";
 import emojiData from "@emoji-mart/data";
+import { debounce } from "lodash";
 
 // Component tách biệt cho danh sách hội thoại
-const ConversationList = ({ conversations, userId, navigate, activeChat, onConversationSelect, isMobile }) => {
+const ConversationList = React.memo(({ conversations, userId, navigate, activeChat, onConversationSelect, isMobile }) => {
+  if (!conversations?.length) return null;
+  
   return (
     <Box className="flex flex-col gap-4">
-      {conversations?.map((item) => {
-        const companyR = item?.participants?.filter(
+      {conversations.map((item) => {
+        const companyR = item?.participants?.find(
           (participant) => participant.role !== ROLE.CANDIDATE
-        ) || [];
+        );
         
         const isActive = item._id === activeChat;
-        
+
         return (
           <div
             onClick={() => {
@@ -40,7 +43,7 @@ const ConversationList = ({ conversations, userId, navigate, activeChat, onConve
             className={`flex items-center gap-2 p-3 md:p-5 ${isActive ? 'bg-primary-light' : 'bg-slate-50'} rounded-md cursor-pointer`}
           >
             <CommonAvatar
-              src={companyR[0]?.user_id?.company?.logo}
+              src={companyR?.user_id?.company?.logo}
               className="!border !min-w-8"
             />
             <Box className="overflow-hidden">
@@ -50,7 +53,7 @@ const ConversationList = ({ conversations, userId, navigate, activeChat, onConve
                 fontWeight={500}
                 className="line-clamp-1"
               >
-                {companyR[0]?.user_id?.company?.name}
+                {companyR?.user_id?.company?.name}
               </Typography>
               <Typography
                 fontSize={isMobile ? "12px" : "14px"}
@@ -67,13 +70,15 @@ const ConversationList = ({ conversations, userId, navigate, activeChat, onConve
       })}
     </Box>
   );
-};
+});
 
 // Component tách biệt cho danh sách công việc đã ứng tuyển
-const AppliedJobsList = ({ jobs, handleCreateConversation, isMobile }) => {
+const AppliedJobsList = React.memo(({ jobs, handleCreateConversation, isMobile }) => {
+  if (!jobs?.length) return null;
+  
   return (
     <Box className="flex flex-col gap-4 md:gap-6 mt-4 md:mt-10">
-      {jobs?.map((item) => (
+      {jobs.map((item) => (
         <Box key={item?._id} className="flex items-center gap-2 md:gap-5 overflow-hidden w-full">
           <div className="flex w-4/5 gap-2 md:gap-3">
             <img
@@ -92,7 +97,10 @@ const AppliedJobsList = ({ jobs, handleCreateConversation, isMobile }) => {
           </div>
           <Link
             to={`${RouteBase.Connect}?id=${item?.posted_by}`}
-            onClick={() => handleCreateConversation(item?.posted_by)}
+            onClick={(e) => {
+              e.preventDefault();
+              handleCreateConversation(item?.posted_by);
+            }}
             className="!bg-primary-light text-nowrap !rounded-full !text-primary h-fit py-1 px-2 text-xs font-medium ml-auto"
           >
             Nhắn tin
@@ -101,10 +109,10 @@ const AppliedJobsList = ({ jobs, handleCreateConversation, isMobile }) => {
       ))}
     </Box>
   );
-};
+});
 
 // Component tách biệt cho phần gửi tin nhắn
-const MessageInput = ({ onSendMessage, showEmojiPicker, setShowEmojiPicker, emojiRef, buttonRef, isMobile }) => {
+const MessageInput = React.memo(({ onSendMessage, showEmojiPicker, setShowEmojiPicker, emojiRef, buttonRef, isMobile }) => {
   return (
     <Formik
       initialValues={{ textMessage: "" }}
@@ -126,7 +134,8 @@ const MessageInput = ({ onSendMessage, showEmojiPicker, setShowEmojiPicker, emoj
                 position: "absolute",
                 bottom: isMobile ? "80px" : "100px",
                 left: "20px",
-                maxWidth: isMobile ? "calc(100vw - 40px)" : "auto"
+                maxWidth: isMobile ? "calc(100vw - 40px)" : "auto",
+                zIndex: 10
               }}
               className="shadow rounded-[9px]"
             >
@@ -167,18 +176,54 @@ const MessageInput = ({ onSendMessage, showEmojiPicker, setShowEmojiPicker, emoj
       )}
     </Formik>
   );
-};
+});
+
+// Component trạng thái trống
+const EmptyState = React.memo(({ type, isMobile }) => {
+  const emptyStateContent = {
+    noChat: {
+      image: emptyChat,
+      title: "Không có cuộc trò chuyện nào",
+      subtitle: "Hãy bắt đầu cuộc trò chuyện với nhà tuyển dụng nào đó"
+    },
+    startChat: {
+      image: startConversation,
+      title: "Hãy bắt đầu cuộc trò chuyện của bạn với nhà tuyển dụng nào đó",
+      subtitle: ""
+    }
+  };
+
+  const content = emptyStateContent[type];
+
+  return (
+    <Box className="size-full flex flex-col gap-4 items-center justify-center p-4">
+      <img 
+        src={content.image} 
+        className={type === "startChat" ? "w-1/2 md:w-1/3" : "w-[150px] md:w-[200px]"} 
+        alt={content.title} 
+      />
+      <Typography fontSize={isMobile ? "14px" : "16px"} className="!text-neutrals-80 text-center">
+        {content.title}
+      </Typography>
+      {content.subtitle && (
+        <Typography fontSize={isMobile ? "12px" : "14px"} className="!text-neutrals-60 text-center">
+          {content.subtitle}
+        </Typography>
+      )}
+    </Box>
+  );
+});
 
 // Component chính
 const ConnectPage = () => {
   const navigate = useNavigate();
   const { id, chat } = useQueryParams();
   const user = useSelector((state) => state.user);
-  
+
   // Media queries
   const isMobile = useMediaQuery('(max-width:768px)');
   const isTablet = useMediaQuery('(min-width:769px) and (max-width:1024px)');
-  
+
   // State
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [currentConversation, setCurrentConversation] = useState(null);
@@ -186,7 +231,8 @@ const ConnectPage = () => {
   const [activeConversationId, setActiveConversationId] = useState(chat || "");
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
-  
+  const [searchTerm, setSearchTerm] = useState("");
+
   // Refs
   const boxRef = useRef(null);
   const emojiRef = useRef(null);
@@ -195,20 +241,39 @@ const ConnectPage = () => {
   // Lấy thông tin người nhận
   const { data: userData } = useGetUser(id, { enabled: !!id });
   const { dataConvert: receiver } = useConvertData(userData);
-  
+
   // Lấy danh sách công việc đã ứng tuyển
   const { data, isLoading: isLoadingJobs } = useGetAppliedJobs(user?.user_id, {});
   const { dataConvert: appliedJobs } = useConvertData(data);
+
+  // Lấy danh sách hội thoại với debounce search
+  const { filters, setFilters } = useFilters({
+    searchName: ""
+  });
   
-  // Lấy danh sách hội thoại
-  const { data: cvsData, refetch: refetchConversation } = useGetAllConversations(user?.user_id);
+  // Debounce function for search
+  const debouncedSearch = useCallback(
+    debounce((term) => {
+      setFilters({ searchName: term });
+    }, 500),
+    []
+  );
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedSearch(value);
+  };
+
+  const { data: cvsData, refetch: refetchConversation } = useGetAllConversations(user?.user_id, filters);
   const { dataConvert: conversations } = useConvertData(cvsData);
-  
+
   // Lấy tin nhắn
   const conversationId = chat || id;
   const { data: messageData, refetch: refetchMessage } = useGetMessage(
     conversationId,
-    { 
+    {
       enabled: !!conversationId,
       chat
     }
@@ -268,7 +333,7 @@ const ConnectPage = () => {
           ],
         });
         refetchConversation();
-        
+
         // Đóng drawer sau khi tạo hội thoại mới trên mobile
         if (isMobile) {
           setRightDrawerOpen(false);
@@ -328,9 +393,9 @@ const ConnectPage = () => {
   // Thiết lập socket để nhận tin nhắn mới
   useEffect(() => {
     if (!conversationId) return;
-    
+
     socket.emit("joinConversation", { conversationId });
-    
+
     const handleReceiveMessage = ({ conversationId: convId, message }) => {
       if (convId === conversationId) {
         setMessages((prevMessages) => [...prevMessages, message]);
@@ -341,11 +406,12 @@ const ConnectPage = () => {
         }
       }
     };
-    
+
     socket.on("receiveMessage", handleReceiveMessage);
-    
+
     return () => {
       socket.off("receiveMessage", handleReceiveMessage);
+      socket.emit("leaveConversation", { conversationId });
     };
   }, [conversationId, refetchMessage, refetchConversation]);
 
@@ -376,19 +442,26 @@ const ConnectPage = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Cleanup debounce function
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
+
   // Memoized components để tránh re-render không cần thiết
   const employerInfo = useMemo(() => {
     if (!currentConversation) return null;
-    
-    const employers = currentConversation.participants
-      .filter(participant => participant.role === ROLE.EMPLOYER);
-      
-    if (!employers || employers.length === 0) return null;
-      
-    return employers.map(participant => (
-      <Box className="flex p-3 md:p-5 shadow-sm border-b items-center gap-2" key={participant.user_id._id}>
+
+    const employer = currentConversation.participants
+      .find(participant => participant.role === ROLE.EMPLOYER);
+
+    if (!employer) return null;
+
+    return (
+      <Box className="flex p-3 md:p-5 shadow-sm border-b items-center gap-2" key={employer.user_id._id}>
         <CommonAvatar
-          src={participant.user_id?.company?.logo}
+          src={employer.user_id?.company?.logo}
           className="!border !w-8 !h-8 md:!w-10 md:!h-10"
         />
         <Typography
@@ -397,60 +470,57 @@ const ConnectPage = () => {
           fontWeight={500}
           className="line-clamp-1"
         >
-          {participant.user_id?.company?.name}
+          {employer.user_id?.company?.name}
         </Typography>
       </Box>
-    ));
+    );
   }, [currentConversation, isMobile]);
 
   // Hiển thị nội dung tin nhắn
   const renderMessages = useMemo(() => {
     if (!messages || messages.length === 0) {
       if (!currentConversation) return null;
-      
-      const employers = currentConversation.participants
-        .filter(participant => participant.role === ROLE.EMPLOYER);
-      
-      if (!employers || employers.length === 0) return null;
-      
+
+      const employer = currentConversation.participants
+        .find(participant => participant.role === ROLE.EMPLOYER);
+
+      if (!employer) return null;
+
       return (
         <Box className="size-full flex flex-col gap-4 items-center justify-center p-4">
-          {employers.map(participant => (
-            <Box className="flex flex-col items-center gap-2" key={participant.user_id._id}>
-              <CommonAvatar
-                src={participant.user_id?.company?.logo}
-                className="!border !size-[60px] md:!size-[80px]"
-              />
-              <Typography
-                fontSize={isMobile ? "14px" : "16px"}
-                color="var(--neutrals-100)"
-                fontWeight={500}
-                className="line-clamp-1 text-center"
-              >
-                {participant.user_id?.company?.name}
-              </Typography>
-              <Typography
-                className="!text-neutrals-80 text-center"
-                fontSize={isMobile ? "12px" : "14px"}
-              >
-                Hãy bắt đầu cuộc trò chuyện bằng một lời chào 😍
-              </Typography>
-            </Box>
-          ))}
+          <Box className="flex flex-col items-center gap-2" key={employer.user_id._id}>
+            <CommonAvatar
+              src={employer.user_id?.company?.logo}
+              className="!border !size-[60px] md:!size-[80px]"
+            />
+            <Typography
+              fontSize={isMobile ? "14px" : "16px"}
+              color="var(--neutrals-100)"
+              fontWeight={500}
+              className="line-clamp-1 text-center"
+            >
+              {employer.user_id?.company?.name}
+            </Typography>
+            <Typography
+              className="!text-neutrals-80 text-center"
+              fontSize={isMobile ? "12px" : "14px"}
+            >
+              Hãy bắt đầu cuộc trò chuyện bằng một lời chào 😍
+            </Typography>
+          </Box>
         </Box>
       );
     }
-    
+
     return (
       <Box className="flex flex-col gap-2 md:gap-3">
         {messages.map((message) => (
           <Box
             key={message?._id || Math.random().toString()}
-            className={`flex px-3 md:px-5 ${
-              message?.sender_id === user?.user_id
+            className={`flex px-3 md:px-5 ${message?.sender_id === user?.user_id
                 ? "justify-end"
                 : "justify-start"
-            }`}
+              }`}
           >
             <Typography
               sx={{
@@ -458,11 +528,10 @@ const ConnectPage = () => {
                 maxWidth: isMobile ? "85%" : "70%",
                 wordBreak: "break-word",
               }}
-              className={`${
-                message.sender_id === user?.user_id
+              className={`${message.sender_id === user?.user_id
                   ? "!text-white !bg-primary"
                   : "!bg-primary-light !text-primary"
-              } !text-xs md:!text-sm rounded-full`}
+                } !text-xs md:!text-sm rounded-full`}
             >
               {message?.content}
             </Typography>
@@ -474,47 +543,47 @@ const ConnectPage = () => {
 
   // Nội dung sidebar trái
   const leftSidebarContent = (
-    <>
-      <Box className={isMobile ? "p-4" : "p-5"}>
-        <Logo />
-        <Box className="my-4">
-          <InputBase
-            fullWidth
-            placeholder="Tên công ty, tên nhà tuyển dụng"
-            startAdornment={<CommonIcon.Search sx={{ marginRight: "8px" }} />}
-            sx={{
-              background: "#f5f5f5",
-              borderRadius: "999px",
-              padding: isMobile ? "8px 10px" : "10px 12px",
-              fontSize: isMobile ? "12px" : "14px",
-            }}
-          />
-        </Box>
-        <ConversationList 
-          conversations={conversations} 
-          userId={user?.user_id} 
-          navigate={navigate}
-          activeChat={activeConversationId}
-          onConversationSelect={handleConversationSelect}
-          isMobile={isMobile}
+    <Box className={isMobile ? "p-4" : "p-5"}>
+      <Logo />
+      <Box className="my-4">
+        <InputBase
+          fullWidth
+          placeholder="Tên công ty, tên nhà tuyển dụng"
+          startAdornment={<CommonIcon.Search sx={{ marginRight: "8px" }} />}
+          value={searchTerm}
+          onChange={handleSearchChange}
+          sx={{
+            background: "#f5f5f5",
+            borderRadius: "999px",
+            padding: isMobile ? "8px 10px" : "10px 12px",
+            fontSize: isMobile ? "12px" : "14px",
+          }}
         />
-        {userData && (
-          <div className="flex items-center gap-2 p-3 md:p-5 bg-slate-50 mt-4">
-            <CommonAvatar  
-              src={receiver?.company?.logo} 
-              className="!border !w-8 !h-8 md:!w-10 md:!h-10" 
-            />
-            <Typography 
-              fontSize={isMobile ? "14px" : "16px"} 
-              color="var(--neutrals-100)" 
-              fontWeight={500}
-            >
-              {receiver?.company?.name}
-            </Typography>
-          </div>
-        )}
       </Box>
-    </>
+      <ConversationList
+        conversations={conversations}
+        userId={user?.user_id}
+        navigate={navigate}
+        activeChat={activeConversationId}
+        onConversationSelect={handleConversationSelect}
+        isMobile={isMobile}
+      />
+      {userData && (
+        <div className="flex items-center gap-2 p-3 md:p-5 bg-slate-50 mt-4">
+          <CommonAvatar
+            src={receiver?.company?.logo}
+            className="!border !w-8 !h-8 md:!w-10 md:!h-10"
+          />
+          <Typography
+            fontSize={isMobile ? "14px" : "16px"}
+            color="var(--neutrals-100)"
+            fontWeight={500}
+          >
+            {receiver?.company?.name}
+          </Typography>
+        </div>
+      )}
+    </Box>
   );
 
   // Nội dung sidebar phải
@@ -523,9 +592,9 @@ const ConnectPage = () => {
       <Typography className="!font-semibold" fontSize={isMobile ? "14px" : "16px"}>
         Tin tuyển dụng đã ứng tuyển
       </Typography>
-      <AppliedJobsList 
-        jobs={appliedJobs} 
-        handleCreateConversation={handleCreateConversation} 
+      <AppliedJobsList
+        jobs={appliedJobs}
+        handleCreateConversation={handleCreateConversation}
         isMobile={isMobile}
       />
     </Box>
@@ -548,13 +617,13 @@ const ConnectPage = () => {
             >
               <CommonIcon.Menu />
             </IconButton>
-            
+
             <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: "var(--primary)", textAlign: "center" }}>
-              {currentConversation ? 
-                currentConversation.participants.find(p => p.role === ROLE.EMPLOYER)?.user_id?.company?.name || "Chat" : 
+              {currentConversation ?
+                currentConversation.participants.find(p => p.role === ROLE.EMPLOYER)?.user_id?.company?.name || "Chat" :
                 "Chat"}
             </Typography>
-            
+
             <IconButton
               edge="end"
               color="primary"
@@ -593,23 +662,10 @@ const ConnectPage = () => {
         <Box className={`col-span-1 ${isTablet ? 'md:col-span-8' : 'md:col-span-6'} flex flex-col justify-end bg-white rounded-md overflow-hidden`}>
           {/* Trạng thái không có hội thoại */}
           {!!conversations?.length && !chat && (
-            <Box className="size-full flex flex-col gap-2 items-center justify-center p-4">
-              <img src={startConversation} className="w-1/2 md:w-1/3" alt="Bắt đầu cuộc trò chuyện" />
-              <Typography fontSize={isMobile ? "14px" : "16px"} className="!text-neutrals-80 text-center">
-                Hãy bắt đầu cuộc trò chuyện của bạn với nhà tuyển dụng nào đó
-              </Typography>
-            </Box>
+            <EmptyState type="startChat" isMobile={isMobile} />
           )}
-          {!conversations?.length && (
-            <Box className="size-full flex flex-col gap-4 items-center justify-center p-4">
-              <img src={emptyChat} alt="Không có tin nhắn" className="w-[150px] md:w-[200px]" />
-              <Typography fontSize={isMobile ? "14px" : "16px"} className="!text-neutrals-80 text-center">
-                Không có cuộc trò chuyện nào
-              </Typography>
-              <Typography fontSize={isMobile ? "12px" : "14px"} className="!text-neutrals-60 text-center">
-                Hãy bắt đầu cuộc trò chuyện với nhà tuyển dụng nào đó
-              </Typography>
-            </Box>
+          {!conversations?.length && !chat && (
+            <EmptyState type="noChat" isMobile={isMobile} />
           )}
 
           {/* Khu vực hiển thị tin nhắn */}
@@ -618,33 +674,33 @@ const ConnectPage = () => {
               {/* Thông tin người nhận từ tham số URL - Trên desktop */}
               {!isMobile && userData && (
                 <div className="flex items-center gap-2 p-3 md:p-5 border-b">
-                  <CommonAvatar 
-                    src={receiver?.company?.logo} 
-                    className="!border !w-8 !h-8 md:!w-10 md:!h-10" 
+                  <CommonAvatar
+                    src={receiver?.company?.logo}
+                    className="!border !w-8 !h-8 md:!w-10 md:!h-10"
                   />
-                  <Typography 
-                    fontSize={isMobile ? "14px" : "16px"} 
-                    color="var(--neutrals-100)" 
+                  <Typography
+                    fontSize={isMobile ? "14px" : "16px"}
+                    color="var(--neutrals-100)"
                     fontWeight={500}
                   >
                     {receiver?.company?.name}
                   </Typography>
                 </div>
               )}
-              
+
               {/* Thông tin người nhận từ hội thoại */}
               {!isMobile && employerInfo}
-              
+
               {/* Box tin nhắn */}
-              <Box 
-                ref={boxRef} 
+              <Box
+                ref={boxRef}
                 className="flex-1 overflow-y-auto py-4 md:py-14 max-h-[calc(100vh-140px)] md:max-h-[500px]"
               >
                 {renderMessages}
               </Box>
-              
+
               {/* Input gửi tin nhắn */}
-              <MessageInput 
+              <MessageInput
                 onSendMessage={handleSendMessage}
                 showEmojiPicker={showEmojiPicker}
                 setShowEmojiPicker={setShowEmojiPicker}

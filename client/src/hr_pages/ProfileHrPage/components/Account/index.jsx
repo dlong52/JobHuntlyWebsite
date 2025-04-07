@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 import { RouteBase } from "../../../../constants/routeUrl";
 import { useNotifications } from "../../../../utils/notifications";
 import { updateUser as updateUserAcc } from "../../../../services/UserServices";
+import ChangeAvatar from "./components/ChangeAvatar";
 export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
@@ -46,21 +47,12 @@ const Account = () => {
   };
   const handleSubmit = async (values) => {
     try {
-      // Gọi API cập nhật dữ liệu trên server
       await updateUserAcc({
         id: user.user_id,
         "profile.name": values.name,
         "profile.phone_number": values.phone_number,
       });
 
-      // // Sau khi API thành công, mới cập nhật Redux state
-      // dispatch(
-      //   updateUser({
-      //     ...user,
-      //     username: values.name,
-      //     phone_number: values.phone_number,
-      //   })
-      // );
       window.location.reload();
       showSuccess("Cập nhật tài khoản thành công!");
     } catch (error) {
@@ -72,7 +64,10 @@ const Account = () => {
     <Box className="grid grid-cols-6 gap-5">
       <Box className="col-span-2 border shadow-inner rounded-md">
         <Box className=" flex items-start gap-3 p-5 border-b">
-          <CommonAvatar />
+          <div className="">
+           
+            <ChangeAvatar />
+          </div>
           <Box className="">
             <Typography sx={{ fontSize: "16px", fontWeight: 500 }}>
               {user?.username}
@@ -140,17 +135,16 @@ const Account = () => {
               user?.is_verified
                 ? 66.66
                 : user?.is_verified_phone && user?.is_verified
-                ? 100
-                : 33.33
+                  ? 100
+                  : 33.33
             }
           />
           <Box className="flex flex-col gap-6 mt-8">
             <Box className="flex justify-between">
               <Box className="flex items-center gap-4">
                 <Box
-                  className={`size-6 rounded-full border flex items-center text-white justify-center ${
-                    user?.is_verified ? "bg-accent-green" : "bg-gray-400"
-                  }`}
+                  className={`size-6 rounded-full border flex items-center text-white justify-center ${user?.is_verified ? "bg-accent-green" : "bg-gray-400"
+                    }`}
                 >
                   <CommonIcon.CheckRounded className="!text-[18px]" />
                 </Box>
@@ -168,9 +162,8 @@ const Account = () => {
             <Box className="flex justify-between">
               <Box className="flex items-center gap-4">
                 <Box
-                  className={`size-6 rounded-full border flex items-center text-white justify-center ${
-                    user?.is_verified_phone ? "bg-accent-green" : "bg-gray-400"
-                  }`}
+                  className={`size-6 rounded-full border flex items-center text-white justify-center ${user?.is_verified_phone ? "bg-accent-green" : "bg-gray-400"
+                    }`}
                 >
                   <CommonIcon.CheckRounded className="!text-[18px]" />
                 </Box>

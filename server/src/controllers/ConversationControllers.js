@@ -15,9 +15,13 @@ const createConversation = async (req, res) => {
 const getConversationsByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
+    const { searchName } = req.query; // Get searchName from query parameters
+    
     const conversations = await conversationService.getConversationsByUserId(
-      userId
+      userId, 
+      searchName
     );
+    
     res.status(200).json({
       status: "success",
       data: conversations,

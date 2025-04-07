@@ -19,6 +19,7 @@ import BreadcrumbMui from "../../ui/BreadcrumbMui";
 import ChipMui from "../../ui/Chip";
 import TooltipMui from "../../ui/TooltipMui";
 import NotVerify from "./components/NotVerify";
+import TableMui from "../../ui/TableMui";
 
 const PostJobPage = () => {
   const user = useSelector((state) => state.user);
@@ -61,37 +62,37 @@ const PostJobPage = () => {
   };
 
   const columns = [
-    { field: "title", headerName: "Tiêu đề" },
+    { field: "title", headerName: "Tiêu đề", renderCell: (value) => value?.title },
     {
       field: "experience",
       headerName: "Kinh nghiệm",
-      renderCell: (value) => helpers.convertTime(value),
+      renderCell: (value) => helpers.convertTime(value?.experience),
     },
     {
       field: "status",
       headerName: "Trạng thái",
       renderCell: (value) => (
         <ChipMui
-          label={value ? "Đang hiển thị" : "Chưa duyệt"}
+          label={value?.status ? "Đang hiển thị" : "Chưa duyệt"}
           variant={"outlined"}
-          color={value ? "success" : "warning"}
+          color={value?.status ? "success" : "warning"}
         />
       ),
     },
     {
       field: "salary",
       headerName: "Lương",
-      renderCell: (value) => helpers.convertSalary(value?.min, value?.max),
+      renderCell: (value) => helpers.convertSalary(value?.salary?.min, value?.salary?.max),
     },
     {
       field: "location",
       headerName: "Địa chỉ",
-      renderCell: (value) => `${value.district.name}, ${value.province.name}`,
+      renderCell: (value) => `${value?.location.district.name}, ${value?.location.province.name}`,
     },
     {
       field: "end_date",
       headerName: "Ngày hết hạn",
-      renderCell: (value) => moment(value).format("DD/MM/YYYY"),
+      renderCell: (value) => moment(value?.end_date).format("DD/MM/YYYY"),
     },
     {
       field: "_id",
@@ -101,8 +102,9 @@ const PostJobPage = () => {
           <Box className="flex gap-2 items-center">
             <TooltipMui content={"Xem ứng viên"}>
               <IconButton
+
                 onClick={() => {
-                  navigate(`${RouteBase.HRJobs}/${value}`);
+                  navigate(`${RouteBase.HRJobs}/${value?._id}`);
                 }}
               >
                 <CommonIcon.RemoveRedEyeTwoTone className="text-primary" />
@@ -110,20 +112,23 @@ const PostJobPage = () => {
             </TooltipMui>
             <TooltipMui content={"Cập nhật tin tuyển dụng"}>
               <IconButton
+                disabled={value?.status}
                 onClick={() => {
-                  handleSetId(value);
+                  handleSetId(value?._id);
                 }}
               >
-                <CommonIcon.DriveFileRenameOutline className="text-primary-dark" />
+                <CommonIcon.DriveFileRenameOutline className={`text-primary-dark ${value?.status ? "opacity-50" : ""}`} />
               </IconButton>
             </TooltipMui>
             <TooltipMui content={"Xóa tin tuyển dụng"}>
               <IconButton
+                disabled={value?.status}
                 onClick={() => {
-                  toggleDelete(), setIdDelete(value);
+                  toggleDelete();
+                  setIdDelete(value?._id);
                 }}
               >
-                <CommonIcon.DeleteSweep className="text-red-700" />
+                <CommonIcon.DeleteSweep className={`text-red-700 ${value?.status ? "opacity-50" : ""}`} />
               </IconButton>
             </TooltipMui>
           </Box>
@@ -182,7 +187,7 @@ const PostJobPage = () => {
       <BreadcrumbMui breadcrumbs={breadcrumbs} title={"Tuyển dụng"} />
       <NotVerify user={user} />
       <Box className="bg-white rounded-md">
-        <CustomTable
+        <TableMui
           columns={columns}
           rows={data?.data?.data || []}
           total={data?.data?.pagination.totalPages}

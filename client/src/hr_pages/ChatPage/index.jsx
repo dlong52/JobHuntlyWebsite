@@ -351,9 +351,9 @@ const ChatPage = () => {
             <Typography className="font-medium text-gray-900">
               {currentChatUser?.profile?.name}
             </Typography>
-            <Typography className="text-sm text-gray-500">
+            {/* <Typography className="text-sm text-gray-500">
               {currentChatUser?.online ? "Đang trực tuyến" : "Ngoại tuyến"}
-            </Typography>
+            </Typography> */}
           </div>
         </div>
         <div className="flex items-center gap-2">

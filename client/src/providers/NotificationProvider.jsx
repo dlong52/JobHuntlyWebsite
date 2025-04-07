@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useMemo, useCallback } from "react";
 import { useGetAllNotifications } from "../hooks/modules/notification/useGetAllNotifications";
 import { useSelector } from "react-redux";
 import useFilters from "../hooks/useFilters";
@@ -6,21 +6,24 @@ import useFilters from "../hooks/useFilters";
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
-  // Chỉ lấy user_id để tránh re-render không cần thiết
+  // Optimized selector to only get userId
   const userId = useSelector((state) => state.user?.user_id);
 
-  // Memo hóa filters để không tạo object mới trên mỗi render
+  // Memoized initial filters
   const initialFilters = useMemo(() => ({ page: 1, limit: 5, sort: "desc" }), []);
   const { filters } = useFilters(initialFilters);
 
-  // Fetch dữ liệu thông báo
-  const { data, isLoading, refetch } = useGetAllNotifications(userId, filters);
+  // Fetch notifications data
+  const { data, isLoading, refetch: originalRefetch } = useGetAllNotifications(userId, filters);
 
-  // Memo hóa danh sách thông báo
+  // Memoize refetch to prevent unnecessary re-renders
+  const refetch = useCallback(() => originalRefetch(), [originalRefetch]);
+
+  // Extract and memoize notification data
   const notifications = useMemo(() => data?.data?.data || [], [data]);
-  const unreadCount = data?.data?.unreadCount;
+  const unreadCount = useMemo(() => data?.data?.unreadCount || 0, [data]);
 
-  // Memo hóa giá trị context để tránh re-render không cần thiết
+  // Memoize context value
   const contextValue = useMemo(
     () => ({ notifications, isLoading, refetch, unreadCount }),
     [notifications, isLoading, refetch, unreadCount]
@@ -33,4 +36,10 @@ export const NotificationProvider = ({ children }) => {
   );
 };
 
-export const useNotification = () => useContext(NotificationContext);
+export const useNotification = () => {
+  const context = useContext(NotificationContext);
+  if (!context) {
+    throw new Error("useNotification must be used within a NotificationProvider");
+  }
+  return context;
+};

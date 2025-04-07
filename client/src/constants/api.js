@@ -35,6 +35,7 @@ export const apiURL = {
   REVENUE_BY_PACKAGE: BASE_URL + "/payment/revenue-by-package",
   SUBSCRIPTION: BASE_URL + "/subscription",
   OVERVIEW: BASE_URL + "/overview",
+  OVERVIEW_ADMIN: BASE_URL + "/overview-admin",
   VN_PAY: BASE_URL + "/vnpay",
   APPLIED_JOBS: BASE_URL + "applied-job",
 };

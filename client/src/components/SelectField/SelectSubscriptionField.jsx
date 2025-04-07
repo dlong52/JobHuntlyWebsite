@@ -39,7 +39,6 @@ const SelectSubscriptionField = ({
     <FormikField
       classNameContainer={classNameContainer}
       className={className}
-      required
       sx={sx}
       classNameLabel="font-medium text-neutrals-100"
       name="subscription_id"

@@ -13,3 +13,4 @@ export { default as CvThemePage } from "./CvThemePage";
 export { default as ReportManagementPage } from "./ReportManagementPage";
 export { default as RevenueDetailPage } from "./RevenueDetailPage";
 export { default as PaymentDetailPage } from "./PaymentDetailPage";
+export { default as AdminChangePasswordPage } from "./AdminChangePasswordPage";
