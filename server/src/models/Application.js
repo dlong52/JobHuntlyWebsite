@@ -14,6 +14,7 @@ const applicationSchema = new mongoose.Schema({
   cover_letter: { type: String },
   isViewed: { type: Boolean, default: false },
   applied_date: { type: Date, default: Date.now },
+  recruiters_viewed: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   status: {
     type: String,
     enum: [

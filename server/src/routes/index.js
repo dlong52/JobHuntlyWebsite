@@ -23,6 +23,7 @@ const cvThemeRouter = require("./CvThemeRouter");
 const overviewRouter = require("./OverviewRouter");
 const reportRouter = require("./ReportRouter");
 const otpRouter = require("./OtpRouter");
+const overviewAdminRouter = require("./OverviewAdminRouter");
 
 const prefixApi = process.env.PREFIX_API;
 const routes = (app) => {
@@ -47,6 +48,7 @@ const routes = (app) => {
   app.use(`${prefixApi}/subscription`, subscriptionRouter);
   app.use(`${prefixApi}/vnpay`, vnPayRouter);
   app.use(`${prefixApi}/overview`, overviewRouter);
+  app.use(`${prefixApi}/overview-admin`, overviewAdminRouter);
   app.use(`${prefixApi}/otp`, otpRouter);
 };
 module.exports = routes;

@@ -68,11 +68,11 @@ const CategoryChart = () => {
 
   return (
     <Box className="w-full bg-white rounded-md p-5 shadow-md">
-      <h2 className="text-primary font-bold mb-4">
+      <h2 className="text-primary font-bold mb-5">
         Nhu cầu tuyển dụng theo ngành nghề
       </h2>
       <ResponsiveContainer width="100%" height={250}>
-        <BarChart data={categories} barSize={30} margin={{ left: -40 }}>
+        <BarChart data={categories} barSize={30} margin={{ left: -45 }}>
           <defs>
             {categories.map((entry, index) => (
               <linearGradient
