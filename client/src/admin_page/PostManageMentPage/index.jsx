@@ -130,22 +130,13 @@ const PostManageMentPage = () => {
           <Box className="flex gap-2 items-center">
             <TooltipMui content={"Duyệt bài đăng"}>
               <IconButton
-                // disabled={value?.status}
+                disabled={value?.status === "approve"}
                 onClick={() => {
                   handleSetId(value?._id);
                 }}
                 className={`${value?.status ? "opacity-45" : ""}`}
               >
                 <CommonIcon.EditAttributes className="text-primary" />
-              </IconButton>
-            </TooltipMui>
-            <TooltipMui content={"Xóa bài đăng"}>
-              <IconButton
-                onClick={() => {
-                  toggleDelete(), setIdDelete(value?._id);
-                }}
-              >
-                <CommonIcon.DeleteSweep className="text-red-700" />
               </IconButton>
             </TooltipMui>
           </Box>
