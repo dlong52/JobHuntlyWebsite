@@ -9,7 +9,7 @@ const sendNotificationToUser = async (req, res) => {
     const user = await User.findById(userId);
     if (!user || !user.fcmToken) {
       return res
-        .status(400)
+        .status(200)
         .json({ error: "User not found or token is missing" });
     }
 

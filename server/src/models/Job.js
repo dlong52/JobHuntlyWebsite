@@ -16,6 +16,16 @@ const JobSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Subscription",
   },
+  status: {
+    type: String,
+    enum: [
+      "pending",
+      "approve",
+      "reject",
+      "deny",
+    ],
+    default: "pending",
+  },
   education: {
     type: String,
     enum: [
@@ -30,7 +40,7 @@ const JobSchema = new mongoose.Schema({
   level: { type: mongoose.Schema.Types.ObjectId, ref: "Level", required: true },
   end_date: { type: Date, required: true },
   salary: { min: Number, max: Number },
-  status: { type: Boolean, required: true, default: false },
+  // status: { type: Boolean, required: true, default: false },
   company: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
   location: {
     province: { id: String, name: String },

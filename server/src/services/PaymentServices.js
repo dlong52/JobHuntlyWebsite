@@ -5,7 +5,7 @@ const Payment = require("../models/Payment");
 const createPayment = async (paymentData) => {
   try {
     const newPayment = new Payment(paymentData);
-    return await newPayment.save();
+    const res =  await newPayment.save();
   } catch (error) {
     throw new Error("Failed to create payment");
   }
@@ -260,12 +260,16 @@ const getPaymentById = async (paymentId) => {
     return await Payment.findById(paymentId)
       .populate({
         path: "user_id",
-        select: "-password", // Loại bỏ password
+        select: "-password",
+        populate: {
+          path: "company",
+          select: "name", 
+        },
       })
       .populate({
         path: "subscription_id",
         populate: {
-          path: "package_id", // Populate package_id trong subscription_id
+          path: "package_id",
         },
       });
   } catch (error) {

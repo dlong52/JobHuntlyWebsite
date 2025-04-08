@@ -1,6 +1,5 @@
 import React from "react";
 import { useGetUser } from "../../../../hooks/modules/user/userGetUser";
-import useConvertData from "../../../../hooks/useConvertData";
 import { Button, CommonIcon } from "../../../../ui";
 import { Box, Typography } from "@mui/material";
 import { updateUser } from "../../../../services/UserServices";
@@ -12,7 +11,7 @@ const HideJob = ({ id, reportId }) => {
   const { showSuccess, showError } = useNotifications();
   const handleHideJob = async () => {
     try {
-      await postService.updatePost({ id: id, status: false });
+      await postService.updatePost({ id: id, status: "deny" });
       await ReportService.updateReport({ id: reportId, status: "resolved" });
       showSuccess("Đã ẩn tin tuyển dụng này!");
     } catch (error) {

@@ -29,7 +29,7 @@ const FindJobPage = () => {
     page: 1,
     limit: 10,
     sort: "desc",
-    status: true,
+    status: "approve",
   });
 
   // Fetch data with hooks
@@ -69,7 +69,7 @@ const FindJobPage = () => {
       page: 1,
       limit: 10,
       sort: "desc",
-      status: true,
+      status: "approve",
     };
     
     const newFilters = searchParams.size === 0
@@ -95,7 +95,7 @@ const FindJobPage = () => {
   // Handle clear filters
   const handleClearFilters = () => {
     setSearchParams("");
-    setFilters({ page: 1, limit: 10, sort: "desc", status: true });
+    setFilters({ page: 1, limit: 10, sort: "desc", status: "approve" });
   };
   
   // Render empty state

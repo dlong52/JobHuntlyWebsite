@@ -10,6 +10,9 @@ const sendChangePassword = (payload) => {
 const sendVerify = (payload) => {
   return httpServices.post(`${apiURL.SEND_EMAIL}/send-verify`, payload);
 };
+const sendInvoice = (payload) => {
+  return httpServices.post(`${apiURL.SEND_EMAIL}/send-invoice`, payload);
+};
 const verifyAccount = (token) => {
   return httpServices.get(`${apiURL.SEND_EMAIL}/verify-account?token=${token}`);
 };
@@ -17,5 +20,6 @@ export const SendEmailServices = {
   cvViewed,
   sendVerify,
   verifyAccount,
-  sendChangePassword
+  sendChangePassword,
+  sendInvoice
 };

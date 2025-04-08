@@ -105,7 +105,7 @@ const HomePage = () => {
   const { filters: jobFilters } = useFilters({
     page: 1,
     limit: isTablet ? 4 : 8,
-    status: true,
+    status: "approve",
     package_code: PACKAGE_CODE.MAX_PLUS,
   });
 

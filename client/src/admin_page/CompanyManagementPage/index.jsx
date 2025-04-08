@@ -123,21 +123,6 @@ const CompanyManagement = () => {
       Quản lí doanh nghiệp
     </Typography>,
   ];
-  const toolbarActions = [
-    {
-      label: (
-        <Formik
-          initialValues={{ search: filters.search || "" }}
-          enableReinitialize={true}
-          onSubmit={(values) => {
-            setFilters({ ...filters, name: values.name });
-          }}
-        >
-          {({}) => <Form className="gap-2"></Form>}
-        </Formik>
-      ),
-    },
-  ];
   // Render
   return (
     <>
@@ -201,7 +186,7 @@ const CompanyManagement = () => {
           filters={filters}
           loading={isLoading}
           isButton={false}
-          toolbarActions={toolbarActions}
+          // toolbarActions={toolbarActions}
           rows={rows || []}
           total={data?.data?.pagination.totalPages}
           page={filters.page}
