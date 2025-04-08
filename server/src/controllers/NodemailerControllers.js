@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const ChangePasswordUi = require("../email_ui/ChangePassword");
 const VerifyAccountUi = require("../email_ui/VerifyAccount");
 const ViewedResume = require("../email_ui/ViewedResume");
+const Invoice = require("../email_ui/Invoice");
 dotenv.config();
 
 const cvViewed = async (req, res) => {
@@ -113,11 +114,31 @@ const verifyAccount = async (req, res) => {
     res.status(400).json({ error: "Token không hợp lệ hoặc đã hết hạn!" });
   }
 };
+const sendInvoice = async (req, res) => {
+  try {
+    const { email, invoice } = req.body;
+    if (!email || !invoice) {
+      return res.status(400).json({ error: "Email và hóa đơn là bắt buộc!" });
+    }
 
+    const mailOptions = {
+      from: "Website tuyển dụng JobHuntly",
+      to: email,
+      subject: "Hóa đơn của bạn",
+      html: Invoice(invoice),
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "Hóa đơn đã được gửi qua email!" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
   cvViewed,
   sendEmailVerification,
   verifyAccount,
   sendEmailChangePassword,
+  sendInvoice
 };

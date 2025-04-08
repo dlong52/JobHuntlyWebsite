@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { CommonIcon } from "../../ui";
+import { Button, CommonIcon } from "../../ui";
 import { Box, IconButton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
@@ -17,6 +17,11 @@ import TooltipMui from "../../ui/TooltipMui";
 import PostDetail from "./components/PostDetail";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
 import TableMui from "../../ui/TableMui";
+import { Form, Formik } from "formik";
+import { FormikField, InputField } from "../../components/CustomFieldsFormik";
+import SelectProvinceField from "../../components/SelectField/SelectProvinceField";
+import { search } from "../../assets/images";
+import { postService } from "../../services/PostServices";
 
 const PostManageMentPage = () => {
   const [idJob, setIdJob] = useState(null);
@@ -28,9 +33,8 @@ const PostManageMentPage = () => {
     toggle: toggleDelete,
   } = useToggleDialog();
   const { showSuccess, showError } = useNotifications();
-  const { isLoading, mutateAsync: deletePost } = useDeletePost();
 
-  const { filters, handleChangePage } = useFilters({
+  const { filters, handleChangePage, setFilters } = useFilters({
     page: 1,
     limit: 10,
     sort: "desc",
@@ -44,7 +48,10 @@ const PostManageMentPage = () => {
   const handleDelete = async () => {
     try {
       if (idDelete) {
-        await deletePost(idDelete);
+        await postService.updatePost({
+          id: idDelete,
+          active: "deny",
+        });
         showSuccess("Đã xóa bài đăng thành công!");
         toggleDelete();
         refetch();
@@ -70,8 +77,24 @@ const PostManageMentPage = () => {
       renderCell: (value) => (
         <ChipMui
           variant={"outlined"}
-          color={value?.status ? "success" : "warning"}
-          label={value?.status ? "Đã duyệt" : "Đang chờ"}
+          color={
+            value?.status === "pending"
+              ? "warning"
+              : value?.status === "reject"
+              ? "error"
+              : value?.status === "deny"
+              ? "default"
+              : "success"
+          }
+          label={
+            value?.status === "pending"
+              ? "Đang chờ duyệt"
+              : value?.status === "reject"
+              ? "Từ chối"
+              : value?.status === "deny"
+              ? "Đã xóa"
+              : "Đã duyệt"
+          }
         />
       ),
     },
@@ -107,22 +130,13 @@ const PostManageMentPage = () => {
           <Box className="flex gap-2 items-center">
             <TooltipMui content={"Duyệt bài đăng"}>
               <IconButton
-                disabled={value?.status}
+                disabled={value?.status === "approve"}
                 onClick={() => {
                   handleSetId(value?._id);
                 }}
                 className={`${value?.status ? "opacity-45" : ""}`}
               >
                 <CommonIcon.EditAttributes className="text-primary" />
-              </IconButton>
-            </TooltipMui>
-            <TooltipMui content={"Xóa bài đăng"}>
-              <IconButton
-                onClick={() => {
-                  toggleDelete(), setIdDelete(value?._id);
-                }}
-              >
-                <CommonIcon.DeleteSweep className="text-red-700" />
               </IconButton>
             </TooltipMui>
           </Box>
@@ -161,6 +175,59 @@ const PostManageMentPage = () => {
   return (
     <Box className="flex flex-col gap-y-5">
       <BreadcrumbMui title={"Tuyển dụng"} breadcrumbs={breadcrumbs} />
+      <Box className="p-3 bg-white rounded-md">
+        <Formik
+          initialValues={{ search: filters.search || "" }}
+          enableReinitialize={true}
+          onSubmit={(values) => {
+            setFilters({
+              ...filters,
+              searchName: values.name,
+              location: values?.province?.label,
+            });
+          }}
+        >
+          {({}) => (
+            <Form className="grid grid-cols-12 gap-2">
+              <FormikField
+                classNameContainer="col-span-5"
+                sx={{
+                  fieldset: {
+                    borderRadius: "10px",
+                  },
+                  "& .MuiInputBase-input::placeholder": {
+                    fontSize: "14px",
+                    fontStyle: "italic",
+                  },
+                }}
+                name="name"
+                placeholder="Tìm kiếm theo tên công ty..."
+                component={InputField}
+              />
+              <SelectProvinceField
+                classNameContainer="col-span-5"
+                sx={{
+                  fieldset: {
+                    borderRadius: "10px",
+                  },
+                  "& .MuiInputBase-input::placeholder": {
+                    fontSize: "14px",
+                    fontStyle: "italic",
+                  },
+                }}
+              />
+              <Button
+                type={"submit"}
+                className={
+                  "!bg-primary !col-span-2  !text-white !normal-case !rounded-[10px]"
+                }
+              >
+                <img src={search} className="size-6" alt="" />
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </Box>
       <Box className="bg-white rounded-md">
         <TableMui
           columns={columns}
@@ -181,11 +248,7 @@ const PostManageMentPage = () => {
           open={openDelete}
           toggle={toggleDelete}
           body={
-            <ConfirmDelete
-              onDelete={handleDelete}
-              onClose={toggleDelete}
-              isLoading={isLoading}
-            />
+            <ConfirmDelete onDelete={handleDelete} onClose={toggleDelete} />
           }
         />
       )}

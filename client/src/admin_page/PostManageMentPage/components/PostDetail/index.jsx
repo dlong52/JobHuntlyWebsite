@@ -18,15 +18,35 @@ const PostDetail = ({ id }) => {
   const handleApproveJob = async () => {
     const payload = {
       id: id,
-      status: detailData?.status ? false : true,
+      status: "approve",
     };
     try {
       await postService.updatePost(payload);
-      showSuccess(
-        payload?.status
-          ? "Duyệt bài đăng thành công!"
-          : "Ẩn bài đăng thành công!"
-      );
+      showSuccess("Duyệt bài đăng thành công!");
+    } catch (error) {
+      showError(error);
+    }
+  };
+  const handleRejectJob = async () => {
+    const payload = {
+      id: id,
+      status: "reject",
+    };
+    try {
+      await postService.updatePost(payload);
+      showSuccess("Từ chối bài đăng thành công!");
+    } catch (error) {
+      showError(error);
+    }
+  };
+  const handleDenyJob = async () => {
+    const payload = {
+      id: id,
+      status: "deny",
+    };
+    try {
+      await postService.updatePost(payload);
+      showSuccess("Cấm bài đăng thành công!");
     } catch (error) {
       showError(error);
     }
@@ -37,7 +57,7 @@ const PostDetail = ({ id }) => {
         <JobDetailLoading />
       ) : (
         <Box>
-          <Container className="py-10">
+          <Container className="">
             <Box className="grid grid-cols-12 gap-5">
               <Box className="col-span-8 flex flex-col gap-y-5">
                 <Box className="bg-white p-5 rounded-md flex flex-col gap-5">
@@ -148,21 +168,6 @@ const PostDetail = ({ id }) => {
                       </Box>
                     </Box>
                   )}
-                  <Box className="flex flex-col gap-5">
-                    <Typography fontWeight={500}>
-                      Cách thức ứng tuyển
-                    </Typography>
-                    <Box className="">
-                      <Typography>
-                        Ứng viên nộp hồ sơ trực tuyến bằng cách bấm{" "}
-                        <b>Ứng tuyển</b> ngay dưới đây.
-                      </Typography>
-                      <Typography className="!mt-4" fontSize={"16px"}>
-                        Hạn nộp hồ sơ:{" "}
-                        {moment(detailData?.end_date).format("DD/MM/YYYY")}
-                      </Typography>
-                    </Box>
-                  </Box>
                 </Box>
               </Box>
               <Box className="col-span-4 flex flex-col gap-y-5">
@@ -316,12 +321,24 @@ const PostDetail = ({ id }) => {
               </Box>
             </Box>
           </Container>
-          <Box className="sticky bottom-0 bg-white p-5 border-t">
+          <Box className="sticky flex gap-2 bottom-0 bg-white p-5 border-t">
+            <Button
+              onClick={handleRejectJob}
+              className={"w-full !bg-accent-red !text-white"}
+            >
+              Từ chối
+            </Button>
             <Button
               onClick={handleApproveJob}
               className={"w-full !bg-primary !text-white"}
             >
               Xác nhận duyệt bài
+            </Button>
+            <Button
+              onClick={handleDenyJob}
+              className={"w-full !bg-primary-dark !text-white"}
+            >
+              Cấm bài đăng
             </Button>
           </Box>
         </Box>
