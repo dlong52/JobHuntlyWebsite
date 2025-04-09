@@ -5,9 +5,28 @@ const Payment = require("../models/Payment");
 const createPayment = async (paymentData) => {
   try {
     const newPayment = new Payment(paymentData);
-    const res =  await newPayment.save();
+    const savedPayment = await newPayment.save();
+
+    // Populate the user_id field
+    const populatedPayment = await Payment.findById(savedPayment._id)
+      .populate({
+        path: "user_id",
+        select: "-password",
+        populate: {
+          path: "company",
+          select: "name",
+        },
+      })
+      .populate({
+        path: "subscription_id",
+        populate: {
+          path: "package_id",
+        },
+      }).exec();
+
+    return populatedPayment;
   } catch (error) {
-    throw new Error("Failed to create payment");
+    throw new Error("Failed to create payment: " + error.message);
   }
 };
 
@@ -263,7 +282,7 @@ const getPaymentById = async (paymentId) => {
         select: "-password",
         populate: {
           path: "company",
-          select: "name", 
+          select: "name",
         },
       })
       .populate({

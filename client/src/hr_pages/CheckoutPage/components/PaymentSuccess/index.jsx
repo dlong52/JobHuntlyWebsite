@@ -2,8 +2,11 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import { Button, CommonIcon } from "../../../../ui";
 import { payment_success } from "../../../../assets/images";
+import { useNavigate } from "react-router-dom";
+import { RouteBase } from "../../../../constants/routeUrl";
 
 const PaymentSuccess = () => {
+  const navigate = useNavigate();
   return (
     <Box className="grid grid-cols-12 bg-white p-8 rounded gap-5">
       <Box className="col-span-6 flex items-center justify-center">
@@ -26,6 +29,7 @@ const PaymentSuccess = () => {
           <Button
             sx={{ textTransform: "none" }}
             className={"!bg-primary !text-white !px-5"}
+            onClick={() => navigate(RouteBase.HROverview)}
           >
             Trang chủ
           </Button>
@@ -33,6 +37,7 @@ const PaymentSuccess = () => {
             sx={{ textTransform: "none" }}
             // variant={"outline"}
             className={"!border-2 !border-primary !text-primary"}
+            onClick={() => navigate(RouteBase.HRMyPackage)}
           >
             Xem dịch vụ
           </Button>

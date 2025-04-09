@@ -1,58 +1,80 @@
-import React, { useRef } from "react";
+import React, { useRef, useMemo, useCallback } from "react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import Logo from "../Logo";
 import { logo } from "../../assets/images";
 import { Button } from "../../ui";
 
 const Invoice = ({ payment }) => {
   const invoiceRef = useRef();
 
-  // Hàm định dạng ngày tháng
-  const formatDate = (dateString) => {
+  // Format date helper function
+  const formatDate = useCallback((dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("vi-VN", {
       day: "numeric",
       month: "numeric",
       year: "numeric",
     });
-  };
+  }, []);
 
-  // Lấy dữ liệu người dùng và gói đăng ký từ payment
+  // Extract data from payment object using destructuring
   const {
     user_id,
     subscription_id,
     amount,
-    payment_method,
     transaction_id,
     status,
     created_at,
-  } = payment;
-  const { profile } = user_id;
-  const { package_id } = subscription_id;
+  } = payment || {};
+  
+  const { profile } = user_id || {};
+  const { package_id } = subscription_id || {};
 
-  // Tính thuế, chiết khấu và tổng tiền
-  const subTotal = amount;
-  const taxRate = 0.1; // 10%
-  const discountRate = package_id.discount / 100; // Chuyển % thành số thập phân
-  const tax = subTotal * taxRate;
-  const discount = subTotal * discountRate;
-  const total = subTotal + tax - discount;
+  // Memoize calculated values to prevent unnecessary recalculations
+  const calculatedValues = useMemo(() => {
+    // Return early with defaults if data isn't loaded
+    if (!amount || !package_id) {
+      return {
+        subTotal: 0,
+        tax: 0,
+        discount: 0,
+        total: 0,
+        invoiceNumber: '#N/A',
+      };
+    }
 
-  // Tạo số hóa đơn
-  const invoiceNumber = `#${transaction_id}${new Date(created_at)
-    .getTime()
-    .toString()
-    .slice(-5)}`;
+    const subTotal = amount;
+    const taxRate = 0.1; // 10%
+    const discountRate = package_id.discount / 100;
+    const tax = subTotal * taxRate;
+    const discount = subTotal * discountRate;
+    const total = subTotal + tax - discount;
+    
+    // Create invoice number
+    const invoiceNumber = `#${transaction_id}${new Date(created_at)
+      .getTime()
+      .toString()
+      .slice(-5)}`;
 
-  // Hàm xuất PDF cải tiến với xử lý trang tốt hơn
-  const exportPdf = async (filename = "hoadon.pdf") => {
+    return {
+      subTotal,
+      tax,
+      discount,
+      total,
+      invoiceNumber,
+    };
+  }, [amount, package_id, transaction_id, created_at]);
+
+  const { subTotal, tax, discount, total, invoiceNumber } = calculatedValues;
+
+  // Export PDF function optimized with useCallback to prevent recreation on renders
+  const exportPdf = useCallback(async (filename = "hoadon.pdf") => {
     if (!invoiceRef?.current) {
       return;
     }
 
     try {
-      // Tạo PDF với kích thước Letter
+      // Create PDF with Letter size
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
@@ -61,26 +83,28 @@ const Invoice = ({ payment }) => {
 
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 10; // margin 10mm
+      const margin = 10; // 10mm margin
       const contentWidth = pageWidth - margin * 2;
 
-      // Chia hóa đơn thành các phần nhỏ để xử lý tốt hơn
-      const sections = [
-        document.querySelector("#invoice-header"),
-        document.querySelector("#invoice-info"),
-        document.querySelector("#invoice-order-details"),
-        document.querySelector("#invoice-table"),
-        document.querySelector("#invoice-summary"),
-        document.querySelector("#invoice-terms"),
+      // Get all sections for better handling
+      const sectionIds = [
+        "invoice-header",
+        "invoice-info",
+        "invoice-order-details",
+        "invoice-table",
+        "invoice-summary",
+        "invoice-terms",
       ];
+      
+      const sections = sectionIds
+        .map(id => document.querySelector(`#${id}`))
+        .filter(Boolean);
 
       let yPosition = margin;
       let isFirstSection = true;
 
-      // Xử lý từng phần một
+      // Process each section
       for (const section of sections) {
-        if (!section) continue;
-
         const canvas = await html2canvas(section, {
           useCORS: true,
           scale: 2,
@@ -91,13 +115,13 @@ const Invoice = ({ payment }) => {
         const imgData = canvas.toDataURL("image/png");
         const imgHeight = (canvas.height * contentWidth) / canvas.width;
 
-        // Kiểm tra nếu section không vừa với trang hiện tại, thêm trang mới
+        // Check if section fits current page, add new page if needed
         if (!isFirstSection && yPosition + imgHeight > pageHeight - margin) {
           pdf.addPage();
           yPosition = margin;
         }
 
-        // Thêm hình ảnh section vào PDF
+        // Add section image to PDF
         pdf.addImage(
           imgData,
           "PNG",
@@ -106,20 +130,25 @@ const Invoice = ({ payment }) => {
           contentWidth,
           imgHeight
         );
-        yPosition += imgHeight + 5; // thêm 5mm khoảng cách giữa các phần
+        yPosition += imgHeight + 5; // Add 5mm spacing between sections
         isFirstSection = false;
       }
 
       pdf.save(filename);
     } catch (error) {
-      console.error("Lỗi khi xuất PDF:", error);
+      console.error("Error exporting PDF:", error);
     }
-  };
+  }, []);
 
-  // Xử lý khi nhấn nút xuất PDF
-  const handleExportPdf = () => {
+  // Handle export PDF button click
+  const handleExportPdf = useCallback(() => {
     exportPdf(`Hoadon_${transaction_id}.pdf`);
-  };
+  }, [exportPdf, transaction_id]);
+
+  // If payment data is missing, return a loading state or empty component
+  if (!payment || !user_id || !subscription_id || !package_id) {
+    return <div className="p-5 text-center">Loading invoice data...</div>;
+  }
 
   return (
     <div className="bg-white text-neutrals-100">
@@ -136,10 +165,10 @@ const Invoice = ({ payment }) => {
           <h1 className="text-lg font-semibold text-gray-800">
             Hóa đơn {invoiceNumber}
           </h1>
-          <img src={logo} alt="" />
+          <img src={logo} alt="Logo" />
         </div>
 
-        {/* Thông tin công ty và khách hàng */}
+        {/* Company and customer information */}
         <div
           id="invoice-info"
           className="grid grid-cols-1 mt-5 px-4 md:grid-cols-2 gap-8 mb-8"
@@ -178,7 +207,7 @@ const Invoice = ({ payment }) => {
           </div>
         </div>
 
-        {/* Chi tiết đơn hàng */}
+        {/* Order details */}
         <div id="invoice-order-details" className="mb-8 p-4">
           <div className="bg-blue-50 p-4 rounded-lg">
             <h2 className="font-bold text-gray-700 mb-3 text-lg">
@@ -203,7 +232,7 @@ const Invoice = ({ payment }) => {
           </div>
         </div>
 
-        {/* Bảng chi tiết các mục */}
+        {/* Detailed items table */}
         <div id="invoice-table" className="mb-8 p-4">
           <table className="w-full border rounded-md">
             <thead>
@@ -273,7 +302,7 @@ const Invoice = ({ payment }) => {
           </table>
         </div>
 
-        {/* Tổng kết */}
+        {/* Summary */}
         <div id="invoice-summary" className="flex justify-end mb-8">
           <div className="w-72 bg-gray-50 p-5 rounded-lg border border-gray-100">
             <div className="flex justify-between mb-3 text-gray-600">
@@ -287,7 +316,7 @@ const Invoice = ({ payment }) => {
             <div className="flex justify-between mb-3 text-gray-600">
               <span>Giảm giá ({package_id.discount}%):</span>
               <span>
-                -{((amount * package_id.discount) / 100).toLocaleString()} VNĐ
+                -{discount.toLocaleString()} VNĐ
               </span>
             </div>
             <div className="flex justify-between font-bold text-lg pt-3 border-t border-gray-200 text-blue-600">
@@ -297,7 +326,7 @@ const Invoice = ({ payment }) => {
           </div>
         </div>
 
-        {/* Điều khoản và điều kiện */}
+        {/* Terms and conditions */}
         <div id="invoice-terms" className="mb-8 bg-gray-50 p-4 rounded-lg">
           <h3 className="font-bold text-gray-700 mb-2">
             Điều Khoản và Điều Kiện:
@@ -311,7 +340,7 @@ const Invoice = ({ payment }) => {
         </div>
       </div>
 
-      {/* Nút xuất PDF */}
+      {/* Export PDF button */}
       <div className="flex justify-end mt-6">
         <Button
           onClick={handleExportPdf}
@@ -331,7 +360,7 @@ const Invoice = ({ payment }) => {
               />
             </svg>
           }
-          className={"!bg-primary !text-white !normal-case !px-8 !py-3"}
+          className="!bg-primary !text-white !normal-case !px-8 !py-3"
         >
           Xuất PDF
         </Button>
@@ -340,4 +369,4 @@ const Invoice = ({ payment }) => {
   );
 };
 
-export default Invoice;
+export default React.memo(Invoice);

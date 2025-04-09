@@ -115,6 +115,7 @@ const AuthProvider = ({ children }) => {
         HttpService.clearTokenStorage();
         HttpService.clearServiceStorage();
         sessionStorage.removeItem("path");
+        sessionStorage.clear();
         await updateUser({
           id: id,
           fcmToken: null,

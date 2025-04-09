@@ -2,8 +2,11 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import { Button, CommonIcon } from "../../../../ui";
 import { error } from "../../../../assets/images";
+import { useNavigate } from "react-router-dom";
+import { RouteBase } from "../../../../constants/routeUrl";
 
 const Error = () => {
+  const navigate = useNavigate();
   return (
     <Box className="grid grid-cols-12 bg-white p-8 rounded">
       <Box className="col-span-6 flex items-center justify-end">
@@ -27,6 +30,7 @@ const Error = () => {
             sx={{ textTransform: "none" }}
             endIcon={<CommonIcon.East />}
             className={"!bg-primary !text-white !px-5"}
+            onClick={() => navigate(RouteBase.HROverview)}
           >
             Trang chủ
           </Button>
@@ -34,6 +38,7 @@ const Error = () => {
             sx={{ textTransform: "none" }}
             // variant={"outline"}
             className={"!border-2 !border-primary !text-primary"}
+            onClick={() => navigate(RouteBase.HRPackage)}
           >
             Tìm dịch vụ
           </Button>
