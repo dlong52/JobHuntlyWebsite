@@ -1,4 +1,4 @@
-import { ROLE } from "../constants/enum";
+import { PACKAGE_CODE, ROLE } from "../constants/enum";
 import { RouteBase } from "../constants/routeUrl";
 import { AdminLayout, HRLayout } from "../layouts";
 import {
@@ -228,6 +228,7 @@ const Routes = [
     showCrisp: false,
     permissionAllow: [ROLE.EMPLOYER],
     layout: null,
+    packages: [PACKAGE_CODE.MAX_PLUS, PACKAGE_CODE.MAX, PACKAGE_CODE.PRO],
   },
   {
     path: RouteBase.HRPackage,
@@ -265,6 +266,7 @@ const Routes = [
     component: RecruitmentReportPage,
     permissionAllow: [ROLE.EMPLOYER],
     layout: HRLayout,
+    packages: [PACKAGE_CODE.MAX_PLUS, PACKAGE_CODE.MAX, PACKAGE_CODE.PRO, PACKAGE_CODE.ECO],
   },
   {
     path: RouteBase.HRMyCompany,

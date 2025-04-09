@@ -51,7 +51,7 @@ const FindJobPage = () => {
     if (searchParams.size === 0) return {};
     
     return {
-      title: query?.title,
+      searchName: query?.searchName,
       location: query?.location,
       employment_type: query?.employment_type,
       min_salary: query?.salaryMin && Number(query?.salaryMin),
@@ -84,7 +84,7 @@ const FindJobPage = () => {
   // Handle search form submission
   const handleSearchSubmit = (values) => {
     const params = new URLSearchParams();
-    if (values?.title) params.set("title", values?.title);
+    if (values?.searchName) params.set("searchName", values?.searchName);
     if (values?.province?.label) params.set("location", values?.province?.label);
 
     if (searchParams.toString() !== params.toString()) {
@@ -185,13 +185,13 @@ const FindJobPage = () => {
           
           {/* Search Form */}
           <Formik
-            initialValues={{ title: query?.title, province: query?.location }}
+            initialValues={{ searchName: query?.searchName, province: query?.location }}
             onSubmit={handleSearchSubmit}
           >
             {() => (
               <Form className="flex bg-white rounded-sm shadow-md w-full p-5 gap-6">
                 <FormikField
-                  name="title"
+                  name="searchName"
                   component={InputField}
                   variant="standard"
                   placeholder="Vị trí tuyển dụng, tên công ty"

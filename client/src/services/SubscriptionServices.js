@@ -7,6 +7,9 @@ const getAllSubscriptions = async (params) => {
 const getSubscription = async (params) => {
   return httpServices.get(`${apiURL.SUBSCRIPTION}/${params.queryKey[1]}`);
 };
+const getActivePackage = async (params) => {
+  return httpServices.get(`${apiURL.SUBSCRIPTION}/active/${params.queryKey[1]}`);
+};
 const createSubscription = (payload) => {
   return httpServices.post(apiURL.SUBSCRIPTION, payload);
 };
@@ -24,4 +27,5 @@ export const SubscriptionService = {
   getSubscription,
   deleteSubscription,
   updateSubscription,
+  getActivePackage
 };

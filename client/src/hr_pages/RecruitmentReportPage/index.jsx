@@ -24,7 +24,7 @@ import { useGetApplicationReport } from "../../hooks/modules/application/useGetA
 
 const RecruitmentReportPage = () => {
   const user = useSelector((state) => state.user);
-  const { filters } = useFilters({
+  const { filters, setFilters } = useFilters({
     days: 30,
   });
   const { data, isLoading } = useGetOverviewHr(user?.company_id, {
@@ -36,7 +36,12 @@ const RecruitmentReportPage = () => {
     useGetApplicationReport(user?.company_id, filters);
   const { dataConvert: report } = useConvertData(reportData);
 
-  const handleSubmit = (values) => {};
+  const handleSubmit = (values) => {
+    setFilters({
+      ...filters,
+      days: values?.days,
+    });
+  };
 
   const breadcrumbs = [
     <Link
@@ -108,7 +113,7 @@ const RecruitmentReportPage = () => {
       </div>
       <div className="bg-white p-5 rounded-md flex flex-col gap-10">
         <Formik
-          initialValues={{ time: 1 }}
+          initialValues={{ days: 30 }}
           onSubmit={handleSubmit}
           enableReinitialize
         >
@@ -126,7 +131,7 @@ const RecruitmentReportPage = () => {
                       borderRadius: "999px",
                     },
                   }}
-                  name="time"
+                  name="days"
                   size="small"
                   component={InputField}
                   placeholder="Dữ liệu theo ngày"
