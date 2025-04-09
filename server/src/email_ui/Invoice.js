@@ -1,4 +1,4 @@
-const Invoice = (invoice, companyName) => {
+const Invoice = (invoice, companyName = "JobHuntly") => {
     // Trích xuất dữ liệu từ đối tượng invoice
     const { _id, user_id, subscription_id, amount, payment_method, transaction_id, status, created_at } = invoice
   
@@ -17,28 +17,28 @@ const Invoice = (invoice, companyName) => {
     const invoiceNumber = `INV-${_id}`
   
     // Thông tin khách hàng
-    const customerName = user_id.profile.name
-    const customerEmail = user_id.email
-    const customerPhone = user_id.profile.phone_number
-    const customerCompany = user_id.company.name
-    const customerAvatar = user_id.profile.avatar_url
+    const customerName = user_id?.profile?.name || ''
+    const customerEmail = user_id?.email || ''
+    const customerPhone = user_id?.profile.phone_number || ''
+    const customerCompany = user_id?.company?.name || ''
+    const customerAvatar = user_id?.profile.avatar_url || ''
   
     // Thông tin gói dịch vụ
-    const packageName = subscription_id.package_id.name
-    const packageDescription = subscription_id.package_id.introduce
-    const packagePrice = subscription_id.package_id.price
-    const packageJobLimit = subscription_id.package_id.job_post_limit
-    const packageDuration = subscription_id.package_id.duration_in_days
+    const packageName = subscription_id?.package_id?.name || ''
+    const packageDescription = subscription_id?.package_id.introduce    || ''
+    const packagePrice = subscription_id?.package_id.price  || 0
+    const packageJobLimit = subscription_id?.package_id.job_post_limit  || 0
+    const packageDuration = subscription_id?.package_id.duration_in_days    || 0
   
     // Thông tin thời hạn
-    const startDate = formatDate(subscription_id.start_date)
-    const endDate = formatDate(subscription_id.end_date)
+    const startDate = formatDate(subscription_id?.start_date) || ""
+    const endDate = formatDate(subscription_id?.end_date) || ""
   
     // Thông tin thanh toán
-    const paymentDate = formatDate(created_at)
-    const paymentMethod = payment_method
-    const paymentStatus = status === "success" ? "Thành công" : "Thất bại"
-    const statusClass = status === "success" ? "status-success" : "status-failed"
+    const paymentDate = formatDate(created_at) || ""
+    const paymentMethod = payment_method || ""
+    const paymentStatus = status === "success" ? "Thành công" : "Thất bại" || ""
+    const statusClass = status === "success" ? "status-success" : "status-failed" || ""
   
     return `<!DOCTYPE html>
   <html lang="en">
@@ -270,7 +270,7 @@ const Invoice = (invoice, companyName) => {
           <div class="invoice-header">
               <div class="logo-container">
                   <img src="${customerAvatar}" alt="Company Logo" class="logo">
-                  <div class="company-name">${companyName}</div>
+                  <div class="company-name">${companyName = "JobHuntly"}</div>
               </div>
               <div class="invoice-title">
                   <h1>HÓA ĐƠN</h1>

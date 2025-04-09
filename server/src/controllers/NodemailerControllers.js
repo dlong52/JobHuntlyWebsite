@@ -120,7 +120,6 @@ const sendInvoice = async (req, res) => {
     if (!email || !invoice) {
       return res.status(400).json({ error: "Email và hóa đơn là bắt buộc!" });
     }
-
     const mailOptions = {
       from: "Website tuyển dụng JobHuntly",
       to: email,

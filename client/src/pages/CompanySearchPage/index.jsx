@@ -44,12 +44,12 @@ const CompanySearchPage = () => {
             }}
           >
             {({ values }) => (
-              <Form className="flex flex-col gap-5">
+              <Form className="flex flex-col gap-5 max-w-[600px]">
                 <Box>
                   <Typography
                     fontSize={"24px"}
-                    fontWeight={500}
-                    className="text-primary"
+                    fontWeight={700}
+                    className="text-primary !leading-10"
                   >
                     Tìm kiếm thông tin công ty để JobHuntly kết nối bạn với
                     những cơ hội việc làm phù hợp nhất
@@ -93,6 +93,7 @@ const CompanySearchPage = () => {
             return (
               <CompanySearchItem
                 key={item?._id}
+                id={item?._id}
                 logo={item?.logo}
                 address={item?.address}
                 name={item?.name}

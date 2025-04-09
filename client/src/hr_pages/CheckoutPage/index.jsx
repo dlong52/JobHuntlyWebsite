@@ -25,6 +25,7 @@ import { PaymentService } from "../../services/PaymentServices";
 import { SubscriptionService } from "../../services/SubscriptionServices";
 import moment from "moment";
 import { useGetAllSubscriptions } from "../../hooks/modules/subscription/useGetAllSubscriptions";
+import { SendEmailServices } from "../../services/SendEmailServices";
 
 const CheckoutPage = () => {
   const user = useSelector((state) => state.user);
@@ -58,6 +59,7 @@ const CheckoutPage = () => {
           job_post_remaining: dataConvert?.job_post_limit,
           duration_in_days: dataConvert?.duration_in_days,
           user_id: user.user_id,
+          email: user?.email,
         }),
         orderType: "other",
         language: "vn",
@@ -109,7 +111,7 @@ const CheckoutPage = () => {
         job_post_remaining: orderInfo?.job_post_remaining,
       });
       if (subscriptionRes?.data?.status === "success") {
-        await PaymentService.createPayment({
+        const resPaym = await PaymentService.createPayment({
           user_id: orderInfo.user_id,
           subscription_id: subscriptionRes?.data?.data?._id,
           amount: Number(transactionInfo?.vnp_Amount) / 100,
@@ -117,6 +119,9 @@ const CheckoutPage = () => {
           transaction_id: transactionInfo?.vnp_TransactionNo,
           status: "success",
         });
+        // if (resPaym?.data?.status === "success") {
+        //   await SendEmailServices.sendInvoice({ email: orderInfo?.email, invoice: resPaym?.data?.data })
+        // }
       }
       localStorage.setItem(`order_${transactionInfo?.vnp_TxnRef}`, true);
     } catch (error) {

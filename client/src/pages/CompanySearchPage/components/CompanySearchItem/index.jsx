@@ -3,8 +3,10 @@ import React from "react";
 import { CommonIcon } from "../../../../ui";
 import Address from "../../../../components/Address";
 import { companyLogoDefault } from "../../../../assets/images";
+import { Link } from "react-router-dom";
+import { RouteBase } from "../../../../constants/routeUrl";
 
-const CompanySearchItem = ({ logo, name, quantity, address, description }) => {
+const CompanySearchItem = ({ id,logo, name, quantity, address, description }) => {
   return (
     <div className="flex gap-5 rounded-md shadow overflow-hidden p-4">
       <img
@@ -14,7 +16,7 @@ const CompanySearchItem = ({ logo, name, quantity, address, description }) => {
       />
       <div className="flex flex-col">
         <div className=" flex items-center gap-1">
-          <Typography>{name}</Typography>
+          <Link className="hover:underline" to={`${RouteBase.Company}/${id}`}>{name}</Link>
           <CommonIcon.FiberManualRecord className="!text-xs" />
           <Typography>Đang tuyển {0} vị trí</Typography>
         </div>
