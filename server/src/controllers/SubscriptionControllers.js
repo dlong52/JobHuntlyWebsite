@@ -1,4 +1,6 @@
+const mongoose  = require('mongoose');
 const subscriptionService = require('../services/SubscriptionServices');
+const Subscription = require('../models/Subscription');
 
 // Create a new subscription
 const createSubscription = async (req, res) => {
@@ -94,11 +96,74 @@ const deleteSubscription = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const employerActivePackage = async (req, res) => {
+  try {
+    const { employer_id } = req.params;
+    
+    // Kiểm tra định dạng ObjectId hợp lệ
+    if (!mongoose.Types.ObjectId.isValid(employer_id)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Invalid employer ID format" 
+      });
+    }
 
+    const currentDate = new Date();
+    
+    // Tìm các subscription còn hiệu lực và lấy thông tin package tương ứng
+    const activeSubscriptions = await Subscription.aggregate([
+      {
+        $match: {
+          employer_id: new mongoose.Types.ObjectId(employer_id),
+          job_post_remaining: { $gt: 0 },
+          end_date: { $gt: currentDate },
+          status: "active"
+        }
+      },
+      {
+        $lookup: {
+          from: "packages",
+          localField: "package_id",
+          foreignField: "_id",
+          as: "package"
+        }
+      },
+      {
+        $unwind: "$package"
+      },
+      {
+        $project: {
+          package_code: "$package.package_code",
+          job_post_remaining: 1,
+          end_date: 1
+        }
+      }
+    ]);
+
+    // Trả về danh sách các package_code
+    return res.status(200).json({
+      success: true,
+      data: activeSubscriptions.map(sub => ({
+        package_code: sub.package_code,
+        job_post_remaining: sub.job_post_remaining,
+        expire_date: sub.end_date
+      }))
+    });
+    
+  } catch (error) {
+    console.error("Error fetching active packages:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message
+    });
+  }
+}
 module.exports = {
   createSubscription,
   getAllSubscriptions,
   getSubscriptionById,
   updateSubscription,
   deleteSubscription,
+  employerActivePackage
 };

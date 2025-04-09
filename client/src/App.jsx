@@ -17,6 +17,8 @@ import { ROLE } from "./constants/enum";
 import CrispChat from "./components/CrispChat";
 import { useNotification } from "./providers/NotificationProvider";
 import PrivateRoute from "./components/PrivateRoute";
+import { useGetActivePackage } from "./hooks/modules/subscription/useGetActivePackage";
+import { useConvertData } from "./hooks";
 
 function App() {
   const { setIsLoading } = useLoadingUser();
@@ -68,7 +70,7 @@ function App() {
           let Layout = MainLayout;
           const isMustLogin = route.mustLogin;
 
-          const WrappedPage = withPermission(Page, route.permissionAllow || []);
+          const WrappedPage = withPermission(Page, route.permissionAllow || [], route?.packages);
 
           const CheckingPrivateComponent = isMustLogin
             ? PrivateRoute
@@ -80,6 +82,7 @@ function App() {
           if (route.showCrisp === false) {
             isShowCrisp = false;
           }
+          
           return (
             <Route
               key={index}

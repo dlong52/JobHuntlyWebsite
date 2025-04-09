@@ -318,7 +318,13 @@ const getJobById = async (id) => {
     .populate("applications")
     .populate("categories")
     .populate("level")
-    .populate("company")
+    .populate({
+      path: "company",
+      populate: {
+        path: "categories",
+        select: "name",
+      },
+    })
     .populate({
       path: "subscription_id",
       populate: {

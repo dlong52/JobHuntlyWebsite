@@ -119,9 +119,9 @@ const HomePage = () => {
   const handleSearchSubmit = (values) => {
     const queryParams = new URLSearchParams();
     if (values.province?.label) queryParams.append('location', values.province.label);
-    if (values.position) queryParams.append('title', values.position);
+    if (values.searchName) queryParams.append('searchName', values.searchName);
 
-    navigate(`${RouteBase.Job}?${queryParams.toString()}`);
+    window.location.href = (`${RouteBase.Job}?${queryParams.toString()}`);
   };
 
   // Responsive grid column configurations
@@ -167,7 +167,7 @@ const HomePage = () => {
           </span>
 
           <Formik
-            initialValues={{ position: "", province: { label: "" } }}
+            initialValues={{ searchName: "", province: { label: "" } }}
             onSubmit={handleSearchSubmit}
           >
             {() => (
@@ -175,7 +175,7 @@ const HomePage = () => {
                 <Box className="flex items-center min-w-[150px] md:min-w-[300px] gap-2">
                   <img src={Search} alt="" className="w-5 md:w-auto" />
                   <FormikField
-                    name="position"
+                    name="searchName"
                     variant="standard"
                     component={InputField}
                     placeholder="Vị trí tuyển dụng, tên công ty"

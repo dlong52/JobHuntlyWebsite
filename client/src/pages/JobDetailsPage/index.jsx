@@ -21,6 +21,7 @@ import moment from "moment";
 import ReportForm from "./components/ReportForm";
 import { companyLogoDefault } from "../../assets/images";
 import { useGetAppliedJobs } from "../../hooks/modules/application/useGetAppliedJobs";
+import Categories from "../../components/Categories";
 
 const JobDetailsPage = () => {
   const user = useSelector((state) => state.user);
@@ -91,6 +92,7 @@ const JobDetailsPage = () => {
       setLoading(false);
     }
   };
+
   return (
     <>
       {!isLoading ? (
@@ -394,7 +396,11 @@ const JobDetailsPage = () => {
                         fontWeight={500}
                         fontSize={"15px"}
                       >
-                        {detailData?.categories[0]?.name}
+                        {!detailData?.company?.categories?.length &&
+                          detailData?.categories[0]?.name}
+                        <Categories
+                          categories={detailData?.company?.categories}
+                        />
                       </Typography>
                     </Box>
                     <Box className="flex gap-2 items-start">

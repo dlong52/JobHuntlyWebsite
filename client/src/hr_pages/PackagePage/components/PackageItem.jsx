@@ -15,7 +15,7 @@ const PackageItem = ({ id, title, price, features, code, subscriptions }) => {
     (item) => item.package_id._id === id
   );
   return (
-    <div className="flex flex-col gap-2 rounded-md transition-all min-h-[400px] duration-500 bg-white overflow-hidden">
+    <div className="flex flex-col shadow gap-2 rounded-md transition-all min-h-[400px] duration-500 bg-white overflow-hidden">
       <Link
         to={`${RouteBase.HRPackage}/${id}`}
         className={`bg-gradient-to-tr ${code === PACKAGE_CODE.ECO
