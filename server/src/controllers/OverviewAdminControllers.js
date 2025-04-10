@@ -1,9 +1,6 @@
 const Job = require('../models/Job');
 const User = require('../models/UserModel');
 const Company = require('../models/Company');
-const mongoose = require('mongoose');
-const Application = require('../models/Application');
-const { default: moment } = require('moment');
 const overviewAdmin = async (req, res) => {
     try {
       const today = new Date();
@@ -23,13 +20,13 @@ const overviewAdmin = async (req, res) => {
   
       // Get active jobs count for today (status = true and end_date > current date)
       const activeJobsToday = await Job.countDocuments({
-        status: true,
+        status: "approve",
         end_date: { $gte: today }
       });
   
       // Get active jobs count for yesterday
       const activeJobsYesterday = await Job.countDocuments({
-        status: true,
+        status: "approve",
         end_date: { $gte: yesterday },
         created_at: { $lt: today }
       });

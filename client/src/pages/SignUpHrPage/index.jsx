@@ -32,7 +32,7 @@ const SignUpHrPage = () => {
       const res = await signInWithGoogle(token, "google", ROLE.EMPLOYER);
       if (res?.status === "success") {
         showSuccess(res?.message);
-        checkRoleNavigate(res?.data.role);
+        checkRoleNavigate(res?.data?.role);
         if (res?.data.access_token) {
           handleGetUserDetails(res?.data.access_token);
           httpServices.saveTokenStorage(res?.data?.access_token);
