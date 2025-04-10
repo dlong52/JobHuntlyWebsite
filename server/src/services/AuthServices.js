@@ -205,15 +205,16 @@ const signInWithGoogle = async (token, role) => {
         },
       });
       await user.save();
-    } else {
-      const checkRole = user?.role.name !== role;
-      if (checkRole) {
-        return {
-          status: "error",
-          message: "Tài khoản này đã được đăng kí với vai trò khác!",
-        };
-      }
-    }
+    } 
+    // else {
+    //   const checkRole = user?.role.name !== role;
+    //   if (checkRole) {
+    //     return {
+    //       status: "error",
+    //       message: "Tài khoản này đã được đăng kí với vai trò khác!",
+    //     };
+    //   }
+    // }
 
     // Tạo token đăng nhập
     const access_token = await JwtServices.generateAccessToken({

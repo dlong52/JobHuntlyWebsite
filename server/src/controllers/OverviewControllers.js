@@ -23,7 +23,7 @@ const OverviewHr = async (req, res) => {
 
     // Đếm số lượng job đang được xem
     const jobViewingCount = await Job.countDocuments({
-      status: true,
+      status: "approve",
       company: companyId,
     });
 

@@ -37,9 +37,9 @@ const CreateCVPage = () => {
       return targetRef;
     }
   }, [targetRef.current]);
-  const handleSave = async (values) => {
+  const handleSave = async (values, cv_name) => {
     const payload = {
-      cv_name: values?.cv_name,
+      cv_name: cv_name,
       user: user?.user_id,
       theme: id,
       profile: cvData?.profile,
@@ -58,14 +58,15 @@ const CreateCVPage = () => {
         return;
       }
       await CVService.createCV(payload);
+      navigate(RouteBase.MyCv);
       showSuccess("CV của bạn đã được lưu");
     } catch (error) {
       showError(error);
     }
   };
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, cv_name) => {
     const payload = {
-      cv_name: values?.cv_name,
+      cv_name: cv_name,
       user: user?.user_id,
       theme: id,
       profile: cvData?.profile,
@@ -143,7 +144,7 @@ const CreateCVPage = () => {
                             showError("Tên CV không được để trống!");
                             return;
                           } else {
-                            handleSubmit(cvData);
+                            handleSubmit(cvData, values?.cv_name);
                           }
                         }}
                         startIcon={<CommonIcon.VerticalAlignBottomRounded />}
@@ -166,7 +167,7 @@ const CreateCVPage = () => {
                             showError("Tên CV không được để trống!");
                             return;
                           }
-                          handleSave(cvData);
+                          handleSave(cvData, values?.cv_name);
                         }}
                         className="text-nowrap !text-white h-fit"
                         sx={{
@@ -183,7 +184,6 @@ const CreateCVPage = () => {
                 </Box>
                 <Container className="p-5 grid grid-cols-12 gap-4 relative">
                   <Box className="col-span-4 p-4 bg-white rounded h-fit sticky top-[172px]">
-                    {/* <CVModel1 values={cvData} /> */}
                     {isLoading ? (
                       <Skeleton
                         variant="rectangular"
