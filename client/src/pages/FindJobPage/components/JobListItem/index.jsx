@@ -148,7 +148,7 @@ const JobListItem = ({
             ) : (
               <Button
                 onClick={() => {
-                  if (!user?.is_verified) {
+                  if (!user?.is_verified ) {
                     showInfo(
                       "Tài khoản chưa xác thực không thể dùng tính năng này!",
                       null,
@@ -157,6 +157,13 @@ const JobListItem = ({
                         horizontal: "center",
                       }
                     );
+                  }
+                  if (user?.role !== ROLE.CANDIDATE) {
+                    showInfo("Bạn cần đăng nhập để thực hiện hành động này!", null, {
+                      vertical: "top",
+                      horizontal: "center",
+                    });
+                    return;
                   }
                   toggle();
                 }}

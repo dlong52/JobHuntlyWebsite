@@ -24,6 +24,7 @@ const overviewRouter = require("./OverviewRouter");
 const reportRouter = require("./ReportRouter");
 const otpRouter = require("./OtpRouter");
 const overviewAdminRouter = require("./OverviewAdminRouter");
+const searchRouter = require("./SearchRouter");
 
 const prefixApi = process.env.PREFIX_API;
 const routes = (app) => {
@@ -50,5 +51,6 @@ const routes = (app) => {
   app.use(`${prefixApi}/overview`, overviewRouter);
   app.use(`${prefixApi}/overview-admin`, overviewAdminRouter);
   app.use(`${prefixApi}/otp`, otpRouter);
+  app.use(`${prefixApi}/search`, searchRouter);
 };
 module.exports = routes;

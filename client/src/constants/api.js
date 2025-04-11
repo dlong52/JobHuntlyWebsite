@@ -26,6 +26,7 @@ export const apiURL = {
   PACKAGE: BASE_URL + "/package",
   WISH_LIST: BASE_URL + "/wishlist",
   ROLE: BASE_URL + "/role",
+  SEARCH: BASE_URL + "/search",
   OTP: BASE_URL + "/otp",
   REPORT: BASE_URL + "/report",
   CV: BASE_URL + "/cv",

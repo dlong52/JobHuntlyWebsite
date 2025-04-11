@@ -20,6 +20,9 @@ import PrivateRoute from "./components/PrivateRoute";
 import { useGetActivePackage } from "./hooks/modules/subscription/useGetActivePackage";
 import { useConvertData } from "./hooks";
 
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 function App() {
   const { setIsLoading } = useLoadingUser();
   const { refetch } = useNotification();
@@ -62,6 +65,12 @@ function App() {
     dispatch(updateUser({ ...res?.data, access_token: token }));
     setIsLoading(false);
   };
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration
+      once: true,     // Whether animation should happen only once
+    });
+  }, []);
   return (
     <>
       <Routes>

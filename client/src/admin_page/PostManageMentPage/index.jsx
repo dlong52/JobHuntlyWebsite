@@ -7,9 +7,7 @@ import useToggleDialog from "../../hooks/useToggleDialog";
 import DialogMUI from "../../components/Dialogs";
 import useFilters from "../../hooks/useFilters";
 import { useGetAllPosts } from "../../hooks/modules/post/useGetAllPosts";
-import { useDeletePost } from "../../hooks/modules/post/useDeletePost";
 import { useNotifications } from "../../utils/notifications";
-import { useSelector } from "react-redux";
 import moment from "moment";
 import { ConfirmDelete } from "../../components";
 import ChipMui from "../../ui/Chip";
@@ -92,7 +90,7 @@ const PostManageMentPage = () => {
               : value?.status === "reject"
               ? "Từ chối"
               : value?.status === "deny"
-              ? "Đã xóa"
+              ? "Đã bị ẩn"
               : "Đã duyệt"
           }
         />
@@ -134,7 +132,7 @@ const PostManageMentPage = () => {
                 onClick={() => {
                   handleSetId(value?._id);
                 }}
-                className={`${value?.status ? "opacity-45" : ""}`}
+                className={`${value?.status === "approve" ? "opacity-45" : ""}`}
               >
                 <CommonIcon.EditAttributes className="text-primary" />
               </IconButton>

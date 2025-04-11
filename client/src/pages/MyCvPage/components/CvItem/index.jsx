@@ -88,6 +88,9 @@ const CvItem = ({ data }) => {
           toggle={toggle}
           body={
             <ConfirmDelete
+              title="Xóa CV này?"
+              subtitle="Bạn có chắc chắn muốn xóa CV này không?"
+              alertMessage="Tất cả dữ liệu về CV sẽ bị xóa"
               onDelete={handleDelete}
               onClose={toggle}
               isLoading={isLoading}

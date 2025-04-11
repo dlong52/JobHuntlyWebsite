@@ -20,6 +20,8 @@ const JobFilter = ({ setFilters }) => {
 
   const initialValues = useMemo(
     () => ({
+      searchName: searchParams.get("searchName") || "",
+      location: searchParams.get("location") || "",
       experience: searchParams.get("experience") || "",
       level: searchParams.get("level") || "",
       salary: JSON.stringify({ min: "", max: "" }),
@@ -46,15 +48,47 @@ const JobFilter = ({ setFilters }) => {
     <Formik initialValues={initialValues} enableReinitialize>
       {({ values, resetForm }) => {
         useEffect(() => {
-          const params = new URLSearchParams();
+          const params = new URLSearchParams(searchParams);
+          
           const salary = values.salary ? JSON.parse(values.salary) : {};
-          if (salary.min) params.set("salaryMin", salary.min);
-          if (salary.max) params.set("salaryMax", salary.max);
-          if (values?.experience) params.set("experience", values.experience);
-          if (values?.level) params.set("level", values.level);
-          if (values?.category) params.set("category", values.category);
-          if (values?.employment_type)
+          
+          if (salary.min) {
+            params.set("salaryMin", salary.min);
+          } else {
+            params.delete("salaryMin");
+          }
+          
+          if (salary.max) {
+            params.set("salaryMax", salary.max);
+          } else {
+            params.delete("salaryMax");
+          }
+          
+          if (values?.experience) {
+            params.set("experience", values.experience);
+          } else {
+            params.delete("experience");
+          }
+          
+          if (values?.level) {
+            params.set("level", values.level);
+          } else {
+            params.delete("level");
+          }
+          
+          if (values?.category) {
+            params.set("category", values.category);
+          } else {
+            params.delete("category");
+          }
+          
+          if (values?.employment_type) {
             params.set("employment_type", values.employment_type);
+          } else {
+            params.delete("employment_type");
+          }
+          
+          // Chỉ cập nhật URL nếu params thực sự thay đổi
           if (searchParams.toString() !== params.toString()) {
             setSearchParams(params);
           }

@@ -2,19 +2,28 @@ import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import React from "react";
 import { Button } from "../../ui";
 
-const ConfirmDelete = ({ onDelete, isLoading, onClose }) => {
+const ConfirmDelete = ({
+  onDelete,
+  isLoading,
+  onClose,
+  title = "Xóa bài đăng này?",
+  subtitle = "Bạn có chắc chắn muốn xóa bài đăng này không",
+  alertMessage = "Tất cả dữ liệu về bài đăng sẽ bị xóa",
+}) => {
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 min-w-[450px]">
       <Typography fontSize={"20px"} fontWeight={"600"}>
-        Xóa bài đăng này?
+        {title}
       </Typography>
       <Box className="flex flex-col items-center">
-        <Typography>Bạn có chắc chắn muốn xóa bài đăng này không? </Typography>
+        <Typography> {subtitle} </Typography>
         <Typography>Bạn không thể hoàn tác hành động này.</Typography>
       </Box>
       <Alert severity="warning" className="w-full">
         <AlertTitle>Cảnh báo</AlertTitle>
-        Tất cả dữ liệu về bài đăng sẽ bị xóa
+        <Typography className="!text-sm">
+          {alertMessage}
+        </Typography>
       </Alert>
       <Box className="flex gap-4 w-full">
         <Button onClick={onClose} className="!flex-1 !bg-slate-600 !text-white">

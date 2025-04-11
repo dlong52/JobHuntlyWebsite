@@ -17,7 +17,7 @@ const getAllJobs = async (filters = {}, options = {}) => {
   const sort = { [sortBy]: order === "desc" ? -1 : 1 };
   const query = {};
 
-  // Handle searchName parameter (searching across title, company name, and category name)
+  // Handle searchName parameter (searching across title, company name, category name, and level name)
   if (filters.searchName) {
     // We'll need to use aggregation for this kind of complex search
     const pipeline = [];
@@ -42,7 +42,7 @@ const getAllJobs = async (filters = {}, options = {}) => {
       matchStage.status = filters.status;
     }
     if (filters.level) {
-      matchStage.level = filters.level;
+      matchStage.level = mongoose.Types.ObjectId(filters.level);
     }
     if (filters.min_salary == 0 && filters.max_salary == 0) {
       matchStage["salary.min"] = null;
@@ -113,16 +113,26 @@ const getAllJobs = async (filters = {}, options = {}) => {
           foreignField: "_id",
           as: "categoryData"
         }
+      },
+      // Lookup level - Add this new lookup to get level data
+      {
+        $lookup: {
+          from: "levels",
+          localField: "level",
+          foreignField: "_id",
+          as: "levelData"
+        }
       }
     );
     
-    // Search stage
+    // Search stage - Add levelData.name to the search criteria
     pipeline.push({
       $match: {
         $or: [
           { title: { $regex: filters.searchName, $options: "i" } },
           { "companyData.name": { $regex: filters.searchName, $options: "i" } },
-          { "categoryData.name": { $regex: filters.searchName, $options: "i" } }
+          { "categoryData.name": { $regex: filters.searchName, $options: "i" } },
+          { "levelData.name": { $regex: filters.searchName, $options: "i" } } // Add level name search
         ]
       }
     });
@@ -178,7 +188,7 @@ const getAllJobs = async (filters = {}, options = {}) => {
       { $unwind: { path: "$subscription_id.package_id", preserveNullAndEmptyArrays: true } }
     );
     
-    // Rename fields to match expected output
+    // Rename fields to match expected output - Updated to include levelData
     pipeline.push({
       $project: {
         _id: 1,
@@ -191,7 +201,7 @@ const getAllJobs = async (filters = {}, options = {}) => {
         gender: 1,
         subscription_id: 1,
         education: 1,
-        level: 1,
+        level: { $arrayElemAt: ["$levelData", 0] }, // Change this to return the whole level object
         end_date: 1,
         salary: 1,
         status: 1,
@@ -296,6 +306,7 @@ const getAllJobs = async (filters = {}, options = {}) => {
       .populate("applications")
       .populate("company")
       .populate("categories")
+      .populate("level") // Make sure to populate level here
       .populate({
         path: "subscription_id",
         populate: { path: "package_id" },

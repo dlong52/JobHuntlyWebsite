@@ -73,12 +73,28 @@ const PostJobPage = () => {
       headerName: "Trạng thái",
       renderCell: (value) => (
         <ChipMui
-          label={value?.status ? "Đang hiển thị" : "Chưa duyệt"}
           variant={"outlined"}
-          color={value?.status ? "success" : "warning"}
+          color={
+            value?.status === "pending"
+              ? "warning"
+              : value?.status === "reject"
+              ? "error"
+              : value?.status === "deny"
+              ? "default"
+              : "success"
+          }
+          label={
+            value?.status === "pending"
+              ? "Đang chờ duyệt"
+              : value?.status === "reject"
+              ? "Từ chối"
+              : value?.status === "deny"
+              ? "Đã bị ẩn"
+              : "Đã duyệt"
+          }
         />
       ),
-    },
+    }, 
     {
       field: "salary",
       headerName: "Lương",
@@ -117,18 +133,18 @@ const PostJobPage = () => {
                   handleSetId(value?._id);
                 }}
               >
-                <CommonIcon.DriveFileRenameOutline className={`text-primary-dark ${value?.status ? "opacity-50" : ""}`} />
+                <CommonIcon.DriveFileRenameOutline className={`text-primary-dark ${value?.status!=="pending" ? "opacity-50" : ""}`} />
               </IconButton>
             </TooltipMui>
             <TooltipMui content={"Xóa tin tuyển dụng"}>
               <IconButton
-                disabled={value?.status}
+                disabled={value?.status !== "pending"}
                 onClick={() => {
                   toggleDelete();
                   setIdDelete(value?._id);
                 }}
               >
-                <CommonIcon.DeleteSweep className={`text-red-700 ${value?.status ? "opacity-50" : ""}`} />
+                <CommonIcon.DeleteSweep className={`text-red-700 ${value?.status!=="pending" ? "opacity-50" : ""}`} />
               </IconButton>
             </TooltipMui>
           </Box>
