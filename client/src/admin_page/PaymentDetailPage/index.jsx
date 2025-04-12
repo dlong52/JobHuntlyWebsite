@@ -43,24 +43,24 @@ const PaymentDetailPage = () => {
             label={
               <Box className="flex items-center gap-1">
                 <CommonIcon.DescriptionTwoTone />
-                Chi tiết
+                Hóa đơn
               </Box>
             }
           />
-          <AntTab
+          {/* <AntTab
             label={
               <Box className="flex items-center gap-1">
                 <CommonIcon.ReceiptTwoTone />
                 Hóa đơn
               </Box>
             }
-          />
+          /> */}
         </AntTabs>
         <Box className="mt-5">
-          {type === 0 && (
+          {/* {type === 0 && (
             <OrderDetail loading={isLoading} payment={dataConvert} />
-          )}
-          {type === 1 && <Invoice loading={isLoading} payment={dataConvert} />}
+          )} */}
+          {type === 0 && !isLoading && <Invoice loading={isLoading} payment={dataConvert} />}
         </Box>
       </Box>
     </Box>

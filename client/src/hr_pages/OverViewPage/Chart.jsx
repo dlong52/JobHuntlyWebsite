@@ -54,7 +54,7 @@ const CVChart = ({ data }) => {
               border: "none",
               boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
             }}
-            formatter={(value) => [`${value}`, "CV tiếp nhận phỏng vấn"]}
+            formatter={(value) => [`${value}`, "CV tiếp nhận"]}
             itemStyle={{ color: "var(--primary)", fontWeight: "bold" }}
             active={activeTooltip !== null}
           />

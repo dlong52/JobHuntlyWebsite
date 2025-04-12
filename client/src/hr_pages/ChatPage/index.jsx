@@ -388,14 +388,14 @@ const ChatPage = () => {
             </IconButton>
           )}
         </div>
-        <InputBase
+        {/* <InputBase
           fullWidth
           placeholder="Tìm kiếm người dùng"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           startAdornment={<CommonIcon.Search className="mr-2 text-gray-400" />}
           className="bg-gray-100 rounded-full px-4 py-2 text-sm"
-        />
+        /> */}
       </div>
 
       {/* Conversations List */}

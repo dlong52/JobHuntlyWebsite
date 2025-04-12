@@ -15,9 +15,9 @@ import { useGetAllSubscriptions } from "../../hooks/modules/subscription/useGetA
 import TableMui from "../../ui/TableMui";
 
 const RevenueManagementPage = () => {
-  const { filters } = useFilters({
+  const { filters, handleChangePage } = useFilters({
     page: 1,
-    limit: 10,
+    limit: 5,
     order: "desc",
   });
   const navigate = useNavigate();
@@ -140,6 +140,10 @@ const RevenueManagementPage = () => {
             toolbarActions={toolbarActionLevel}
             toolbarTitle="Hoá đơn"
             filters={filters}
+            total={data?.data?.pagination?.totalPages}
+            page={filters?.page}
+            rowsPerPage={filters.limit || 5}
+            onPageChange={handleChangePage}
           />
         </Box>
         <Box className="col-span-4 p-5 h-fit rounded-md bg-white">

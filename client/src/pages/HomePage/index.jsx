@@ -71,13 +71,14 @@ const useDebounce = (value, delay) => {
 // Reusable components for better organization
 const SectionHeader = ({ title, highlightedText, linkTo }) => (
   <Box className="flex items-center justify-between pb-4 md:pb-8">
-    <h1 className="font-ClashDisplay font-semibold text-xl md:text-3xl text-neutrals-100">
+    <h1 data-aos="fade-down" className="font-ClashDisplay font-semibold text-xl md:text-3xl text-neutrals-100">
       {title} <span className="text-accent-blue">{highlightedText}</span>
     </h1>
 
     {linkTo && (
       <Link
         to={linkTo}
+        data-aos="fade-right"
         className="font-semibold text-sm md:text-base text-primary flex items-center gap-1"
       >
         Hiển thị tất cả{" "}
@@ -261,7 +262,7 @@ const HomePage = () => {
         >
           {/* <FadeInComponent> */}
           <h1
-            data-aos="fade-down"
+            
             className="font-ClashDisplay font-bold text-3xl md:text-5xl lg:text-[72px] text-neutrals-100 !leading-[80px]"
           >
             Khám phá
@@ -272,7 +273,7 @@ const HomePage = () => {
           {/* </FadeInComponent> */}
 
           <span
-            data-aos="fade-down"
+            
             className="max-w-[521px] text-neutrals-60 font-Epilogue text-sm md:text-base leading-6 md:leading-7"
           >
             Nền tảng tuyệt vời cho người tìm việc đang tìm kiếm những đỉnh cao
@@ -296,13 +297,11 @@ const HomePage = () => {
               );
 
               return (
-                <div data-aos="fade-up" className="w-fit relative z-20">
+                <div  className="w-fit relative z-20">
                   <Form
-                    className={`flex ${
-                      isMobile ? "flex-col" : "items-center"
-                    } bg-white rounded-sm shadow-lg ${
-                      isMobile ? "w-full" : "w-fit"
-                    } p-3 md:p-4 gap-3 md:gap-6`}
+                    className={`flex ${isMobile ? "flex-col" : "items-center"
+                      } bg-white rounded-sm shadow-lg ${isMobile ? "w-full" : "w-fit"
+                      } p-3 md:p-4 gap-3 md:gap-6`}
                   >
                     <Box className="flex items-center min-w-[150px] md:min-w-[350px] gap-2">
                       <img src={Search} alt="" className="w-5 md:w-auto" />
@@ -325,9 +324,8 @@ const HomePage = () => {
                     <Button
                       type="submit"
                       size={isMobile ? "medium" : "large"}
-                      className={`!bg-primary !text-white !text-nowrap font-semibold ${
-                        isMobile ? "w-full px-4" : "px-8"
-                      } rounded-sm hover:bg-blue-600 transition-all`}
+                      className={`!bg-primary !text-white !text-nowrap font-semibold ${isMobile ? "w-full px-4" : "px-8"
+                        } rounded-sm hover:bg-blue-600 transition-all`}
                     >
                       Tìm kiếm
                     </Button>
@@ -465,14 +463,14 @@ const HomePage = () => {
             ))}
           </Box>
         </Container> */}
-        <div className="bg-gradient-to-tr from-primary-dark to-primary rounded-t-3xl mt-20 py-20 text-white">
+        <div className="bg-gradient-to-tr from-primary-dark to-primary rounded-t-3xl mt-20 py-10 text-white">
           <Container className=" grid grid-cols-12">
             <div className="col-span-6 flex flex-col justify-center">
               <div className="flex flex-col gap-2">
-                <Typography fontSize={"40px"} fontWeight={700}>
+                <Typography data-aos="fade-down" fontSize={"40px"} fontWeight={700}>
                   Bạn là nhà tuyển dụng ?
                 </Typography>
-                <Typography fontSize={"14px"} className="text-[#ffffffc5]">
+                <Typography data-aos="fade-down" fontSize={"14px"} className="text-[#ffffffc5]">
                   Trải nghiệm nền tảng tuyển dụng thông minh giúp kết nối với
                   ứng viên tiềm năng nhanh chóng và hiệu quả.
                 </Typography>
@@ -480,29 +478,31 @@ const HomePage = () => {
                   JobHuntly cung cấp công cụ toàn diện để đăng tuyển, sàng lọc
                   và quản lý ứng viên một cách chuyên nghiệp.
                 </Typography> */}
-                <div className="flex items-center gap-3 mt-5">
+                <div data-aos="fade-down" className="flex items-center gap-3 mt-5">
                   <Button
                     size={"large"}
                     className={
                       "!bg-white !normal-case !text-neutrals-100 !px-10"
                     }
+                    onClick={()=>{navigate(RouteBase.SignIn)}}
                   >
                     Đăng nhập
                   </Button>
                   <Button
                     size={"large"}
                     className={"!bg-primary !normal-case !text-white !px-10"}
+                    onClick={()=>{navigate(RouteBase.SignUpHr)}}
                   >
                     Đăng kí
                   </Button>
                 </div>
               </div>
               <div className="grid grid-cols-12 mt-5 gap-4">
-                <Typography fontSize={"14px"} className="col-span-12">
+                <Typography data-aos="fade-right" fontSize={"14px"} className="col-span-12">
                   Tại sao chọn JobHuntly?
                 </Typography>
-                <div className="flex items-start gap-3 col-span-6">
-                  <CommonIcon.Addchart className="text-purple-300 h-6 w-6 mt-[2px]" />
+                <div data-aos="fade-up" className="flex items-start gap-3 col-span-6">
+                  <CommonIcon.ArticleOutlined className="text-purple-300 h-6 w-6 mt-[2px]" />
                   <div>
                     <Typography
                       fontWeight={500}
@@ -520,8 +520,8 @@ const HomePage = () => {
                     </Typography>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 col-span-6">
-                  <CommonIcon.Addchart className="text-purple-300 h-6 w-6 mt-[2px]" />
+                <div data-aos="fade-up" className="flex items-start gap-3 col-span-6">
+                  <CommonIcon.Search className="text-purple-300 h-6 w-6 mt-[2px]" />
                   <div>
                     <Typography
                       fontWeight={500}
@@ -539,8 +539,8 @@ const HomePage = () => {
                     </Typography>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 col-span-6">
-                  <CommonIcon.Addchart className="text-purple-300 h-6 w-6 mt-[2px]" />
+                <div data-aos="fade-up" className="flex items-start gap-3 col-span-6">
+                  <CommonIcon.PeopleOutline className="text-purple-300 h-6 w-6 mt-[2px]" />
                   <div>
                     <Typography
                       fontWeight={500}
@@ -558,7 +558,7 @@ const HomePage = () => {
                     </Typography>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 col-span-6">
+                <div data-aos="fade-up" className="flex items-start gap-3 col-span-6">
                   <CommonIcon.Addchart className="text-purple-300 h-6 w-6 mt-[2px]" />
                   <div>
                     <Typography
@@ -579,13 +579,16 @@ const HomePage = () => {
                 </div>
               </div>
             </div>
-            <div className="col-span-6 overflow-hidden flex justify-center">
-              <img
+            <div className="col-span-6 overflow-hidden flex justify-center"
+
+            >
+              <div style={{ borderRadius: "30% 70% 70% 30% / 30% 30% 70% 70% ", backgroundImage: `url(${recuiment})`, backgroundSize: "100%", backgroundRepeat: "no-repeat", backgroundPosition: "center" }} className="w-4/5 aspect-square custom-mask"></div>
+              {/* <img
                 src={recuiment}
                 style={{ borderRadius: "30% 70% 70% 30% / 30% 30% 70% 70% " }}
                 className="w-3/5 aspect-square object-cover"
                 alt=""
-              />
+              /> */}
             </div>
           </Container>
         </div>

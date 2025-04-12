@@ -95,16 +95,12 @@ const AppliedJobsList = React.memo(({ jobs, handleCreateConversation, isMobile }
               </span>
             </Box>
           </div>
-          <Link
-            to={`${RouteBase.Connect}?id=${item?.posted_by}`}
-            onClick={(e) => {
-              e.preventDefault();
-              handleCreateConversation(item?.posted_by);
-            }}
+          <button
+            onClick={() => handleCreateConversation(item?.posted_by, item)}
             className="!bg-primary-light text-nowrap !rounded-full !text-primary h-fit py-1 px-2 text-xs font-medium ml-auto"
           >
             Nhắn tin
-          </Link>
+          </button>
         </Box>
       ))}
     </Box>
@@ -314,11 +310,26 @@ const ConnectPage = () => {
   }, []);
 
   // Xử lý tạo hội thoại mới
-  const handleCreateConversation = useCallback(async (receiverId) => {
+  const handleCreateConversation = useCallback(async (receiverId, jobInfo = null) => {
     try {
       const targetId = receiverId || receiver?._id;
-      if (!!userData && !!user?.user_id && !!targetId) {
-        await ConversationService.createConversation({
+      
+      if (!!user?.user_id && !!targetId) {
+        // Lấy thông tin người nhận
+        let recipientUsername = receiver?.profile?.name;
+        let recipientRole = receiver?.role?.name;
+        
+        // Nếu có jobInfo (từ danh sách công việc đã ứng tuyển), sử dụng thông tin từ đó
+        if (jobInfo) {
+          recipientUsername = jobInfo.company?.name || "Nhà tuyển dụng";
+          recipientRole = ROLE.EMPLOYER;
+        } else if (!recipientUsername || !recipientRole) {
+          // Fallback nếu không có thông tin người nhận
+          recipientUsername = "Nhà tuyển dụng";
+          recipientRole = ROLE.EMPLOYER;
+        }
+        
+        const response = await ConversationService.createConversation({
           participants: [
             {
               user_id: user?.user_id,
@@ -327,22 +338,45 @@ const ConnectPage = () => {
             },
             {
               user_id: targetId,
-              username: receiver?.profile?.name,
-              role: receiver?.role.name,
+              username: recipientUsername,
+              role: recipientRole,
             },
           ],
         });
-        refetchConversation();
-
+        
+        // Cập nhật danh sách hội thoại
+        await refetchConversation();
+        
         // Đóng drawer sau khi tạo hội thoại mới trên mobile
         if (isMobile) {
           setRightDrawerOpen(false);
+        }
+        
+        // Chuyển hướng đến hội thoại mới tạo nếu có id cuộc hội thoại trong phản hồi
+        if (response && response.data && response.data._id) {
+          navigate(`${RouteBase.Connect}?chat=${response.data._id}`);
+          setActiveConversationId(response.data._id);
+        } else {
+          // Nếu không có id trong phản hồi, chờ danh sách hội thoại cập nhật và tìm hội thoại vừa tạo
+          setTimeout(() => {
+            refetchConversation().then(() => {
+              if (conversations && conversations.length > 0) {
+                const newConversation = conversations.find(conv => 
+                  conv.participants.some(p => p.user_id._id === targetId)
+                );
+                if (newConversation) {
+                  navigate(`${RouteBase.Connect}?chat=${newConversation._id}`);
+                  setActiveConversationId(newConversation._id);
+                }
+              }
+            });
+          }, 500);
         }
       }
     } catch (error) {
       console.error("Error creating conversation:", error);
     }
-  }, [userData, user, receiver, refetchConversation, isMobile]);
+  }, [user, receiver, refetchConversation, isMobile, navigate, conversations]);
 
   // Xử lý gửi tin nhắn
   const handleSendMessage = useCallback(async (values, { resetForm }) => {

@@ -7,6 +7,7 @@ const categorySchema = new mongoose.Schema({
   active: { type: Boolean, default: true },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
+  job_count: { type: Number, default: 0 },
 });
 
 // Middleware cập nhật thời gian

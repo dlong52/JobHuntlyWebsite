@@ -4,7 +4,7 @@ import {
   FormikField,
   RadioField,
 } from "../../../../components/CustomFieldsFormik";
-import { applicantStatusOptions } from "../../../../constants/enum";
+import { applicantStatusOptions, STATUS_APPLICANT } from "../../../../constants/enum";
 import { Button, CommonAvatar, CommonIcon } from "../../../../ui";
 import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -17,6 +17,7 @@ import { useNotifications } from "../../../../utils/notifications";
 import { NotificationService } from "../../../../services/NotificationServices";
 import { SendEmailServices } from "../../../../services/SendEmailServices";
 import { useSelector } from "react-redux";
+import React from "react";
 
 const ApplicantDetail = ({ id }) => {
   const user = useSelector((state) => state.user);
@@ -24,15 +25,44 @@ const ApplicantDetail = ({ id }) => {
   const { dataConvert: detailData } = useConvertData(data);
   const { showSuccess, showError } = useNotifications();
 
+  const [loading, setLoading] = React.useState(false);
+
   const handleSubmit = async (values) => {
     const payload = {
       id: id,
       status: values?.status,
     };
+    const status = values?.status === STATUS_APPLICANT.UNDER_REVIEW
+      ? "Đang xem xét"
+      : values?.status === STATUS_APPLICANT.SUITABLE
+        ? "Phù hợp"
+        : values?.status === STATUS_APPLICANT.ACCEPT
+          ? "Nhận việc"
+          : values?.status === STATUS_APPLICANT.REJECTED
+            ? "Từ chối"
+            : "Hẹn phỏng vấn"
+    setLoading(true);
+    console.log("🚀 ~ file: index.jsx:60 ~ handleSubmit ~ status:", status);
+    
     try {
       await ApplicantService.updateApplicant(payload);
+      await NotificationService.sendToUser({
+        userId: detailData?.candidate?._id,
+        title: `Nhà tuyển dụng vừa đánh CV của bạn là ${status}`,
+        body: `${user?.company_name}, vừa đánh giá CV của bạn`,
+      });
+      await SendEmailServices.statusResume({
+        recruiterName: user?.username,
+        companyName: user?.company_name,
+        jobTitle: detailData?.job?.title,
+        applicantName: detailData?.candidate?.profile?.name,
+        applicantEmail: detailData?.candidate?.email,
+        status: status,
+      });
       showSuccess("Đã gửi đánh giá của bạn cho ứng viên");
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       showError(error);
     }
   };
@@ -141,6 +171,7 @@ const ApplicantDetail = ({ id }) => {
             <Box className="sticky bg-white bottom-0 right-0 left-0 p-5 shadow-md">
               <Button
                 type={"submit"}
+                isLoading={loading}
                 className={"!bg-primary w-full !text-white"}
               >
                 Cập nhật

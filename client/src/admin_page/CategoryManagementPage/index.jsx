@@ -228,7 +228,7 @@ const CategoryManagementPage = () => {
               onPageChange={handleChangePage}
               loading={isLoading}
               toolbarActions={toolbarActionCategory}
-              toolbarTitle="Danh sách dịch vụ"
+              toolbarTitle="Danh sách lĩnh vực"
               filters={filters}
             />
           )}

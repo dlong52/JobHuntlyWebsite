@@ -31,7 +31,7 @@ const CompanySearchPage = () => {
   }, [data]);
   return (
     <div>
-      <Box className="h-[300px] bg-gradient-to-tr from-white to-primary-light">
+      <Box className="h-[300px] bg-gradient-to-tr from-white to-primary-light pb-20">
         <Container className="flex justify-between h-full items-center">
           <Formik
             initialValues={{ keyword: keyword }}

@@ -14,13 +14,13 @@ const JobItemCard = ({ data }) => {
       {isHotJob && (
         <img
           src={hotjob}
-          className="absolute top-[-30px] left-[-20px] size-14"
+          className="absolute top-[-5px] left-[-5px] size-7"
           alt=""
         />
       )}
       <Box className="flex justify-between items-center">
         <Link to={`${RouteBase.Job}/${data?._id}`}>
-          <img src={data?.company?.logo || cpLogo} alt="" className="w-12 rounded-md" />
+          <img src={data?.company?.logo || cpLogo} alt="" className="w-12 aspect-square rounded-md" />
         </Link>
         <span className="px-4 py-1 rounded-full text-sm border font-medium bg-[#4540de11] text-primary">
           {helpers.convertSalary(data?.salary?.min, data?.salary?.max)}
@@ -29,13 +29,13 @@ const JobItemCard = ({ data }) => {
       <Box className="flex flex-col gap-1">
         <Link
           to={`${RouteBase.Job}/${data?._id}`}
-          className="font-semibold hover:underline"
+          className="font-semibold hover:underline line-clamp-1"
         >
           {data?.title}
         </Link>
         <Link
           to={`${RouteBase.Company}/${data?.company?._id}`}
-          className="text-neutrals-80 hover:text-primary-dark"
+          className="text-neutrals-80 hover:text-primary-dark line-clamp-1"
         >
           {data?.company?.name}
         </Link>

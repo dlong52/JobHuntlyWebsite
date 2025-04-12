@@ -27,7 +27,7 @@ const CompanyPage = () => {
   }, [data]);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white pb-20">
       <Box className="h-[300px] bg-gradient-to-tr from-white to-primary-light">
         <Container className="flex justify-between h-full items-center">
           <Formik

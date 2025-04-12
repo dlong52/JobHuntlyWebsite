@@ -14,20 +14,52 @@ import DialogMUI from "../../components/Dialogs";
 import ApplicantDetail from "./components/ApplicantDetail";
 import ChipMui from "../../ui/Chip";
 import Status from "./components/Status";
+import { NotificationService } from "../../services/NotificationServices";
+import { SendEmailServices } from "../../services/SendEmailServices";
+import { ApplicantService } from "../../services/ApplicationServices";
+import { useNotifications } from "../../utils/notifications";
 
 const CvManagementHrPage = () => {
   const [applicantId, setApplicantId] = useState(null);
-  const { company_id } = useSelector((state) => state.user);
+  const { showError, showSuccess } = useNotifications();
+  const { company_id, company_name, username } = useSelector((state) => state.user);
   const { shouldRender, open, toggle } = useToggleDialog();
   const { filters, handleChangePage } = useFilters({
     page: 1,
     limit: 15,
     company: company_id,
   });
-  const { data, isLoading } = useGetAllApplicants(filters, {
+  const { data, isLoading, refetch } = useGetAllApplicants(filters, {
     enabled: !!company_id,
   });
   const { dataConvert } = useConvertData(data);
+  const handelUpdateViewState = async (data) => {
+    try {
+      if (data?.isViewed) {
+        return;
+      }
+      const payload = {
+        id: data?._id,
+        isViewed: true,
+      };
+      await NotificationService.sendToUser({
+        userId: data?.candidate?._id,
+        title: "Nhà tuyển dụng vừa xem CV ứng tuyển của bạn",
+        body: `${company_name}, vừa xem CV của bạn`,
+      });
+      await SendEmailServices.cvViewed({
+        recruiterName: username,
+        companyName: company_name,
+        jobTitle: data?.job?.title,
+        applicantName: data?.candidate?.profile?.name,
+        applicantEmail: data?.candidate?.email,
+      });
+      await ApplicantService.updateApplicant(payload);
+      refetch();
+    } catch (error) {
+      showError(error);
+    }
+  };
   const columns = [
     {
       field: "",
@@ -83,6 +115,7 @@ const CvManagementHrPage = () => {
             <TooltipMui content={"Xem CV"}>
               <Link
                 target="_blank"
+                onClick={()=>{handelUpdateViewState(value)}}
                 to={value?.cv_url ? value.cv_url : `/view-cv/${value?.cv}`}
               >
                 <CommonIcon.AccountBoxTwoTone className="!text-primary" />
@@ -105,7 +138,7 @@ const CvManagementHrPage = () => {
     },
     {
       field: "isViewed",
-      headerName: "Trạng thái xem",
+      headerName: "Trạng thái ứng viên",
       renderCell: (value) => <Status status={value?.status} />,
     },
     {

@@ -16,6 +16,7 @@ import { useNotifications } from "../../../../../../utils/notifications";
 import { useGetCompany } from "../../../../../../hooks/modules/company/useGetCompany";
 import useConvertData from "../../../../../../hooks/useConvertData";
 import SelectCategoryField from "../../../../../../components/SelectField/SelectCategoryField";
+import { updateUser } from "../../../../../../services/UserServices";
 
 const EditCompanyInfo = () => {
   const user = useSelector((state) => state.user);
@@ -54,6 +55,21 @@ const EditCompanyInfo = () => {
       },
     };
     try {
+      if (!user?.company_id){
+        const res = await CompanyService.createCompany({
+          id: user?.company_id,
+          created_by: user?.user_id,
+          ...payload,
+        });
+        if (res.data.status === "success") {
+          await updateUser({
+            id: user?.user_id,
+            company: res.data.data._id,
+          })
+        }
+        showSuccess("Cập nhật thông tin công ty thành công");
+        return;
+      }
       await CompanyService.updateCompany({
         id: user?.company_id,
         ...payload,

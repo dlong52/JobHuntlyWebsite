@@ -7,7 +7,7 @@ import TooltipMui from "../../ui/TooltipMui";
 import { excel, search } from "../../assets/images";
 import helpers from "../../utils/helpers";
 import BreadcrumbMui from "../../ui/BreadcrumbMui";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
 import TableMui from "../../ui/TableMui";
 import moment from "moment";
@@ -24,6 +24,7 @@ const RevenueDetailPage = () => {
   });
   const { data, isLoading } = useGetAllPayments(filters);
   const { dataConvert } = useConvertData(data);
+  const navigate = useNavigate();
 
   const columns = [
     {
@@ -79,13 +80,19 @@ const RevenueDetailPage = () => {
     },
     {
       field: "_id",
-      headerName: "In hóa đơn",
+      headerName: "Xem chi tiết",
       classNameHeader: "!text-neutrals-60 !text-sm !py-3 !font-normal",
       renderCell: (value) => {
         return (
           <TooltipMui content="Tải xuống hóa đơn">
-            <IconButton onClick={() => {}}>
-              <CommonIcon.FileDownloadOutlined className="!text-primary" />
+            <IconButton
+              onClick={() =>
+                navigate(
+                  `${RouteBase.AdminRevenueManagement}/details/${value?._id}`
+                )
+              }
+            >
+              <CommonIcon.Info className="!text-primary" />
             </IconButton>
           </TooltipMui>
         );

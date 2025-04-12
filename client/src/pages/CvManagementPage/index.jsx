@@ -17,7 +17,7 @@ const CvManagementPage = () => {
   const { dataConvert } = useConvertData(data);
 
   return (
-    <>
+    <div className=" pb-20">
       <Box className=" bg-white flex items-end">
         <Box className="flex flex-col gap-8 bg-gradient-to-tr from-blue-950 to-blue-800 text-white w-full">
           <Box className="w-full bg-banner bg-no-repeat bg-contain bg-right h-full">
@@ -53,7 +53,7 @@ const CvManagementPage = () => {
           ))}
         </Container>
       )}
-    </>
+    </div>
   );
 };
 

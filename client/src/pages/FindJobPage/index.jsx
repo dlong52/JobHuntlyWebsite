@@ -288,7 +288,7 @@ const FindJobPage = () => {
   return (
     <Fragment>
       {/* Hero Banner */}
-      <Box className="bg-banner bg-no-repeat bg-contain bg-right h-[500px] bg-neutrals-0 flex items-end">
+      <Box className="bg-banner bg-no-repeat bg-contain bg-right h-[500px] bg-neutrals-0 flex items-end  pb-20">
         <Container
           className="flex flex-col justify-center items-center gap-8"
           style={{ height: "calc(100% - 75px)" }}

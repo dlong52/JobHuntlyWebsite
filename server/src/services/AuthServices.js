@@ -234,6 +234,7 @@ const signInWithGoogle = async (token, role) => {
       data: {
         access_token,
         role: user.role.name,
+        email: user.email
       },
     };
   } catch (error) {

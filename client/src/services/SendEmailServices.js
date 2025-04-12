@@ -3,7 +3,9 @@ import httpServices from "./httpServices";
 const cvViewed = (payload) => {
   return httpServices.post(`${apiURL.SEND_EMAIL}/cv-viewed`, payload);
 };
-
+const statusResume = (payload) => {
+  return httpServices.post(`${apiURL.SEND_EMAIL}/send-status`, payload);
+};
 const sendChangePassword = (payload) => {
   return httpServices.post(`${apiURL.SEND_EMAIL}/send-change-password`, payload);
 };
@@ -21,5 +23,6 @@ export const SendEmailServices = {
   sendVerify,
   verifyAccount,
   sendChangePassword,
-  sendInvoice
+  sendInvoice,
+  statusResume
 };

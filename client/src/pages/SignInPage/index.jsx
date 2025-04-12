@@ -28,6 +28,7 @@ import { useLoadingUser } from "../../providers/LoadingUserProvider";
 import Loading from "../../components/Loading";
 import { Link } from "react-router-dom";
 import { RouteBase } from "../../constants/routeUrl";
+import { requestForToken } from "../../../firebaseConfig";
 
 const SignInPage = () => {
   const { isLoading, setIsLoading } = useLoadingUser();
@@ -48,6 +49,9 @@ const SignInPage = () => {
       setIsLoading(true);
       const res = await signInWithGoogle(token, "google", ROLE.CANDIDATE);
       if (res?.status === "success") {
+        console.log(res?.data?.email);
+        
+        await requestForToken(res?.data?.email);
         showSuccess(res?.message);
         checkRoleNavigate(res?.data?.role);
         if (res?.data?.access_token) {

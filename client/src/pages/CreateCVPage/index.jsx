@@ -101,7 +101,7 @@ const CreateCVPage = () => {
   }, [user?.is_verified]);
   return (
     <Box>
-      <Box className="flex flex-col gap-5">
+      <Box className="flex flex-col gap-5  pb-20">
         <Formik
           initialValues={{
             cv_name: "",

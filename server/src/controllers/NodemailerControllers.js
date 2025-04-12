@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const ChangePasswordUi = require("../email_ui/ChangePassword");
 const VerifyAccountUi = require("../email_ui/VerifyAccount");
 const ViewedResume = require("../email_ui/ViewedResume");
+const StatusResume = require("../email_ui/StatusResume");
 const Invoice = require("../email_ui/Invoice");
 dotenv.config();
 
@@ -33,6 +34,42 @@ const cvViewed = async (req, res) => {
       to: applicantEmail,
       subject: "Nhà tuyển dụng đã xem CV của bạn",
       html: ViewedResume(applicantName, recruiterName, companyName, jobTitle),
+    });
+
+    res.status(200).send({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Failed to send email" });
+  }
+};
+
+const statusResume = async (req, res) => {
+  const {
+    recruiterName,
+    companyName,
+    jobTitle,
+    applicantName,
+    applicantEmail,
+    status,
+  } = req.body;
+
+  if (
+    !recruiterName ||
+    !companyName ||
+    !jobTitle ||
+    !applicantName ||
+    !applicantEmail ||
+    !status
+  ) {
+    return res.status(400).send({ message: "Missing required fields" });
+  }
+
+  try {
+    await transporter.sendMail({
+      from: '"Website Tuyển Dụng" <your-email@gmail.com>',
+      to: applicantEmail,
+      subject: "Nhà tuyển dụng đã đánh giá CV của bạn",
+      html: StatusResume(applicantName, recruiterName, companyName, jobTitle, status),
     });
 
     res.status(200).send({ message: "Email sent successfully" });
@@ -139,5 +176,6 @@ module.exports = {
   sendEmailVerification,
   verifyAccount,
   sendEmailChangePassword,
-  sendInvoice
+  sendInvoice,
+  statusResume
 };

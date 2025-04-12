@@ -43,7 +43,7 @@ const ProfileSettingPage = () => {
   };
 
   return (
-    <Box className="pt-5">
+    <Box className="pt-5 pb-20">
       <Container className="">
         <Box className="grid grid-cols-12 gap-2">
           <UploadAvatar />

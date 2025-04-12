@@ -92,7 +92,7 @@ const JobListItem = ({
         >
           <img
             src={hotjob}
-            className="absolute top-[-30px] left-[-20px] size-14"
+            className="absolute top-[-5px] left-[-5px] size-8"
             alt=""
           />
         </TooltipMui>

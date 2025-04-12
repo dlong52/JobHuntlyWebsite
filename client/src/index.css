@@ -43,6 +43,17 @@
   font-family: "Inter", serif;
   font-optical-sizing: auto;
 }
+.custom-mask {
+  -webkit-mask-image: url('./assets/images/background/mask.png');
+  -webkit-mask-size: cover;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+
+  mask-image: url('./assets/images/background/mask.png');
+  mask-size: cover;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
 .ck.ck-editor {
   border: none !important;
   box-shadow: none !important;

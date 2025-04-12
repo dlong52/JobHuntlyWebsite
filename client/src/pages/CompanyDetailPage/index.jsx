@@ -72,7 +72,7 @@ const CompanyDetailPage = () => {
       {isLoading ? (
         <CompanyLoadingSkeleton />
       ) : (
-        <Container className="py-5">
+        <Container className="py-5 pb-10">
           <Box className="rounded-md overflow-hidden relative">
             <img
               src={detailData?.cover ? detailData.cover : companyCoverDefault}

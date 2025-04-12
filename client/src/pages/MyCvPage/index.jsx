@@ -18,7 +18,7 @@ const MyCvPage = () => {
   const { dataConvert } = useConvertData(data);
 
   return (
-    <Container className="pt-5">
+    <Container className="pt-5  pb-20">
       <Box className="py-4 px-6 rounded-md bg-white shadow">
         <Box className="flex justify-between items-center">
           <Typography fontSize={"20px"} fontWeight={500}>

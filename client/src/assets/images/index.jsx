@@ -20,6 +20,7 @@ export { default as flash } from './logo/flash.webp'
 export { default as avatar } from './avatar/avatar.svg' 
 
 export { default as bannerChild } from './background/banner_0.png'
+export { default as mask } from './background/mask.png'
 export { default as recuiment } from './background/recuiment.jpg'
 export { default as banner } from './background/banner.png'
 export { default as cvtmp } from './background/cvtmp.png'

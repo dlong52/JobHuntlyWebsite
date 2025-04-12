@@ -29,7 +29,7 @@ const WishListPage = () => {
   }, [wishlist]);
 
   return (
-    <Box>
+    <Box className="  pb-20">
       <Box className="flex flex-col gap-8 bg-gradient-to-tr from-blue-950 to-blue-800 text-white w-full">
         <Box className="w-full bg-banner bg-no-repeat bg-contain bg-right h-full">
           <Container className="container mx-auto h-full flex flex-col gap-2 py-5">
