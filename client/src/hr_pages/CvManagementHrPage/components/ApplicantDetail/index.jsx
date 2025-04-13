@@ -43,7 +43,7 @@ const ApplicantDetail = ({ id }) => {
             : "Hẹn phỏng vấn"
     setLoading(true);
     console.log("🚀 ~ file: index.jsx:60 ~ handleSubmit ~ status:", status);
-    
+
     try {
       await ApplicantService.updateApplicant(payload);
       await NotificationService.sendToUser({
@@ -128,7 +128,7 @@ const ApplicantDetail = ({ id }) => {
                 <Box className="grid grid-cols-12 w-full gap-5">
                   <Box className="p-5 border col-span-6 rounded-md">
                     <Box className="flex items-center gap-5">
-                      <CommonAvatar className={"!size-16"} />
+                      <CommonAvatar src={detailData?.candidate?.profile?.avatar_url} className={"!size-16"} />
                       <Box className="">
                         <Typography fontWeight={500} fontSize={"18px"}>
                           {detailData?.candidate?.profile?.name}
@@ -141,6 +141,12 @@ const ApplicantDetail = ({ id }) => {
                         </Typography>
                       </Box>
                     </Box>
+                    <div className="mt-5">
+                      <Typography fontSize={"14px"} fontWeight={500} className=" !flex !items-center"><CommonIcon.HistoryEduOutlined className="!text-[19px]"/> Thư giới thiệu: </Typography>
+                      <div className="mt-2 border rounded-lg p-3">
+                        <Typography>{detailData?.cover_letter}</Typography>
+                      </div>
+                    </div>
                   </Box>
                   <Box className="overflow-hidden relative border col-span-6 rounded-md">
                     <img

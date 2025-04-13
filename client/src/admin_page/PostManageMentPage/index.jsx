@@ -199,7 +199,7 @@ const PostManageMentPage = () => {
                   },
                 }}
                 name="name"
-                placeholder="Tìm kiếm theo tên công ty..."
+                placeholder="Tìm kiếm theo vị trí, lĩnh vực, tên công ty..."
                 component={InputField}
               />
               <SelectProvinceField

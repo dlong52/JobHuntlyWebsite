@@ -44,7 +44,7 @@ export const ROLE = {
   ADMIN: "ADMIN",
   EMPLOYER: "EMPLOYER",
   CANDIDATE: "CANDIDATE",
-};
+}; 
 export const GENDER = {
   MALE: "male",
   FEMALE: "female",
@@ -52,7 +52,7 @@ export const GENDER = {
 export const APPLICANT_STATUS = {
   UNDER_REVIEW: "under_review",
   SUITABLE: "suitable",
-  ACCEPTED: "accept",
+  ACCEPT: "accept",
   REJECTED: "rejected",
   INTERVIEW: "interview",
 };

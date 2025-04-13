@@ -25,14 +25,14 @@ const BorderLinearProgress = styled(LinearProgress)(
     },
   })
 );
-const ProgressChartItem = ({ text, value, color }) => {
+const ProgressChartItem = ({ text, value, color, quantity }) => {
   return (
     <div className="flex items-center w-full gap-5">
       <div className="min-w-[180px] flex items-center justify-between">
         <Typography className="text-nowrap" fontWeight={500} fontSize={"14px"}>
           {text}
         </Typography>
-        <Typography fontSize={"14px"}>{value}</Typography>
+        <Typography fontSize={"14px"}>{quantity || value}</Typography>
       </div>
       <BorderLinearProgress
         variant="determinate"

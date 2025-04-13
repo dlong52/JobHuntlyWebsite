@@ -222,16 +222,7 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     classNameLabel="font-medium text-neutrals-100"
                     required
                   />
-                  <FormikField
-                    classNameContainer="col-span-12"
-                    className="bg-[#f8fafc]"
-                    required
-                    classNameLabel="font-medium text-neutrals-100"
-                    name="job_benefit"
-                    component={CkEditerField}
-                    label="Quyền lợi"
-                    placeholder="Mô tả chi tiết quyền lợi"
-                  />
+                  
                   <FormikField
                     classNameContainer="col-span-12"
                     className="bg-[#f8fafc]"
@@ -241,6 +232,16 @@ const CreateEditJobPost = ({ id, toggle, refetch }) => {
                     component={CkEditerField}
                     label="Yêu cầu công việc"
                     placeholder="Nhập các yêu cầu (phân cách bằng dấu phẩy)"
+                  />
+                  <FormikField
+                    classNameContainer="col-span-12"
+                    className="bg-[#f8fafc]"
+                    required
+                    classNameLabel="font-medium text-neutrals-100"
+                    name="job_benefit"
+                    component={CkEditerField}
+                    label="Quyền lợi"
+                    placeholder="Mô tả chi tiết quyền lợi"
                   />
                   <FormikField
                     classNameContainer="col-span-12"

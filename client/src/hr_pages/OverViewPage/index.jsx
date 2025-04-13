@@ -1,6 +1,6 @@
 import { Avatar, Box, Card, CardContent, Grid2, Typography } from "@mui/material";
 import React from "react";
-import { Button, CommonAvatar, CommonIcon } from "../../ui";
+import { Button, CommonIcon } from "../../ui";
 import EmploymentGrowthChart from "./Chart";
 import { useGetOverviewHr } from "../../hooks/modules/overview/useGetOverviewHr";
 import { useSelector } from "react-redux";
@@ -8,7 +8,6 @@ import { useConvertData } from "../../hooks";
 import { BorderLinearProgress } from "../ProfileHrPage/components/Account";
 import BarChartSkeleton from "../../ui/BarChartSkeleton";
 import BarChartEmpty from "../../components/BarChartEmpty";
-import CustomCircularProgress from "../../components/CustomCircularProgress";
 import VerifyItem from "../PostJobPage/components/NotVerify/VerifyItem";
 import { RouteBase } from "../../constants/routeUrl";
 import { useNavigate } from "react-router-dom";
@@ -26,12 +25,12 @@ const OverViewPage = () => {
         <Box className="bg-primary rounded-md p-4 flex-1 flex justify-between items-center">
           <div className="text-white">
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              CV tiếp nhận
+              CV nhận việc
             </Typography>
             <Typography variant="h5" sx={{ fontWeight: "900" }}>
               {dataConvert?.accepted_count || 0}
             </Typography>
-            <Typography variant="caption">Tăng 20%</Typography>
+            <Typography variant="caption">Giảm 20%</Typography>
           </div>
           <CommonIcon.FeedTwoTone className="!text-[#ffffff82] !size-20" />
         </Box>
@@ -43,7 +42,7 @@ const OverViewPage = () => {
             <Typography variant="h5" sx={{ fontWeight: "900" }}>
               {dataConvert?.recent_applications_count || 0}
             </Typography>
-            <Typography variant="caption">Tăng 20%</Typography>
+            <Typography variant="caption">Tăng 10%</Typography>
           </div>
           <CommonIcon.AccountCircleTwoTone className="!text-[#ffffff82] !size-20" />
         </Box>
@@ -55,7 +54,7 @@ const OverViewPage = () => {
             <Typography variant="h5" sx={{ fontWeight: "900" }}>
               {dataConvert?.job_viewing_count || 0}
             </Typography>
-            <Typography variant="caption">Tăng 20%</Typography>
+            <Typography variant="caption">Tăng 16%</Typography>
           </div>
           <CommonIcon.NewspaperTwoTone className="!text-[#ffffff82] !size-20" />
         </Box>

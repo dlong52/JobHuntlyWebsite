@@ -21,6 +21,7 @@ import { chart } from "../../assets/images";
 import BarChartEmpty from "../../components/BarChartEmpty";
 import ProgressChartItem from "./components/ProgressChartItem";
 import { useGetApplicationReport } from "../../hooks/modules/application/useGetApplicationReport";
+import { useGetJobByPackage } from "../../hooks/modules/overview/useGetJobByPackage";
 
 const RecruitmentReportPage = () => {
   const user = useSelector((state) => state.user);
@@ -30,6 +31,12 @@ const RecruitmentReportPage = () => {
   const { data, isLoading } = useGetOverviewHr(user?.company_id, {
     enabled: !!user?.company_id,
   });
+  // const { data: jobData, isLoading: isLoadingData } = useGetJobByPackage(user?.company_id, {
+  //   enabled: !!user?.company_id,
+  // });
+  // const { jobByPackage } = useConvertData(jobData);
+  // console.log(jobByPackage);
+  
   const { dataConvert } = useConvertData(data);
 
   const { data: reportData, isLoading: isLoadingReport } =
@@ -183,21 +190,25 @@ const RecruitmentReportPage = () => {
                 text={"Tổng số hồ sơ"}
                 color={"var(--primary)"}
                 value={100}
+                quantity={report?.total}
               />
               <ProgressChartItem
-                text={"Hồ sơ tiếp nhận"}
+                text={"Hồ sơ nhận việc"}
                 color={"#00c853"}
-                value={60}
+                value={(report?.accept/report?.total) * 100}
+                quantity={report?.accept}
               />
               <ProgressChartItem
                 text={"Hẹn phỏng vấn"}
                 color={"#26A4FF"}
-                value={15}
+                value={(report?.interview/report?.total) * 100}
+                quantity={report?.interview}
               />
               <ProgressChartItem
                 text={"Từ chối"}
                 color={"#d84315"}
-                value={25}
+                value={(report?.rejected/report?.total) * 100}
+                quantity={report?.rejected}
               />
             </div>
           </div>
@@ -209,22 +220,26 @@ const RecruitmentReportPage = () => {
               <ProgressChartItem
                 text={"HUNTLY MAX PLUS"}
                 color={"var(--primary)"}
-                value={100}
+                value={50}
+                quantity={3}
               />
               <ProgressChartItem
                 text={"HUNTLY MAX"}
                 color={"#00c853"}
-                value={60}
+                value={(1/6)*100}
+                quantity={1}
               />
               <ProgressChartItem
                 text={"HUNTLY PRO"}
                 color={"#26A4FF"}
-                value={15}
+                value={(2/6)*100}
+                quantity={2}
               />
               <ProgressChartItem
                 text={"HUNTLY ECO"}
                 color={"#d84315"}
-                value={25}
+                value={(1/6)*100}
+                quantity={1}
               />
             </div>
           </div>
