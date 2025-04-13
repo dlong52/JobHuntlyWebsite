@@ -30,7 +30,7 @@ export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
-    backgroundColor: "var(--accent-green)",
+    backgroundColor: "var(--primary)",
     ...theme.applyStyles("dark", {
       backgroundColor: "#308fe8",
     }),
@@ -143,7 +143,7 @@ const Account = () => {
             <Box className="flex justify-between">
               <Box className="flex items-center gap-4">
                 <Box
-                  className={`size-6 rounded-full border flex items-center text-white justify-center ${user?.is_verified ? "bg-accent-green" : "bg-gray-400"
+                  className={`size-6 rounded-full border flex items-center text-white justify-center ${user?.is_verified ? "bg-primary" : "bg-[#4e4e62]"
                     }`}
                 >
                   <CommonIcon.CheckRounded className="!text-[18px]" />
@@ -154,7 +154,7 @@ const Account = () => {
               </Box>
               <Link
                 to={RouteBase.HRVerify}
-                className="text-accent-green aspect-square size-8 flex items-center justify-center bg-neutrals-0 !rounded-full"
+                className="text-primary aspect-square size-8 flex items-center justify-center bg-primary-light !rounded-full"
               >
                 <CommonIcon.EastRounded fontSize="small" />
               </Link>
@@ -162,7 +162,7 @@ const Account = () => {
             <Box className="flex justify-between">
               <Box className="flex items-center gap-4">
                 <Box
-                  className={`size-6 rounded-full border flex items-center text-white justify-center ${user?.is_verified_phone ? "bg-accent-green" : "bg-gray-400"
+                  className={`size-6 rounded-full border flex items-center text-white justify-center ${user?.is_verified_phone ? "bg-primary" : "bg-[#4e4e62]"
                     }`}
                 >
                   <CommonIcon.CheckRounded className="!text-[18px]" />
@@ -172,15 +172,15 @@ const Account = () => {
                 </Typography>
               </Box>
               <Link
-                to={RouteBase.HRVerify}
-                className="text-accent-green aspect-square size-8 flex items-center justify-center bg-neutrals-0 !rounded-full"
+                to={RouteBase.HRVerifyPhone}
+                className="text-primary aspect-square size-8 flex items-center justify-center bg-primary-light !rounded-full"
               >
                 <CommonIcon.EastRounded fontSize="small" />
               </Link>
             </Box>
             <Box className="flex justify-between">
               <Box className="flex items-center gap-4">
-                <Box className="size-6 rounded-full border flex items-center justify-center bg-accent-green text-white">
+                <Box className="size-6 rounded-full border flex items-center justify-center bg-primary text-white">
                   <CommonIcon.CheckRounded className="!text-[18px]" />
                 </Box>
                 <Typography fontSize={"15px"} fontWeight={500}>
@@ -189,7 +189,7 @@ const Account = () => {
               </Box>
               <Link
                 to={`${RouteBase.HRProfile}?type=1`}
-                className="text-accent-green aspect-square size-8 flex items-center justify-center bg-neutrals-0 !rounded-full"
+                className="text-primary aspect-square size-8 flex items-center justify-center bg-primary-light !rounded-full"
               >
                 <CommonIcon.EastRounded fontSize="small" />
               </Link>

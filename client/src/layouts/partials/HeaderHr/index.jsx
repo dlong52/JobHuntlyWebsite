@@ -66,7 +66,7 @@ const HeaderHr = () => {
             onClick={() => console.log("Popover clicked!")}
           >
             <Box className="flex items-center gap-2 border p-[5px] rounded-full bg-primary text-white">
-              <CommonAvatar sx={{ width: "30px", height: "30px" }} />
+              <CommonAvatar src={user?.avatar_url} sx={{ width: "30px", height: "30px" }} />
               <CommonIcon.ArrowDropDownRounded sx={{ fontSize: "30px" }} />
             </Box>
           </CommonPopover>

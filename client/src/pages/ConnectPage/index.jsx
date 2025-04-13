@@ -562,10 +562,10 @@ const ConnectPage = () => {
                 maxWidth: isMobile ? "85%" : "70%",
                 wordBreak: "break-word",
               }}
-              className={`${message.sender_id === user?.user_id
-                  ? "!text-white !bg-primary"
-                  : "!bg-primary-light !text-primary"
-                } !text-xs md:!text-sm rounded-full`}
+              className={` ${message.sender_id === user?.user_id
+                  ? "!text-white !bg-primary rounded-t-full rounded-bl-full"
+                  : "!bg-primary-light !text-primary rounded-t-full rounded-br-full"
+                } !text-sm md:!text-sm`}
             >
               {message?.content}
             </Typography>
